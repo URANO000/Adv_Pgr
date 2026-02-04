@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AP_MVC.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
@@ -144,9 +144,82 @@
     </header>
 
 
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <!-- Main Footer Content -->
+            <div class="row py-5">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-brand mb-3">
+                        <img src="~/logo-footer.png" alt="logo" class="footer-logo mb-3">
+                        <h5 class="fw-bold">Red Social de Mascotas</h5>
+                    </div>
+                    <p class="footer-description">Conectando corazones con patitas. Encuentra a tu compañero perfecto y dale un hogar lleno de amor.</p>
+                    <div class="social-links mt-4">
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:facebook"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:instagram"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:twitter"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:youtube"></iconify-icon></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="footer-heading">Explorar</h6>
+                    <ul class="footer-links">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a href="#">Adoptar</a></li>
+                        <li><a href="#">Fundraisers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="footer-heading">Categorías</h6>
+                    <ul class="footer-links">
+                        <li><a href="#"> Gatos</a></li>
+                        <li><a href="#"> Perros</a></li>
+                        <li><a href="#"> Roedores</a></li>
+                        <li><a href="#"> Aves</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <h6 class="footer-heading">Contacto</h6>
+                    <ul class="footer-contact">
+                        <li>
+                            <iconify-icon icon="mdi:email-outline"></iconify-icon>
+                            <span>contacto@redmascotas.com</span>
+                        </li>
+                        <li>
+                            <iconify-icon icon="mdi:phone-outline"></iconify-icon>
+                            <span>+506 8888-8888</span>
+                        </li>
+                        <li>
+                            <iconify-icon icon="mdi:map-marker-outline"></iconify-icon>
+                            <span>San José, Costa Rica</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom py-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                        <p class="mb-0">&copy; @DateTime.Now.Year Red Social de Mascotas. Todos los derechos reservados.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-link-bottom">Política de Privacidad</a>
+                        <span class="mx-2">|</span>
+                        <a href="#" class="footer-link-bottom">Términos de Servicio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
