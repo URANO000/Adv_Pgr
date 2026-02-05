@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Red Social de Mascotas</title>
+    <title>@ViewData["Title"] - Patitas Social Adopciones</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -24,7 +24,7 @@
                 <div class="col-sm-4 col-lg-3 text-center text-sm-start">
                     <div class="main-logo">
                         <a asp-area="" asp-controller="Home" asp-action="Index">
-                            <img src="~/logo.png" alt="logo" class="logo-img">
+                            <img src="~/img/logo-footer.png" alt="logo" class="logo-img">
                         </a>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                 <div class="d-flex d-lg-none align-items-end mt-3">
                     <ul class="d-flex justify-content-end list-unstyled m-0">
                         <li>
-                            <a href="account.html" class="mx-3">
+                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
                                 <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
                             </a>
                         </li>
@@ -122,12 +122,12 @@
                         <div class="d-none d-lg-flex align-items-end">
                             <ul class="d-flex justify-content-end list-unstyled m-0">
                                 <li>
-                                    <a href="index.html" class="mx-3">
+                                    <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3" title="Iniciar Sesión">
                                         <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="index.html" class="mx-3">
+                                    <a href="#" class="mx-3" title="Favoritos">
                                         <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
                                     </a>
                                 </li>
@@ -154,8 +154,8 @@
             <div class="row py-5">
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <div class="footer-brand mb-3">
-                        <img src="~/logo-footer.png" alt="logo" class="footer-logo mb-3">
-                        <h5 class="fw-bold">Red Social de Mascotas</h5>
+                        <img src="~/img/logo-footer.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
+                        <h5 class="fw-bold">Patitas Social Adopciones</h5>
                     </div>
                     <p class="footer-description">Conectando corazones con patitas. Encuentra a tu compañero perfecto y dale un hogar lleno de amor.</p>
                     <div class="social-links mt-4">
@@ -179,10 +179,10 @@
                 <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
                     <h6 class="footer-heading">Categorías</h6>
                     <ul class="footer-links">
-                        <li><a href="#"> Gatos</a></li>
-                        <li><a href="#"> Perros</a></li>
-                        <li><a href="#"> Roedores</a></li>
-                        <li><a href="#"> Aves</a></li>
+                        <li><a href="#">Gatos</a></li>
+                        <li><a href="#">Perros</a></li>
+                        <li><a href="#">Roedores</a></li>
+                        <li><a href="#">Aves</a></li>
                     </ul>
                 </div>
 
@@ -191,7 +191,7 @@
                     <ul class="footer-contact">
                         <li>
                             <iconify-icon icon="mdi:email-outline"></iconify-icon>
-                            <span>contacto@redmascotas.com</span>
+                            <span>contacto@patitassocial.com</span>
                         </li>
                         <li>
                             <iconify-icon icon="mdi:phone-outline"></iconify-icon>
@@ -209,7 +209,7 @@
             <div class="footer-bottom py-4">
                 <div class="row align-items-center">
                     <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
-                        <p class="mb-0">&copy; @DateTime.Now.Year Red Social de Mascotas. Todos los derechos reservados.</p>
+                        <p class="mb-0">&copy; @DateTime.Now.Year Patitas Social Adopciones. Todos los derechos reservados.</p>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-link-bottom">Política de Privacidad</a>
