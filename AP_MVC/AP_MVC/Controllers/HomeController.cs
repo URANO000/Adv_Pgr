@@ -16,6 +16,24 @@ namespace AP_MVC.Controllers
             return View();
         }
 
+        //Pantalla de registro
+        [HttpGet]
+        public IActionResult Registro()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Registro(Usuario model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return RedirectToAction("Login");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
