@@ -2,7 +2,188 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section id="banner">
+    <div class="swiper main-swiper">
+        <div class="swiper-wrapper">
+
+            <!-- Slide 1 -->
+            <div class="swiper-slide">
+                <div class="container">
+                    <div class="row banner-content align-items-center">
+                        <div class="img-wrapper col-md-5">
+                            <img src="~/img/banner-img.png" class="img-fluid">
+                        </div>
+                        <div class="content-wrapper col-md-7 p-5 mb-5">
+                            <div class="secondary-font text-primary text-uppercase">
+                                Adopta, no compres
+                            </div>
+                            <h2 class="banner-title display-1 fw-normal mb-5">
+                                Un hogar cambia
+                                <span class="text-primary">una vida</span>
+                            </h2>
+                            <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-3">
+                                ver mascotas en adopción
+                                <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="swiper-slide">
+                <div class="container">
+                    <div class="row banner-content align-items-center">
+                        <div class="img-wrapper col-md-5">
+                            <img src="~/img/banner-img2.png" class="img-fluid">
+                        </div>
+                        <div class="content-wrapper col-md-7 p-5 mb-5">
+                            <div class="secondary-font text-primary text-uppercase mb-4">
+                                Dale una segunda oportunidad
+                            </div>
+                            <h2 class="banner-title display-1 fw-normal">
+                                Ellos esperan
+                                <span class="text-primary">por ti</span>
+                            </h2>
+                            <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-3">
+                                adoptar ahora
+                                <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="swiper-slide">
+                <div class="container">
+                    <div class="row banner-content align-items-center">
+                        <div class="img-wrapper col-md-5">
+                            <img src="~/img/banner-img3.png" class="img-fluid">
+                        </div>
+                        <div class="content-wrapper col-md-7 p-5 mb-5">
+                            <div class="secondary-font text-primary text-uppercase mb-4">
+                                Publica mascotas en adopción
+                            </div>
+                            <h2 class="banner-title display-1 fw-normal">
+                                Ayuda a encontrar
+                                <span class="text-primary">un hogar responsable</span>
+                            </h2>
+                            <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-3">
+                                publicar una mascota
+                                <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+
+
+<section id="categories">
+    <div class="container my-3 py-5">
+        <div class="row my-5">
+            <div class="col text-center">
+                <a href="#" class="categories-item">
+                    <iconify-icon class="category-icon" icon="ph:rabbit"></iconify-icon>
+                    <h5>Conejos</h5>
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="#" class="categories-item">
+                    <iconify-icon class="category-icon" icon="ph:bird"></iconify-icon>
+                    <h5>Aves</h5>
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="#" class="categories-item">
+                    <iconify-icon class="category-icon" icon="ph:dog"></iconify-icon>
+                    <h5>Perros</h5>
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="#" class="categories-item">
+                    <iconify-icon class="category-icon" icon="fluent-emoji-high-contrast:hamster"></iconify-icon>
+                    <h5>Roedores</h5>
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="#" class="categories-item">
+                    <iconify-icon class="category-icon" icon="ph:cat"></iconify-icon>
+                    <h5>Gatos</h5>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="banner" class="my-3">
+    <div class="container">
+        <div class="row flex-row-reverse align-items-center gy-4">
+
+            <!-- Image -->
+            <div class="col-12 col-md-6 text-center">
+                <img src="~/img/banner-img4.png"
+                     alt="Mascota esperando adopción"
+                     class="img-fluid">
+            </div>
+
+            <!-- Content -->
+            <div class="col-12 col-md-5 offset-md-1 p-4 p-md-5">
+                <span class="secondary-font text-primary text-uppercase mb-3 fs-6 d-block">
+                    Por patitas felices
+                </span>
+
+                <h2 class="display-5 fw-normal mb-4">
+                    Nuestra Misión & Visión
+                </h2>
+
+                <p class="mb-3">
+                    <strong>Misión:</strong> Conectar animales en situación de adopción con personas responsables,
+                    facilitando un proceso transparente, ético y accesible que promueva el bienestar animal y
+                    reduzca el abandono.
+                </p>
+
+                <p class="mb-4">
+                    <strong>Visión:</strong> Construir una comunidad donde cada mascota tenga la oportunidad de
+                    encontrar un hogar seguro y amoroso, utilizando la tecnología como puente entre refugios,
+                    rescatistas y adoptantes.
+                </p>
+
+                <a href="#adopciones"
+                   class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+                    Ver adopciones
+                    <svg width="20" height="20" viewBox="0 0 24 24" class="ms-2">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Swiper(".main-swiper", {
+            loop: true,
+            speed: 600,
+            pagination: {
+                el: ".main-swiper .swiper-pagination",
+                clickable: true
+            }
+        });
+    });
+</script>
