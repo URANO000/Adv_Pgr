@@ -39,5 +39,17 @@ namespace AP_MVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        //Pantalla de inicio de sesión
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login(Usuario model)
+        {
+            return View();
+        }
     }
 }

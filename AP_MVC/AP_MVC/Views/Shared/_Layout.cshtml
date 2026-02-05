@@ -3,48 +3,231 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AP_MVC</title>
+    <title>@ViewData["Title"] - Patitas Social Adopciones</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AP_MVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
+          rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AP_MVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+    <header class="header-color">
+        <div class="container py-2">
+            <div class="row py-4 pb-0 pb-sm-4 align-items-center ">
+
+                <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+                    <div class="main-logo">
+                        <a asp-area="" asp-controller="Home" asp-action="Index">
+                            <img src="~/img/logo-footer.png" alt="logo" class="logo-img">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+                    <div class="search-bar border rounded-2 px-4 py-2 d-flex align-items-center gap-3 shadow-sm">
+                        <iconify-icon icon="mdi:paw" class="fs-5 text-accent"></iconify-icon>
+
+                        <form id="search-form" class="d-flex align-items-center flex-grow-1 m-0">
+                            <input type="text"
+                                   class="form-control border-0 bg-transparent shadow-none"
+                                   placeholder="Busca a tu próxima mascota" />
+                        </form>
+
+                        <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <hr class="m-0">
+        </div>
+
+        <div class="container">
+            <nav class="main-menu d-flex navbar navbar-expand-lg ">
+
+                <div class="d-flex d-lg-none align-items-end mt-3">
+                    <ul class="d-flex justify-content-end list-unstyled m-0">
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
+                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="wishlist.html" class="mx-3">
+                                <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
+                               aria-controls="offcanvasSearch">
+                                <iconify-icon icon="tabler:search" class="fs-4"></iconify-icon>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                        aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                <div class="offcanvas offcanvas-end button-category" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+
+                    <div class="offcanvas-header justify-content-center">
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+
+                    <div class="offcanvas-body d-flex align-items-center w-100">
+
+
+                        <ul class="navbar-nav menu-list list-unstyled d-flex justify-content-center align-items-center gap-4 mx-auto mb-0">
+
+
+                            <li class="nav-item">
+                                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
+                                   aria-expanded="false">Categorías</a>
+                                <ul class="dropdown-menu" aria-labelledby="pages">
+                                    <li><a href="#" class="dropdown-item">Gatos</a></li>
+                                    <li><a href="#" class="dropdown-item">Perros</a></li>
+                                    <li><a href="#" class="dropdown-item">Roedores</a></li>
+                                    <li><a href="#" class="dropdown-item">Aves</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Fundraisers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Contacto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Nosotros</a>
+                            </li>
+                        </ul>
+
+
+                        <div class="d-none d-lg-flex align-items-end">
+                            <ul class="d-flex justify-content-end list-unstyled m-0">
+                                <li>
+                                    <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3" title="Iniciar Sesión">
+                                        <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="mx-3" title="Favoritos">
+                                        <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <!-- Main Footer Content -->
+            <div class="row py-5">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="footer-brand mb-3">
+                        <img src="~/img/logo-footer.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
+                        <h5 class="fw-bold">Patitas Social Adopciones</h5>
+                    </div>
+                    <p class="footer-description">Conectando corazones con patitas. Encuentra a tu compañero perfecto y dale un hogar lleno de amor.</p>
+                    <div class="social-links mt-4">
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:facebook"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:instagram"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:twitter"></iconify-icon></a>
+                        <a href="#" class="social-icon"><iconify-icon icon="mdi:youtube"></iconify-icon></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="footer-heading">Explorar</h6>
+                    <ul class="footer-links">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a href="#">Adoptar</a></li>
+                        <li><a href="#">Fundraisers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4 mb-lg-0">
+                    <h6 class="footer-heading">Categorías</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Gatos</a></li>
+                        <li><a href="#">Perros</a></li>
+                        <li><a href="#">Roedores</a></li>
+                        <li><a href="#">Aves</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <h6 class="footer-heading">Contacto</h6>
+                    <ul class="footer-contact">
+                        <li>
+                            <iconify-icon icon="mdi:email-outline"></iconify-icon>
+                            <span>contacto@patitassocial.com</span>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li>
+                            <iconify-icon icon="mdi:phone-outline"></iconify-icon>
+                            <span>+506 8888-8888</span>
+                        </li>
+                        <li>
+                            <iconify-icon icon="mdi:map-marker-outline"></iconify-icon>
+                            <span>San José, Costa Rica</span>
                         </li>
                     </ul>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - AP_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <!-- Footer Bottom -->
+            <div class="footer-bottom py-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                        <p class="mb-0">&copy; @DateTime.Now.Year Patitas Social Adopciones. Todos los derechos reservados.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-link-bottom">Política de Privacidad</a>
+                        <span class="mx-2">|</span>
+                        <a href="#" class="footer-link-bottom">Términos de Servicio</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/plugins.js" asp-append-version="true"></script>
+    <script src="~/js/modernizr.js" asp-append-version="true"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
