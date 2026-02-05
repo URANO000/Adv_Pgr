@@ -1,0 +1,125 @@
+﻿@model AP_MVC.Models.Usuario
+
+@{
+    ViewData["Title"] = "Registro";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Red Social de Mascotas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AP_MVC.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <section class="text-center text-lg-start">
+        <style>
+            body {
+                overflow: hidden;
+                background-color: #f8f9fa;
+            }
+
+            .cascading-right {
+                margin-right: -50px;
+            }
+
+            @@media (max-width: 991.98px) {
+                .cascading-right {
+                    margin-right: 0;
+                }
+            }
+
+            .login-icon {
+                color: var(--bs-primary);
+                font-size: 2.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .login-section {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .login-container {
+                max-width: 1200px;
+            }
+        </style>
+
+        <div class="login-section">
+            <div class="container login-container">
+                <div class="row g-0 align-items-center">
+
+                    <div class="col-lg-5 mb-5 mb-lg-0">
+                        <div class="card cascading-right bg-body-tertiary" style="backdrop-filter: blur(30px);">
+                            <div class="card-body p-4 shadow-5 text-center">
+
+                                <iconify-icon icon="mdi:account-plus" class="login-icon"></iconify-icon>
+                                <h2 class="fw-bold mb-3">Crear cuenta</h2>
+                                <p class="text-muted mb-4">Regístrate para ingresar al sistema</p>
+
+                                <form asp-controller="Home" asp-action="Registro" method="post">
+
+                                    <div class="form-floating mb-4">
+                                        <input type="text" id="Identificacion" name="Identificacion"
+                                               class="form-control" asp-for="Identificacion"
+                                               placeholder="Identificación" required />
+                                        <label for="Identificacion">Identificación</label>
+                                        <span asp-validation-for="Identificacion" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-floating mb-4">
+                                        <input type="password" id="Contrasenna" name="Contrasenna"
+                                               class="form-control" asp-for="Contrasenna"
+                                               placeholder="Contraseña" required />
+                                        <label for="Contrasenna">Contraseña</label>
+                                        <span asp-validation-for="Contrasenna" class="text-danger"></span>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
+                                        <iconify-icon icon="mdi:account-check" class="me-2"></iconify-icon>
+                                        Registrarse
+                                    </button>
+
+                                    <div class="text-center">
+                                        <p class="mb-0">
+                                            ¿Ya tienes cuenta?
+                                            <a asp-controller="Home" asp-action="Login" class="fw-bold text-decoration-none">
+                                                Inicia sesión
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <img src="~/img/login.png" class="w-100 rounded-4 shadow-4" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
