@@ -396,6 +396,7 @@ iconify-icon.category-icon {
 
 a.categories-item:hover iconify-icon.category-icon {
     color: #80CCFF;
+    font-size: 110px;
 }
 
 
