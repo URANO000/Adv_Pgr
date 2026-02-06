@@ -242,7 +242,7 @@ body {
 
 body {
     letter-spacing: 0.01625rem;
-    background-color: #FFF8F0;
+    background-color: #FFFFFF;
 }
 
 h1,
@@ -819,14 +819,4 @@ Single Product section style start
 /* Tarjeta del login */
 .card.bg-body-tertiary {
     background-color: #FFFCF7 !important;
-}
-
-/* Login section background */
-.login-section {
-    background-color: #FFFCF7;
-}
-
-/* Eliminar línea sobre el footer */
-main {
-    background-color: #FFFDFA;
 }

@@ -2,66 +2,55 @@
 
 @{
     ViewData["Title"] = "Iniciar Sesión";
-    Layout = null;
+    Layout = "_LayoutExterno";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Red Social de Mascotas</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/normalize.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AP_MVC.styles.css" asp-append-version="true" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Section: Design Block -->
-    <section class="text-center text-lg-start">
-        <style>
-            body {
-                overflow: hidden;
-                background-color: #f8f9fa;
+<!-- Section: Design Block -->
+<section class="text-center text-lg-start">
+    <style>
+        .cascading-left {
+            margin-left: -50px;
+        }
+
+        @@media (max-width: 991.98px) {
+            .cascading-left {
+                margin-left: 0;
             }
-            .cascading-right {
-                margin-right: -50px;
-            }
-            @@media (max-width: 991.98px) {
-                .cascading-right {
-                    margin-right: 0;
-                }
-            }
-            .login-icon {
-                color: var(--bs-primary);
-                font-size: 2.5rem;
-                margin-bottom: 0.75rem;
-            }
-            .login-section {
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 20px;
-            }
-            .login-container {
-                max-width: 1200px;
-            }
-        </style>
-        <!-- Jumbotron -->
-        <div class="login-section">
-            <div class="container login-container">
-                <div class="row g-0 align-items-center">
-                    <div class="col-lg-5 mb-5 mb-lg-0">
-                        <div class="card cascading-right bg-body-tertiary" style="backdrop-filter: blur(30px);">
-                            <div class="card-body p-4 shadow-5 text-center">
-                                <iconify-icon icon="mdi:paw" class="login-icon"></iconify-icon>
-                                <h2 class="fw-bold mb-3">Bienvenido de Vuelta</h2>
-                                <p class="text-muted mb-4">Inicia sesión para conectar con las mascotas</p>
+        }
+
+        .login-icon {
+            color: var(--bs-primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .login-section {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-container {
+            max-width: 1200px;
+        }
+    </style>
+    <!-- Jumbotron -->
+    <div class="login-section">
+        <div class="container login-container">
+            <div class="row g-0 align-items-center">
+                <!-- Imagen primero (lado izquierdo) -->
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <img src="~/img/login.png" class="w-100 rounded-4 shadow-4" />
+                </div>
+                <!-- Tarjeta después (lado derecho) -->
+                <div class="col-lg-5 mb-5 mb-lg-0">
+                    <div class="card cascading-left bg-body-tertiary" style="backdrop-filter: blur(30px);">
+                        <div class="card-body p-4 shadow-5 text-center">
+                            <iconify-icon icon="mdi:paw" class="login-icon"></iconify-icon>
+                            <h2 class="fw-bold mb-3">Bienvenido de Vuelta</h2>
+                            <p class="text-muted mb-4">Inicia sesión para conectar con las mascotas</p>
 
                             <form asp-controller="Home" asp-action="Login" method="post">
                                 <!-- Identificación input -->
@@ -97,26 +86,14 @@
 
                                 <!-- Link para registro -->
                                 <div class="text-center">
-                                        <p class="mb-0">
-                                            ¿No tienes cuenta?
+                                    <p class="mb-0">
+                                        ¿No tienes cuenta?
                                         <a asp-controller="Home" asp-action="Registro" class="fw-bold text-decoration-none">Regístrate aquí</a>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mb-5 mb-lg-0">
-                        <img src="~/img/login.png" class="w-100 rounded-4 shadow-4"/>
-                </div>
             </div>
         </div>
-    </section>
-    <!-- Section: Design Block -->
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-</body>
-</html>
+</section>
