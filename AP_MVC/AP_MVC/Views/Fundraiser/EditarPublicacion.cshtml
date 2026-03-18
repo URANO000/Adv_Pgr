@@ -1,0 +1,107 @@
+﻿@model AP_MVC.Models.Fundraiser
+
+@{
+    ViewData["Title"] = "Editar Publicación de Donación";
+    Layout = "_Layout";
+}
+
+<section class="fundraiser-section">
+    <div class="container fundraiser-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-11">
+                <div class="card fundraiser-card shadow-sm">
+                    <div class="card-body p-5">
+
+                        <div class="text-center mb-4">
+                            <iconify-icon icon="mdi:pencil-box-outline" class="fundraiser-icon"></iconify-icon>
+                            <h2 class="fw-bold mb-2">Editar publicación de donación</h2>
+                            <p class="text-muted">Modificá los datos de tu campaña de donación</p>
+                        </div>
+
+                        <form asp-controller="Fundraiser" asp-action="Editar" method="post">
+
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="FundraiserId" />
+
+                            <div class="form-floating mb-4">
+                                <input type="text" id="AnimalNombre" class="form-control" value="@ViewBag.AnimalNombre" placeholder="Animal" readonly />
+                                <input type="hidden" asp-for="AnimalId" />
+                                <label for="AnimalNombre">
+                                    <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>Animal
+                                </label>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <input type="text" id="Titulo" name="Titulo"
+                                       class="form-control" asp-for="Titulo"
+                                       placeholder="Título de la publicación" maxlength="200" required />
+                                <label for="Titulo">
+                                    <iconify-icon icon="mdi:format-title" class="me-1"></iconify-icon>Título
+                                </label>
+                                <span asp-validation-for="Titulo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="Descripcion" class="fundraiser-label">
+                                    <iconify-icon icon="mdi:text-box-outline" class="me-1"></iconify-icon>Descripción
+                                </label>
+                                <textarea id="Descripcion" name="Descripcion"
+                                          class="form-control fundraiser-textarea" asp-for="Descripcion"
+                                          placeholder="Describe la situación del animal y el motivo de la campaña..."
+                                          rows="5" required></textarea>
+                                <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <input type="number" id="MetaTotal" name="MetaTotal"
+                                       class="form-control" asp-for="MetaTotal"
+                                       placeholder="Meta de recaudación (₡)" min="1" step="0.01" required />
+                                <label for="MetaTotal">
+                                    <iconify-icon icon="mdi:cash-multiple" class="me-1"></iconify-icon>Meta de recaudación (₡)
+                                </label>
+                                <span asp-validation-for="MetaTotal" class="text-danger small"></span>
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <button type="button"
+                                        class="btn btn-modal-inactivar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalInactivar"
+                                        data-fundraiser-id="@Model.FundraiserId">
+                                    <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>
+                                    Inactivar publicación
+                                </button>
+                            </div>
+                            <div class="row g-3 mt-1">
+                                <div class="col-12 col-sm-6">
+                                    <a asp-controller="Fundraiser" asp-action="Catalogo"
+                                           class="btn btn-outline-primary btn-lg w-100">
+                                        <iconify-icon icon="mdi:close-circle-outline" class="me-2"></iconify-icon>
+                                        Cancelar
+                                    </a>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                                        <iconify-icon icon="mdi:content-save-outline" class="me-2"></iconify-icon>
+                                        Guardar cambios
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@* Partial del modal *@
+@await Html.PartialAsync("_ModalCambiarEstado")
+
+@section Scripts {
+    <script src="~/js/Fundraiser.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

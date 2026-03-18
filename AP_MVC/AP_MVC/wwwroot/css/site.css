@@ -820,3 +820,167 @@ Single Product section style start
 .card.bg-body-tertiary {
     background-color: #FFFCF7 !important;
 }
+
+/*--------------------------------------------------------------
+Fundraiser / Publicación de Donación section styles
+--------------------------------------------------------------*/
+.fundraiser-section {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    background-color: #ffffff;
+}
+
+.fundraiser-container {
+    max-width: 960px;
+}
+
+.fundraiser-card {
+    background-color: var(--login-card-color);
+    border: 1px solid rgba(65, 64, 62, 0.10);
+    border-radius: 1rem;
+}
+    .fundraiser-card .text-danger {
+        color: #c0392b !important;
+        font-size: 0.85rem;
+    }
+
+.fundraiser-icon {
+    color: var(--bs-primary);
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.fundraiser-label {
+    font-size: 0.9rem;
+    color: var(--light-dark-color);
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.fundraiser-textarea {
+    text-transform: none;
+    resize: vertical;
+    min-height: 130px;
+    padding: 1rem 1.25rem;
+    line-height: 1.7;
+}
+
+    .fundraiser-textarea:focus {
+        border-color: #80CCFF;
+        box-shadow: 0 0 0 0.2rem rgba(128, 204, 255, 0.2);
+    }
+
+.fundraiser-switch {
+    width: 3rem;
+    height: 1.6rem;
+    cursor: pointer;
+}
+
+    .fundraiser-switch:checked {
+        background-color: #DEAD6F;
+        border-color: #DEAD6F;
+    }
+
+    .fundraiser-switch:focus {
+        box-shadow: 0 0 0 0.2rem rgba(222, 173, 111, 0.35);
+        border-color: #DEAD6F;
+    }
+
+.fundraiser-toggle-wrap .form-check-label {
+    font-size: 0.95rem;
+    color: var(--light-dark-color);
+    line-height: 1.6rem;
+}
+
+.fundraiser-back-link {
+    color: var(--light-dark-color);
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+    .fundraiser-back-link:hover {
+        color: #80CCFF;
+    }
+
+@media screen and (max-width: 576px) {
+    .fundraiser-card .card-body {
+        padding: 1.5rem !important;
+    }
+}
+
+/*--------------------------------------------------------------
+Modal Inactivar Publicación
+--------------------------------------------------------------*/
+.modal-inactivar-content {
+    border: none;
+    border-radius: 1rem;
+    background-color: #ffffff;
+}
+
+.modal-inactivar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: rgba(192, 57, 43, 0.10);
+    margin: 0 auto;
+}
+
+    .modal-inactivar-icon iconify-icon {
+        font-size: 2.4rem;
+        color: #c0392b;
+    }
+
+.modal-inactivar-title {
+    font-family: var(--heading-font);
+    font-size: 1.25rem;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.modal-inactivar-desc {
+    color: var(--light-dark-color);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.modal-inactivar-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background-color: rgba(192, 57, 43, 0.07);
+    color: #c0392b;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+    padding: 0.45rem 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-inactivar-actions {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+    .modal-inactivar-actions .btn {
+        flex: 1;
+        padding: 1.2rem 1rem;
+    }
+
+.btn-modal-inactivar {
+    border-radius: 0.4rem;
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #c0392b;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #a93226;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: #c0392b;
+    --bs-btn-active-border-color: transparent;
+    transition: background-color 0.25s ease;
+}

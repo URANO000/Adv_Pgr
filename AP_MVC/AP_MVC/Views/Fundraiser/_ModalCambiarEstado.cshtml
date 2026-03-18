@@ -1,0 +1,44 @@
+﻿@* Modal: Inactivar publicación de donación *@
+
+<div class="modal fade" id="modalInactivar" tabindex="-1" aria-labelledby="modalInactivarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-inactivar-content">
+
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body text-center px-4 pb-2">
+                <div class="modal-inactivar-icon mb-3">
+                    <iconify-icon icon="mdi:alert-circle-outline"></iconify-icon>
+                </div>
+                <h5 class="modal-inactivar-title">¿Inactivar esta publicación?</h5>
+                <p class="modal-inactivar-desc">
+                    Una vez inactivada, la publicación dejará de ser visible para los donantes.
+                </p>
+                <div class="modal-inactivar-warning">
+                    <iconify-icon icon="mdi:lock-outline" class="me-1"></iconify-icon>
+                    Esta acción <strong>no se puede revertir</strong>.
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 px-4 pb-4">
+                <form asp-controller="Fundraiser" asp-action="Inactivar" method="post"
+                      class="modal-inactivar-actions">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="modalFundraiserId" value="" />
+
+                    <button type="button" class="btn btn-outline-primary"
+                            data-bs-dismiss="modal">
+                        <iconify-icon icon="mdi:close" class="me-1"></iconify-icon>Cancelar
+                    </button>
+
+                    <button type="submit" class="btn btn-modal-inactivar">
+                        <iconify-icon icon="mdi:eye-off-outline" class="me-1"></iconify-icon>Inactivar
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
