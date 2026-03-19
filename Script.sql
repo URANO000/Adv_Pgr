@@ -188,6 +188,10 @@ INSERT INTO dbo.Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, Crea
 ('1', 3, 'Toto',   1.20,  '8 meses',  'M', 'Le gusta la lechuga',NULL);
 GO
 
+--Rol Id --19/3/2026
+INSERT INTO dbo.Rol(NombreRol)
+VALUES ('Administrador'), ('Usuario Normal');
+
 /* PROCESOS ALMACENADOS */
 
 CREATE PROCEDURE [dbo].[sp_ListarAnimales]
@@ -279,5 +283,132 @@ BEGIN
 
     END
 
+END
+GO
+
+
+-- 19/3/2026 -----------Autenticación----------------------------
+CREATE PROCEDURE [dbo].[sp_RegistrarCuenta]
+	@CorreoElectronico NVARCHAR(255),
+	@Contrasenna NVARCHAR(500),
+	@PrimerNombre NVARCHAR(100),
+	@SegundoNombre NVARCHAR(100) NULL,
+	@PrimerApellido NVARCHAR(100),
+	@SegundoApellido NVARCHAR(100) NULL,
+	@Cedula NVARCHAR(200),
+	@Telefono NVARCHAR(30) NULL,
+	@Provincia NVARCHAR(100) NULL,
+	@CreatedAt DATETIME2
+AS
+BEGIN
+	IF NOT EXISTS (
+		SELECT 1 FROM Usuario
+		WHERE Cedula = @Cedula
+		OR CorreoElectronico = @CorreoElectronico)
+	BEGIN
+
+		INSERT INTO [dbo].[Usuario] (CorreoElectronico,ContrasenaHash, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive, RolId)
+		VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia, @CreatedAt, 1, 2)
+
+	END
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_IniciarSesion]
+	@CorreoElectronico NVARCHAR(255),
+	@Contrasenna NVARCHAR(500)
+AS
+BEGIN
+
+	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
+	RolId, UpdatedBy
+	FROM Usuario
+	WHERE CorreoElectronico = @CorreoElectronico
+		AND ContrasenaHash = @Contrasenna
+		AND IsActive = 1
+END
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_ActualizarContrasenna]
+	@UsuarioId NVARCHAR(450),
+	@Contrasenna NVARCHAR(500)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET ContrasenaHash = @Contrasenna
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_ValidarCorreo]
+	@CorreoElectronico NVARCHAR(255)
+AS
+BEGIN
+	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
+	RolId, UpdatedBy
+	FROM Usuario
+	WHERE CorreoElectronico = @CorreoElectronico
+	AND IsActive = 1
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerUsuario]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia
+	FROM Usuario
+	WHERE UsuarioId = @UsuarioId
+	AND IsActive = 1
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_ObtenerUsuarios]
+AS
+BEGIN
+	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt,
+	RolId, UpdatedBy
+	FROM Usuario
+	ORDER BY CreatedAt 
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_EditarUsuario]
+	@UsuarioId NVARCHAR(450),
+	@CorreoElectronico NVARCHAR(255),
+	@PrimerNombre NVARCHAR(100),
+	@SegundoNombre NVARCHAR(100) NULL,
+	@PrimerApellido NVARCHAR(100),
+	@SegundoApellido NVARCHAR(100) NULL,
+	@Cedula NVARCHAR(200),
+	@Telefono NVARCHAR(30) NULL,
+	@Provincia NVARCHAR(100) NULL
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET CorreoElectronico =  @CorreoElectronico,
+		PrimerNombre = @PrimerNombre,
+		SegundoNombre = @SegundoNombre,
+		PrimerApellido = @PrimerApellido,
+		SegundoApellido = @SegundoApellido,
+		Cedula = @Cedula,
+		Telefono = @Telefono,
+		Provincia = @Provincia
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE PROCEDURE [dbo].[sp_DesactivarUsuario]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET IsActive = 0
+	WHERE UsuarioId = @UsuarioId
 END
 GO
