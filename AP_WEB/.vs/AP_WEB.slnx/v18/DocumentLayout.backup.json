@@ -1,7 +1,32 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\kkoni\\OneDrive\\Desktop\\Documents\\GitHub\\Adv_Pgr\\AP_WEB\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\controllers\\fundraisercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\controllers\\fundraisercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\models\\registrarfundraiserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\models\\registrarfundraiserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\models\\editarfundraiserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\models\\editarfundraiserrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\models\\fundraiserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\models\\fundraiserresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\models\\animalresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\models\\animalresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|c:\\users\\evely\\onedrive\\documentos\\fidelitas\\vii cuatrimestre\\programaci\u00F3n avanzada en web\\proyecto\\adv_pgr\\ap_web\\ap_web\\controllers\\animalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{573C3F29-E4C3-A45C-99B9-85FE07DCC315}|AP_WEB\\AP_WEB.csproj|solutionrelative:ap_web\\controllers\\animalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +47,84 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AnimalResponse.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\AnimalResponse.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Models\\AnimalResponse.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\AnimalResponse.cs",
+              "RelativeToolTip": "AP_WEB\\Models\\AnimalResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:38:27.027Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AnimalController.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Controllers\\AnimalController.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Controllers\\AnimalController.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Controllers\\AnimalController.cs",
+              "RelativeToolTip": "AP_WEB\\Controllers\\AnimalController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwB8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:38:09.73Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FundraiserResponse.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\FundraiserResponse.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Models\\FundraiserResponse.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\FundraiserResponse.cs",
+              "RelativeToolTip": "AP_WEB\\Models\\FundraiserResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:20:18.856Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EditarFundraiserRequest.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\EditarFundraiserRequest.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Models\\EditarFundraiserRequest.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\EditarFundraiserRequest.cs",
+              "RelativeToolTip": "AP_WEB\\Models\\EditarFundraiserRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:03:00.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RegistrarFundraiserRequest.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\RegistrarFundraiserRequest.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Models\\RegistrarFundraiserRequest.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Models\\RegistrarFundraiserRequest.cs",
+              "RelativeToolTip": "AP_WEB\\Models\\RegistrarFundraiserRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:02:51.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FundraiserController.cs",
+              "DocumentMoniker": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Controllers\\FundraiserController.cs",
+              "RelativeDocumentMoniker": "AP_WEB\\Controllers\\FundraiserController.cs",
+              "ToolTip": "C:\\Users\\evely\\OneDrive\\Documentos\\Fidelitas\\VII Cuatrimestre\\Programaci\u00F3n Avanzada en Web\\Proyecto\\Adv_Pgr\\AP_WEB\\AP_WEB\\Controllers\\FundraiserController.cs",
+              "RelativeToolTip": "AP_WEB\\Controllers\\FundraiserController.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAcwFkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T03:02:26.481Z",
+              "EditorCaption": ""
             }
           ]
         }

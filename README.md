@@ -1,2 +1,2 @@
 # Adv_Pgr
-Proyecto de Programación Avanzada.
+Proyecto de Programación Avanzada Web.
