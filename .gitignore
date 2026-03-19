@@ -52,3 +52,27 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio / archivos locales de IDE
+.vs/
+**/.vs/
+
+# Archivos de usuario
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Índices, cachés y metadatos de Visual Studio
+*.vsidx
+*.dbcache
+*.opendb
+*.VC.db
+futdcache.v2
+*.cache
+DocumentLayout.json
+DocumentLayout.backup.json
+
+# Binarios/metadatos locales que no deberían versionarse
+*.bin
+*.v10.bin
