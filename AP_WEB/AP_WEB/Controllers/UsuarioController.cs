@@ -20,6 +20,26 @@ namespace AP_WEB.Controllers
             _helper = helper;
         }
 
+        [HttpPut("CambiarAcceso")]
+        public IActionResult CambiarAcceso(SeguridadRequest model)
+        {
+            var UsuarioId = User.FindFirst("UsuarioId")?.Value;
+
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", UsuarioId);
+            parametros.Add("@Contrasenna", model.NuevaContrasenna);
+
+            var result = context.Execute("sp_ActualizarContrasenna", parametros);
+
+            if(result <= 0)
+            {
+                return BadRequest("Su información no se actualizó correctamente");
+            }
+
+            return Ok("Su información se actualizó correctamente");
+        }
+
         [HttpGet("VerPerfil")]
         public IActionResult VerPerfil()
         {

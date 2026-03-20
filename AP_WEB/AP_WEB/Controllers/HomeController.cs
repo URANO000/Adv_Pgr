@@ -25,7 +25,7 @@ namespace AP_WEB.Controllers
             _password = password;
         }
 
-        [HttpPost("RegistroUsuario")]
+        [HttpPost("RegistrarUsuario")]
         public IActionResult RegistrarUsuario(RegistroUsuarioRequest model)
         {
             using var context = _helper.CreateConnection();
@@ -39,7 +39,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@Cedula", model.Cedula);
             parametros.Add("@Telefono", model.Telefono);
             parametros.Add("@Provincia", model.Provincia);
-            parametros.Add("@CreatedAt", model.CreatedAt);
+            parametros.Add("@CreatedAt", DateTime.Now);
 
             var result = context.Execute("sp_RegistrarCuenta", parametros);
             if(result <= 0)

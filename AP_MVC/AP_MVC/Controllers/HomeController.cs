@@ -1,22 +1,31 @@
-using System.Diagnostics;
+using System.Net;
+using AP_MVC.Filters;
 using AP_MVC.Models;
+using AP_MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AP_MVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpClientFactory _http;
+        private readonly IConfiguration _config;
+        private readonly IPasswordHelper _password;
+
+        public HomeController(IHttpClientFactory http, IConfiguration config, IPasswordHelper password)
+        {
+            _http = http;
+            _config = config;
+            _password = password;
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        //Pantalla de registro
+        #region Crear Cuenta
         [HttpGet]
         public IActionResult Registro()
         {
@@ -26,30 +35,106 @@ namespace AP_MVC.Controllers
         [HttpPost]
         public IActionResult Registro(Usuario model)
         {
-            if (!ModelState.IsValid)
+            model.Contrasenna = _password.Encrypt(model.Contrasenna);
+
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + "Home/RegistrarUsuario";
+            var result = client.PostAsJsonAsync(url, model).Result;
+
+            if(result.StatusCode == HttpStatusCode.OK)
             {
-                return View(model);
+                return RedirectToAction("Login", "Home");
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
             }
 
-            return RedirectToAction("Login");
+            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
+            return View();
         }
+        #endregion
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        #region Inicio de sesión
 
-        //Pantalla de inicio de sesión
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Login(Usuario model)
         {
+            model.Contrasenna = _password.Encrypt(model.Contrasenna);
+
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + "Home/IniciarSesion";
+            var result = client.PostAsJsonAsync(url, model).Result;
+
+            if(result.StatusCode == HttpStatusCode.OK)
+            {
+                var objeto = result.Content.ReadFromJsonAsync<Usuario>().Result;
+                var NombreCompleto = objeto!.PrimerNombre + " " + objeto!.SegundoNombre + " " + objeto!.PrimerApellido + " " + objeto!.SegundoApellido;
+                HttpContext.Session.SetString("NombreUsuario", NombreCompleto);
+                HttpContext.Session.SetString("UsuarioId", objeto!.UsuarioId);
+                HttpContext.Session.SetString("Token", objeto!.Token);
+                HttpContext.Session.SetString("ImagenPerfil", objeto!.ImagenPerfil);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else if(result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+
+            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
             return View();
         }
+
+        #endregion
+
+        #region Cerrar Sesión
+
+        [SesionActiva]
+        [HttpGet]
+        public IActionResult CerrarSesion()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Home");
+        }
+
+        #endregion
+
+        #region Recuperar Acceso
+
+        [HttpGet]
+        public IActionResult RecuperarAcceso()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecuperarAcceso(Usuario model)
+        {
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + "Home/RecuperarAcceso";
+            var result = client.PutAsJsonAsync(url, model).Result;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+
+            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
+            return View();
+        }
+
+        #endregion
+
     }
 }

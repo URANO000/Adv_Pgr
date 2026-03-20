@@ -39,7 +39,7 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Animal/ListarAnimales";
             var result = client.GetAsync(url).Result;
 
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
                 var animales = result.Content.ReadFromJsonAsync<List<Animal>>().Result ?? new List<Animal>();
                 return animales.FirstOrDefault(a => a.AnimalId == animalId)?.Nombre ?? string.Empty;
