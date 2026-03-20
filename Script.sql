@@ -11,6 +11,14 @@ CREATE TABLE Rol (
 	NombreRol NVARCHAR(100) NOT NULL
 );
 
+--19/3/2026
+CREATE TABLE UsuarioImagen(
+	ImagenId INT PRIMARY KEY IDENTITY(1,1),
+	ImagenFile VARBINARY(MAX) NULL,
+	UploadedAt DATETIME2 NULL
+);
+
+
 CREATE TABLE Usuario (
 	UsuarioId NVARCHAR(450) PRIMARY KEY DEFAULT NEWID(),
 	CorreoElectronico NVARCHAR(255) NOT NULL UNIQUE,
@@ -25,14 +33,18 @@ CREATE TABLE Usuario (
 	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 	IsActive BIT NOT NULL,
 	RolId INT NOT NULL,
+	imgPerfil INT NULL,
 
 	UpdatedBy NVARCHAR (450),
 
 	CONSTRAINT [FK_Usuario_Rol_RolId] FOREIGN KEY (RolId)
 	REFERENCES Rol(RolId),
 	CONSTRAINT [FK_Usuario_Usuario_UpdatedBy] FOREIGN KEY (UpdatedBy)
-	REFERENCES Usuario(UsuarioId)
+	REFERENCES Usuario(UsuarioId),
+	CONSTRAINT [FK_Usuario_ImagenUsuario] FOREIGN KEY (imgPerfil)
+	REFERENCES UsuarioImagen(ImagenId)
 );
+
 
 --Animales, Tipos
 --Caninos, felinos, conejos, roedores, aves, etc....
@@ -378,30 +390,50 @@ BEGIN
 END
 GO
 
+
 CREATE PROCEDURE [dbo].[sp_EditarUsuario]
 	@UsuarioId NVARCHAR(450),
 	@CorreoElectronico NVARCHAR(255),
 	@PrimerNombre NVARCHAR(100),
-	@SegundoNombre NVARCHAR(100) NULL,
+	@SegundoNombre NVARCHAR(100) = NULL,
 	@PrimerApellido NVARCHAR(100),
-	@SegundoApellido NVARCHAR(100) NULL,
+	@SegundoApellido NVARCHAR(100) = NULL,
 	@Cedula NVARCHAR(200),
-	@Telefono NVARCHAR(30) NULL,
-	@Provincia NVARCHAR(100) NULL
+	@Telefono NVARCHAR(30) = NULL,
+	@Provincia NVARCHAR(100) = NULL,
+
+	
+	@ImagenFile VARBINARY(MAX) = NULL
 AS
 BEGIN
-	UPDATE [dbo].[Usuario]
-	SET CorreoElectronico =  @CorreoElectronico,
+	SET NOCOUNT ON;
+
+	DECLARE @ImagenId INT = NULL;
+
+	
+	IF @ImagenFile IS NOT NULL
+	BEGIN
+		INSERT INTO UsuarioImagen (ImagenFile, UploadedAt)
+		VALUES (@ImagenFile, SYSDATETIME());
+
+		SET @ImagenId = SCOPE_IDENTITY();
+	END
+
+	UPDATE dbo.Usuario
+	SET CorreoElectronico = @CorreoElectronico,
 		PrimerNombre = @PrimerNombre,
 		SegundoNombre = @SegundoNombre,
 		PrimerApellido = @PrimerApellido,
 		SegundoApellido = @SegundoApellido,
 		Cedula = @Cedula,
 		Telefono = @Telefono,
-		Provincia = @Provincia
-	WHERE UsuarioId = @UsuarioId
+		Provincia = @Provincia,
+
+		--Solo si una img nueva existe
+		imgPerfil = COALESCE(@ImagenId, imgPerfil)
+
+	WHERE UsuarioId = @UsuarioId;
 END
-GO
 
 CREATE PROCEDURE [dbo].[sp_DesactivarUsuario]
 	@UsuarioId NVARCHAR(450)

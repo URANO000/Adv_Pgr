@@ -123,7 +123,7 @@ namespace AP_WEB.Controllers
 
             var claims = new[]
             {
-                new Claim("usuarioId", usuarioId.ToString()),
+                new Claim("UsuarioId", usuarioId.ToString()),
             };
 
             var signingCredentials = new SigningCredentials(
