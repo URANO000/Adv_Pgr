@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AP_WEB.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
@@ -29,7 +29,7 @@ namespace AP_WEB.Controllers
             var parametros = new DynamicParameters();
             parametros.Add("@UsuarioId", UsuarioId);
 
-            var model = context.QueryFirstOrDefault<UsuarioResponse>("sp_ObtenerUsuario", parametros);
+            var model = context.QueryFirstOrDefault<PerfilResponse>("sp_ObtenerUsuario", parametros);
             if(model == null)
             {
                 return NotFound("No se encontró el perfil de usuario.");
@@ -52,21 +52,14 @@ namespace AP_WEB.Controllers
             return Ok(model);
         }
 
+        [Authorize]
         [HttpPut("EditarPerfil")]
-        public async Task<IActionResult> EditarPerfil([FromForm] EditarPerfilRequest model)
+        public async Task<IActionResult> EditarPerfil(EditarPerfilRequest model)
         {
             var UsuarioId = User.FindFirst("UsuarioId")?.Value;
 
-            //Para la img
-            byte[]? imagenBytes = null;
-
-            if (model.Imagen != null && model.Imagen.Length > 0)
-            {
-                using var ms = new MemoryStream();
-                await model.Imagen.CopyToAsync(ms);
-                imagenBytes = ms.ToArray();
-            }
-
+            if (UsuarioId == null)
+                return Unauthorized("Token inválido o sin UsuarioId");
 
             using var context = _helper.CreateConnection();
             var parameters = new DynamicParameters();
@@ -79,7 +72,7 @@ namespace AP_WEB.Controllers
             parameters.Add("@Cedula", model.Cedula);
             parameters.Add("@Telefono", model.Telefono);
             parameters.Add("@Provincia", model.Provincia);
-            parameters.Add("@ImagenFile", imagenBytes); 
+            parameters.Add("@ImagenPerfil", model.ImagenPerfil); 
 
             var result = context.Execute("sp_EditarUsuario", parameters);
             if (result <= 0)

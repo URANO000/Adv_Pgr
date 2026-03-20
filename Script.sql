@@ -11,13 +11,6 @@ CREATE TABLE Rol (
 	NombreRol NVARCHAR(100) NOT NULL
 );
 
---19/3/2026
-CREATE TABLE UsuarioImagen(
-	ImagenId INT PRIMARY KEY IDENTITY(1,1),
-	ImagenFile VARBINARY(MAX) NULL,
-	UploadedAt DATETIME2 NULL
-);
-
 
 CREATE TABLE Usuario (
 	UsuarioId NVARCHAR(450) PRIMARY KEY DEFAULT NEWID(),
@@ -33,18 +26,14 @@ CREATE TABLE Usuario (
 	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 	IsActive BIT NOT NULL,
 	RolId INT NOT NULL,
-	imgPerfil INT NULL,
-
-	UpdatedBy NVARCHAR (450),
+	ImagenPerfil VARCHAR(MAX) NULL,
 
 	CONSTRAINT [FK_Usuario_Rol_RolId] FOREIGN KEY (RolId)
 	REFERENCES Rol(RolId),
-	CONSTRAINT [FK_Usuario_Usuario_UpdatedBy] FOREIGN KEY (UpdatedBy)
-	REFERENCES Usuario(UsuarioId),
-	CONSTRAINT [FK_Usuario_ImagenUsuario] FOREIGN KEY (imgPerfil)
-	REFERENCES UsuarioImagen(ImagenId)
 );
 
+ALTER TABLE Usuario
+ADD CONSTRAINT UQ_UsuarioId UNIQUE (UsuarioId);
 
 --Animales, Tipos
 --Caninos, felinos, conejos, roedores, aves, etc....
@@ -88,12 +77,11 @@ CREATE TABLE Animal(
 );
 
 
---Media (Videos, fotos) guarda archivo en bits, etc--
+--Media (Videos, fotos) guarda archivo en url, etc--
 CREATE TABLE AnimalMedia (
 	MediaId INT IDENTITY PRIMARY KEY NOT NULL,
 	AnimalId INT NOT NULL,
-	Archivo VARBINARY (max),
-	ArchivoNombre NVARCHAR(100),
+	ArchivoUrl VARCHAR(MAX),
 	FileSize BIGINT NOT NULL,
 	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 	CreatedBy NVARCHAR(450),
@@ -334,7 +322,7 @@ BEGIN
 
 	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
 	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId, UpdatedBy
+	RolId
 	FROM Usuario
 	WHERE CorreoElectronico = @CorreoElectronico
 		AND ContrasenaHash = @Contrasenna
@@ -360,7 +348,7 @@ AS
 BEGIN
 	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
 	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId, UpdatedBy
+	RolId
 	FROM Usuario
 	WHERE CorreoElectronico = @CorreoElectronico
 	AND IsActive = 1
@@ -371,11 +359,19 @@ CREATE PROCEDURE [dbo].[sp_ObtenerUsuario]
 	@UsuarioId NVARCHAR(450)
 AS
 BEGIN
-	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia
-	FROM Usuario
-	WHERE UsuarioId = @UsuarioId
-	AND IsActive = 1
+	SELECT 
+		u.CorreoElectronico,
+		u.PrimerNombre,
+		u.SegundoNombre,
+		u.PrimerApellido,
+		u.SegundoApellido,
+		u.Cedula,
+		u.Telefono,
+		u.Provincia,
+		u.ImagenPerfil
+	FROM Usuario u
+	WHERE u.UsuarioId = @UsuarioId
+	AND u.IsActive = 1
 END
 GO
 
@@ -384,7 +380,7 @@ AS
 BEGIN
 	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
 	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt,
-	RolId, UpdatedBy
+	RolId, ImagenPerfil
 	FROM Usuario
 	ORDER BY CreatedAt 
 END
@@ -395,29 +391,16 @@ CREATE PROCEDURE [dbo].[sp_EditarUsuario]
 	@UsuarioId NVARCHAR(450),
 	@CorreoElectronico NVARCHAR(255),
 	@PrimerNombre NVARCHAR(100),
-	@SegundoNombre NVARCHAR(100) = NULL,
+	@SegundoNombre NVARCHAR(100) NULL,
 	@PrimerApellido NVARCHAR(100),
-	@SegundoApellido NVARCHAR(100) = NULL,
+	@SegundoApellido NVARCHAR(100) NULL,
 	@Cedula NVARCHAR(200),
-	@Telefono NVARCHAR(30) = NULL,
-	@Provincia NVARCHAR(100) = NULL,
+	@Telefono NVARCHAR(30) NULL,
+	@Provincia NVARCHAR(100) NULL,
 
-	
-	@ImagenFile VARBINARY(MAX) = NULL
+	@ImagenPerfil VARCHAR(MAX) NULL
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @ImagenId INT = NULL;
-
-	
-	IF @ImagenFile IS NOT NULL
-	BEGIN
-		INSERT INTO UsuarioImagen (ImagenFile, UploadedAt)
-		VALUES (@ImagenFile, SYSDATETIME());
-
-		SET @ImagenId = SCOPE_IDENTITY();
-	END
 
 	UPDATE dbo.Usuario
 	SET CorreoElectronico = @CorreoElectronico,
@@ -428,12 +411,11 @@ BEGIN
 		Cedula = @Cedula,
 		Telefono = @Telefono,
 		Provincia = @Provincia,
-
-		--Solo si una img nueva existe
-		imgPerfil = COALESCE(@ImagenId, imgPerfil)
+		ImagenPerfil = @ImagenPerfil
 
 	WHERE UsuarioId = @UsuarioId;
 END
+GO
 
 CREATE PROCEDURE [dbo].[sp_DesactivarUsuario]
 	@UsuarioId NVARCHAR(450)

@@ -14,7 +14,7 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool IsActive { get; set; }
         public int RolId { get; set; }
-        public string? UpdatedBy { get; set; } = string.Empty;
+        public string? ImagenPerfil { get; set; } = string.Empty;
 
         public string Token { get; set; } = string.Empty;
     }

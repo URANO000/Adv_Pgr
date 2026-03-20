@@ -1,6 +1,6 @@
 ﻿namespace AP_WEB.Models.Usuario
 {
-    public class EditarPerfilRequest
+    public class PerfilResponse
     {
         public string CorreoElectronico { get; set; } = string.Empty;
         public string Cedula { get; set; } = string.Empty;
