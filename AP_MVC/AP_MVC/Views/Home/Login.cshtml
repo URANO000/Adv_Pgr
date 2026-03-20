@@ -1,4 +1,4 @@
-﻿@model AP_MVC.Models.Usuario
+﻿@model Usuario
 
 @{
     ViewData["Title"] = "Iniciar Sesión";
@@ -52,19 +52,26 @@
                             <h2 class="fw-bold mb-3">Bienvenido de Vuelta</h2>
                             <p class="text-muted mb-4">Inicia sesión para conectar con las mascotas</p>
 
-                            <form asp-controller="Home" asp-action="Login" method="post">
-                                <!-- Identificación input -->
+                            @if (ViewBag.Mensaje != null)
+                            {
+                                <div class="alert alert-danger text-center text-black">
+                                    @ViewBag.Mensaje
+                                </div>
+                            }
+
+
+                            <form id="formLogin" asp-controller="Home" asp-action="Login" method="post">
+
                                 <div class="form-floating mb-4">
-                                    <input type="text" id="Identificacion" name="Identificacion" class="form-control" asp-for="Identificacion" placeholder="Identificación" required />
-                                    <label for="Identificacion">Identificación</label>
-                                    <span asp-validation-for="Identificacion" class="text-danger"></span>
+                                    <input type="email" id="CorreoElectronico" name="CorreoElectronico" class="form-control" asp-for="CorreoElectronico"
+                                    placeholder="Correo Electrónico" required />
+                                    <label for="Contrasenna">CorreoElectronico</label>
                                 </div>
 
                                 <!-- Contraseña input -->
                                 <div class="form-floating mb-4">
                                     <input type="password" id="Contrasenna" name="Contrasenna" class="form-control" asp-for="Contrasenna" placeholder="Contraseña" required />
                                     <label for="Contrasenna">Contraseña</label>
-                                    <span asp-validation-for="Contrasenna" class="text-danger"></span>
                                 </div>
 
                                 <!-- Checkbox y enlace -->
@@ -75,7 +82,7 @@
                                             Recordarme
                                         </label>
                                     </div>
-                                    <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                                    <a asp-action="RecuperarAcceso" asp-controller="Home" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
                                 </div>
 
                                 <!-- Submit button -->
@@ -96,4 +103,9 @@
                 </div>
             </div>
         </div>
+    </div>
 </section>
+
+@section Scripts{
+    <script src="~/js/login.js" asp-append-version="true"></script>
+}
