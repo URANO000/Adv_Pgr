@@ -2,6 +2,7 @@
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace AP_WEB.Controllers
 {
@@ -35,7 +36,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@Titulo", model.Titulo);
             parametros.Add("@Descripcion", model.Descripcion);
 
-            var result = context.Execute("sp_RegistrarPublicacionMascota", parametros);
+            var result = context.Execute("sp_RegistrarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
 
             if (result <= 0)
                 return BadRequest("La publicación no se registró correctamente");
@@ -51,7 +52,7 @@ namespace AP_WEB.Controllers
             var parametros = new DynamicParameters();
             parametros.Add("@UsuarioId", usuarioId);
 
-            var result = context.Query<PublicacionMascotaResponse>("sp_ListarMisPublicacionesMascota", parametros);
+            var result = context.Query<PublicacionMascotaResponse>("sp_ListarMisPublicacionesMascota", parametros, commandType: CommandType.StoredProcedure);
 
             if (result == null || !result.Any())
                 return NotFound("No se encontraron publicaciones");
@@ -68,7 +69,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@PublicacionId", publicacionId);
             parametros.Add("@UsuarioId", usuarioId);
 
-            var result = context.QueryFirstOrDefault<PublicacionMascotaResponse>("sp_ObtenerPublicacionMascota", parametros);
+            var result = context.QueryFirstOrDefault<PublicacionMascotaResponse>("sp_ObtenerPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
 
             if (result == null)
                 return NotFound("La publicación no fue encontrada");
@@ -87,7 +88,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@Titulo", model.Titulo);
             parametros.Add("@Descripcion", model.Descripcion);
 
-            var result = context.Execute("sp_EditarPublicacionMascota", parametros);
+            var result = context.Execute("sp_EditarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
 
             if (result <= 0)
                 return BadRequest("La publicación no se actualizó correctamente");
@@ -104,7 +105,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@PublicacionId", publicacionId);
             parametros.Add("@UsuarioId", usuarioId);
 
-            var result = context.Execute("sp_InactivarPublicacionMascota", parametros);
+            var result = context.Execute("sp_InactivarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
 
             if (result <= 0)
                 return BadRequest("La publicación no se pudo inactivar");
@@ -123,7 +124,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@FileSize", model.FileSize);
             parametros.Add("@CreatedBy", model.CreatedBy);
 
-            var result = context.Execute("sp_RegistrarAnimalMedia", parametros);
+            var result = context.Execute("sp_RegistrarAnimalMedia", parametros, commandType: CommandType.StoredProcedure);
 
             if (result <= 0)
                 return BadRequest("La imagen no se registró correctamente");
@@ -139,7 +140,7 @@ namespace AP_WEB.Controllers
             var parametros = new DynamicParameters();
             parametros.Add("@AnimalId", animalId);
 
-            var result = context.Query<AnimalMediaResponse>("sp_ListarAnimalMedia", parametros);
+            var result = context.Query<AnimalMediaResponse>("sp_ListarAnimalMedia", parametros, commandType: CommandType.StoredProcedure);
 
             if (result == null || !result.Any())
                 return NotFound("No se encontraron imágenes");
@@ -156,7 +157,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@MediaId", model.MediaId);
             parametros.Add("@UsuarioId", model.UsuarioId);
 
-            var result = context.Execute("sp_EliminarAnimalMedia", parametros);
+            var result = context.Execute("sp_EliminarAnimalMedia", parametros, commandType: CommandType.StoredProcedure);
 
             if (result <= 0)
                 return BadRequest("La imagen no se eliminó correctamente");
