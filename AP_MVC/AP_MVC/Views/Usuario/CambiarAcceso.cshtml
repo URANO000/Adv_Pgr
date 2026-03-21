@@ -1,0 +1,59 @@
+﻿@model Seguridad
+@{
+    Layout = "_LayoutExterno";
+}
+
+<!-- Section: Design Block -->
+<section class="text-center text-lg-start">
+    <!-- Jumbotron -->
+    <div class="login-section">
+        <div class="container login-container">
+            <div class="row g-0 align-items-center">
+                <!-- Imagen primero (lado izquierdo) -->
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <img src="~/img/banner-img3.png" class="w-100 rounded-4 shadow-4" />
+                </div>
+                <!-- Tarjeta después (lado derecho) -->
+                <div class="col-lg-5 mb-5 mb-lg-0">
+                    <div class="card cascading-left bg-body-tertiary" style="backdrop-filter: blur(30px);">
+                        <div class="card-body p-4 shadow-5 text-center">
+                            <iconify-icon icon="mdi:paw" class="login-icon"></iconify-icon>
+                            <h2 class="fw-bold mb-3">Recuperar Acceso</h2>
+
+                            @if (ViewBag.Mensaje != null)
+                            {
+                                <div class="alert alert-danger text-center text-black">
+                                    @ViewBag.Mensaje
+                                </div>
+                            }
+
+
+                            <form id="formCambiarAcceso" asp-controller="Usuario" asp-action="RecuperarAcceso" method="post">
+
+                                <div class="form-floating mb-4">
+                                    <input type="text" id="NuevaContrasenna" name="NuevaContrasenna" class="form-control" asp-for="NuevaContrasenna"
+                                           placeholder="Nueva Contraseña" required="" />
+                                    <label for="Contrasenna">Nueva Contraseña</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <input type="password" asp-for="ConfirmarContrasenna" class="form-control" placeholder="Name" required="">
+                                        <label for="floatingInput">Confirmar Contraseña</label>
+                                </div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
+                                    <iconify-icon icon="mdi:login" class="me-2"></iconify-icon>
+                                    Procesar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/recuperarAcceso.js" asp-append-version="true"></script>
+}

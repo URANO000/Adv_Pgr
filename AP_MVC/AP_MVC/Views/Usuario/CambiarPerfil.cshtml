@@ -1,0 +1,131 @@
+﻿@model Usuario
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "_Layout";
+}
+
+<section class="text-center text-lg-start p-4">
+    <div class="perfil-section">
+        <div class="container-fluid">
+            <div class="row g-0 align-items-center">
+
+                <div class="mb-5 mb-lg-0">
+                    <div class="card bg-body-tertiary">
+                        <div class="card-body p-4 shadow-5 text-center m-10 perfil-card">
+
+                            <h2 class="fw-bold mb-3">Editar Perfil</h2>
+
+                            @if (ViewBag.Mensaje != null)
+                            {
+                                <div class="alert alert-info text-black">
+                                    @ViewBag.Mensaje
+                                </div>
+                            }
+
+                            <form asp-action="CambiarPerfil" asp-controller="Usuario" method="post" enctype="multipart/form-data">
+
+                                <!-- Imagen actual -->
+                                <div class="mb-4">
+                                    <img src="@Model.ImagenPerfil"
+                                         class="rounded-circle mb-3"
+                                         width="120" height="120"
+                                         style="object-fit: cover;" />
+
+                                    <input type="file" name="ImagenPerfil" class="form-control" />
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="form-floating">
+                                        <input asp-for="Cedula" class="form-control" onkeyup="ConsultarNombre();" />
+                                        <label>Cédula</label>
+                                    </div>
+                                </div>
+
+                                <!-- Nombres -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <input asp-for="PrimerNombre" class="form-control" readonly="readonly" />
+                                            <label>Primer Nombre</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <input asp-for="SegundoNombre" class="form-control" readonly="readonly" />
+                                            <label>Segundo Nombre</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <input asp-for="PrimerApellido" class="form-control" readonly="readonly" />
+                                            <label>Primer Apellido</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <input asp-for="SegundoApellido" class="form-control" readonly="readonly" />
+                                            <label>Segundo Apellido</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contacto -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <input asp-for="Telefono" class="form-control" />
+                                            <label>Teléfono</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating">
+                                            <select asp-for="Provincia" class="form-select">
+                                                <option value="">Seleccione...</option>
+                                                <option>San José</option>
+                                                <option>Alajuela</option>
+                                                <option>Cartago</option>
+                                                <option>Heredia</option>
+                                                <option>Guanacaste</option>
+                                                <option>Puntarenas</option>
+                                                <option>Limón</option>
+                                            </select>
+                                            <label>Provincia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Correo -->
+                                <div class="form-floating mb-3">
+                                    <input asp-for="CorreoElectronico" class="form-control" />
+                                    <label>Correo Electrónico</label>
+                                </div>
+@* 
+                                <!-- Password opcional -->
+                                <div class="form-floating mb-4">
+                                    <input asp-for="Contrasenna" type="password" class="form-control" />
+                                    <label>Nueva Contraseña (opcional)</label>
+                                </div> *@
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Guardar Cambios
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script src="~/js/utilities.js" asp-append-version="true"></script>
+}

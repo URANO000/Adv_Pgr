@@ -314,16 +314,17 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_IniciarSesion]
+CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
 	@CorreoElectronico NVARCHAR(255),
 	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
 
-	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId
-	FROM Usuario
+	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
+	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive,
+	r.NombreRol
+	FROM Usuario u
+	INNER JOIN Rol r ON u.RolId = r.RolId
 	WHERE CorreoElectronico = @CorreoElectronico
 		AND ContrasenaHash = @Contrasenna
 		AND IsActive = 1
