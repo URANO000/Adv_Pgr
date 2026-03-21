@@ -27,13 +27,22 @@ namespace AP_MVC.Controllers
 
         private SelectList GetTiposAnimal(int? selectedId = null)
         {
-            var lista = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "1", Text = "Perro" },
-                new SelectListItem { Value = "2", Text = "Gato" }
-            };
+            using var client = _http.CreateClient();
 
-            return new SelectList(lista, "Value", "Text", selectedId);
+            var url = UrlAPI + "Animal/ListarTiposAnimal";
+
+            var result = client.GetAsync(url).Result;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var lista = result.Content
+                    .ReadFromJsonAsync<List<AnimalTipoViewModel>>().Result
+                    ?? new List<AnimalTipoViewModel>();
+
+                return new SelectList(lista, "TipoId", "Nombre", selectedId);
+            }
+
+            return new SelectList(new List<AnimalTipoViewModel>(), "TipoId", "Nombre");
         }
 
         [HttpGet]
