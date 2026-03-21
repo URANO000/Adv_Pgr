@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using AP_MVC.Models.Enum;
 
 namespace AP_MVC.Models
 {
@@ -16,7 +16,7 @@ namespace AP_MVC.Models
         public string Provincia { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
-        public int RolId { get; set; }
+        public Rol RolId { get; set; }
         public string ImagenPerfil { get; set; } = string.Empty;
 
 

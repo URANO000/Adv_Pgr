@@ -18,11 +18,13 @@ namespace AP_WEB.Controllers
         private readonly IConfiguration _config;
         private readonly IGeneralHelper _helper;
         private readonly IPasswordHelper _password;
-        public HomeController(IConfiguration config, IGeneralHelper helper, IPasswordHelper password)
+        private readonly IWebHostEnvironment _env;
+        public HomeController(IConfiguration config, IGeneralHelper helper, IPasswordHelper password, IWebHostEnvironment env)
         {
             _config = config;
             _helper = helper;
             _password = password;
+            _env = env;
         }
 
         [HttpPost("RegistrarUsuario")]
@@ -65,7 +67,7 @@ namespace AP_WEB.Controllers
                 return NotFound("Su información no se autenticó correctamente");
             }
 
-            result.Token = GenerarToken(result.UsuarioId);
+            result.Token = GenerarToken(result.UsuarioId, result.NombreRol);
 
             return Ok(result);
         }
@@ -105,25 +107,31 @@ namespace AP_WEB.Controllers
         private static string GenerarContrasenna()
         {
             const string letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            return new string([.. Enumerable.Range(0, 8).Select(_ => letras[Random.Shared.Next(letras.Length)])]);
+            var buffer = new char[8];
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                buffer[i] = letras[Random.Shared.Next(letras.Length)];
+            }
+            return new string(buffer);
         }
 
-        private static string ObtenerPlantillaCorreo(string nombre, string contrasenna)
+        private  string ObtenerPlantillaCorreo(string nombre, string contrasenna)
         {
-            var ruta = Path.Combine(AppContext.BaseDirectory, "Templates", "RecuperarAcceso.html");
+            var ruta = Path.Combine(_env.ContentRootPath, "Templates", "RecuperarAcceso.html");
             var plantilla = System.IO.File.ReadAllText(ruta);
             return plantilla
                 .Replace("{{Nombre}}", nombre)
                 .Replace("{{Contrasenna}}", contrasenna);
         }
 
-        private string GenerarToken(string usuarioId)
+        private string GenerarToken(string usuarioId, string rol)
         {
             var key = Encoding.UTF8.GetBytes(_config.GetValue<string>("Jwt:Key")!);
 
             var claims = new[]
             {
                 new Claim("UsuarioId", usuarioId.ToString()),
+                new Claim(ClaimTypes.Role, rol)
             };
 
             var signingCredentials = new SigningCredentials(

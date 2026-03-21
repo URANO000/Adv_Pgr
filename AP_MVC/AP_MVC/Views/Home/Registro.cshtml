@@ -8,11 +8,11 @@
 <!-- Section: Design Block -->
 <section class="text-center text-lg-start">
     <!-- Jumbotron -->
-    <div class="registro-section">
+    <div class="login-section">
         <div class="container login-container">
             <div class="row g-0 align-items-center">
 
-                <div class="col-lg-5 mb-5 mb-lg-0">
+                <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="card cascading-right bg-body-tertiary" style="backdrop-filter: blur(30px);">
                         <div class="card-body p-4 shadow-5 text-center">
 
@@ -28,7 +28,7 @@
                             }
 
                             <div class="formRegistro">
-                                <form id="formRegistro" asp-controller="Home" asp-action="Registro" method="post">
+                                <form id="formRegistro" asp-controller="Home" asp-action="Registro" method="post" enctype="multipart/form-data">
 
                                     <div class="form-floating mb-4">
                                         <input type="text" id="Cedula" name="Cedula"
@@ -37,50 +37,56 @@
                                         <label for="Cedula">Cédula</label>
                                     </div>
 
-                                    <div class="form-floating mb-4">
-                                        <input type="text" id="PrimerNombre" name="PrimerNombre"
-                                               class="form-control ReadOnly" readonly="readonly" asp-for="PrimerNombre"
-                                               placeholder="Primer Nombre" required="" />
-                                        <label for="PrimerNombre">Primer Nombre</label>
-                                    </div>
-                                    <div class="form-floating mb-4">
-                                        <input type="text" id="SegundoNombre" name="SegundoNombre"
-                                               class="form-control ReadOnly" readonly="readonly" asp-for="SegundoNombre"
-                                               placeholder="Segundo Nombre" />
-                                        <label for="SegundoNombre">Segundo Nombre</label>
-                                    </div>
-                                    <div class="form-floating mb-4">
-                                        <input type="text" id="PrimerApellido" name="PrimerApellido"
-                                               class="form-control ReadOnly" readonly="readonly" asp-for="PrimerApellido"
-                                               placeholder="Primer Apellido" required="" />
-                                        <label for="PrimerApellido">Primer Apellido</label>
-                                    </div>
-                                    <div class="form-floating mb-4">
-                                        <input type="text" id="SegundoApellido" name="SegundoApellido"
-                                               class="form-control ReadOnly" readonly="readonly" asp-for="SegundoApellido"
-                                               placeholder="Segundo Apellido" />
-                                        <label for="SegundoApellido">Segundo Apellido</label>
-                                    </div>
-
-                                    <div class="form-floating mb-4">
-                                        <input type="tel" id="Telefono" name="Telefono"
-                                               class="form-control" asp-for="Telefono"
-                                               placeholder="Teléfono"/>
-                                        <label for="Telefono">Teléfono</label>
+                                   <div class="row">
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <input type="text" id="PrimerNombre" name="PrimerNombre"
+                                                   class="form-control ReadOnly" readonly="readonly" asp-for="PrimerNombre"
+                                                   placeholder="Primer Nombre" required="" />
+                                            <label for="PrimerNombre">Primer Nombre</label>
+                                        </div>
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <input type="text" id="SegundoNombre" name="SegundoNombre"
+                                                   class="form-control ReadOnly" readonly="readonly" asp-for="SegundoNombre"
+                                                   placeholder="Segundo Nombre" />
+                                            <label for="SegundoNombre">Segundo Nombre</label>
+                                        </div>
+                                   </div>
+                                    <div class="row">
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <input type="text" id="PrimerApellido" name="PrimerApellido"
+                                                   class="form-control ReadOnly" readonly="readonly" asp-for="PrimerApellido"
+                                                   placeholder="Primer Apellido" required="" />
+                                            <label for="PrimerApellido">Primer Apellido</label>
+                                        </div>
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <input type="text" id="SegundoApellido" name="SegundoApellido"
+                                                   class="form-control ReadOnly" readonly="readonly" asp-for="SegundoApellido"
+                                                   placeholder="Segundo Apellido" />
+                                            <label for="SegundoApellido">Segundo Apellido</label>
+                                        </div>
                                     </div>
 
-                                    <div class="form-floating mb-4">
-                                        <select id="Provincia" name="Provincia" class="form-select" asp-for="Provincia">
-                                            <option value="">Seleccione...</option>
-                                            <option value="San José">San José</option>
-                                            <option value="Alajuela">Alajuela</option>
-                                            <option value="Cartago">Cartago</option>
-                                            <option value="Heredia">Heredia</option>
-                                            <option value="Guanacaste">Guanacaste</option>
-                                            <option value="Puntarenas">Puntarenas</option>
-                                            <option value="Limón">Limón</option>
-                                        </select>
-                                        <label for="Provincia">Provincia</label>
+                                    <div class="row">
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <input type="tel" id="Telefono" name="Telefono"
+                                                   class="form-control" asp-for="Telefono"
+                                                   placeholder="Teléfono" />
+                                            <label for="Telefono">Teléfono</label>
+                                        </div>
+
+                                        <div class="form-floating mb-4 col-md-6 ">
+                                            <select id="Provincia" name="Provincia" class="form-select" asp-for="Provincia">
+                                                <option value="">Seleccione...</option>
+                                                <option value="San José">San José</option>
+                                                <option value="Alajuela">Alajuela</option>
+                                                <option value="Cartago">Cartago</option>
+                                                <option value="Heredia">Heredia</option>
+                                                <option value="Guanacaste">Guanacaste</option>
+                                                <option value="Puntarenas">Puntarenas</option>
+                                                <option value="Limón">Limón</option>
+                                            </select>
+                                            <label for="Provincia">Provincia</label>
+                                        </div>
                                     </div>
 
                                     <div class="form-floating mb-4">

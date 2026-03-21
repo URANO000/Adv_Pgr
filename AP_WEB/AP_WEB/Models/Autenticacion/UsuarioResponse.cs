@@ -3,6 +3,7 @@
     public class UsuarioResponse
     {
         public string UsuarioId { get; set; } = string.Empty;
+        public string NombreRol { get; set; } = string.Empty;
         public string CorreoElectronico { get; set; } = string.Empty;
         public string Cedula { get; set; } = string.Empty;
         public string PrimerNombre { get; set; } = string.Empty;
