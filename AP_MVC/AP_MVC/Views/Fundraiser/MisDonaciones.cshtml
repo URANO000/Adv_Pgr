@@ -1,5 +1,168 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model List<AP_MVC.Models.Fundraiser>
+
 @{
+    ViewData["Title"] = "Mis Publicaciones";
+    Layout = "_Layout";
+}
+
+<section class="fundraiser-section">
+    <div class="container fundraiser-container py-4">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <iconify-icon icon="mdi:clipboard-list-outline" class="fundraiser-icon" style="font-size:2rem;"></iconify-icon>
+                <h2 class="fw-bold d-inline-block mb-0 ms-2">Mis publicaciones</h2>
+                <p class="text-muted mt-1 mb-0">Historial de todas tus campañas de donación</p>
+            </div>
+            <a asp-controller="Fundraiser" asp-action="Registrar" class="btn btn-primary">
+                <iconify-icon icon="mdi:plus-circle-outline" class="me-1"></iconify-icon>Nueva campaña
+            </a>
+        </div>
+
+        <!-- Alertas -->
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>@TempData["Exito"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Filtro rápido activas/inactivas -->
+        <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+            <span class="text-muted small me-1">Filtrar:</span>
+            <button class="btn btn-sm btn-outline-primary active-filter" data-filtro="todas">Todas</button>
+            <button class="btn btn-sm btn-outline-success" data-filtro="activa">Activas</button>
+            <button class="btn btn-sm btn-outline-secondary" data-filtro="inactiva">Inactivas</button>
+            <span class="ms-auto text-muted small" id="contadorHistorial">
+                @(Model?.Count ?? 0) publicación(es)
+            </span>
+        </div>
+
+        <!-- Tabla de historial -->
+        @if (Model == null || !Model.Any())
+        {
+            <div class="text-center py-5">
+                <iconify-icon icon="mdi:clipboard-off-outline" style="font-size:4rem;color:#ccc;"></iconify-icon>
+                <p class="text-muted mt-3">No tenés publicaciones de donación todavía.</p>
+                <a asp-controller="Fundraiser" asp-action="Registrar" class="btn btn-primary mt-2">
+                    <iconify-icon icon="mdi:plus-circle-outline" class="me-1"></iconify-icon>Crear mi primera campaña
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="card shadow-sm border-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaHistorial">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Campaña</th>
+                                <th>Animal</th>
+                                <th>Meta</th>
+                                <th>Progreso</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var porcentaje = item.MetaTotal > 0
+                                    ? Math.Min((double)(item.TotalActual / item.MetaTotal) * 100, 100)
+                                    : 0;
+
+                                var estadoClase = item.IsActive ? "activa" : "inactiva";
+
+                                <tr class="fila-historial" data-estado="@estadoClase">
+                                    <td>
+                                        <div class="fw-bold">@item.Titulo</div>
+                                        <small class="text-muted">
+                                            @(item.Descripcion.Length > 60
+                                                ? item.Descripcion.Substring(0, 60) + "..."
+                                                : item.Descripcion)
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <iconify-icon icon="mdi:paw" class="me-1 text-warning"></iconify-icon>
+                                        @item.NombreAnimal
+                                    </td>
+                                    <td class="text-nowrap">₡@item.MetaTotal.ToString("N2")</td>
+                                    <td style="min-width:140px;">
+                                        <div class="progress mb-1" style="height:7px;border-radius:5px;">
+                                            <div class="progress-bar @(item.IsActive ? "bg-success" : "bg-secondary")"
+                                                 role="progressbar"
+                                                 style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            ₡@item.TotalActual.ToString("N2") (@porcentaje.ToString("0")%)
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                                <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>Activa
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
+                                                <iconify-icon icon="mdi:eye-off-outline" class="me-1"></iconify-icon>Inactiva
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-muted small text-nowrap">
+                                        @item.CreatedAt.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class="text-center text-nowrap">
+                                        <a asp-controller="Fundraiser" asp-action="Detalle"
+                                           asp-route-id="@item.FundraiserId"
+                                           class="btn btn-sm btn-outline-primary me-1"
+                                           title="Ver detalle">
+                                            <iconify-icon icon="mdi:eye-outline"></iconify-icon>
+                                        </a>
+                                        @if (item.IsActive)
+                                        {
+                                            <a asp-controller="Fundraiser" asp-action="Editar"
+                                               asp-route-id="@item.FundraiserId"
+                                               class="btn btn-sm btn-outline-warning me-1"
+                                               title="Editar">
+                                                <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
+                                            </a>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Inactivar"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalInactivar"
+                                                    data-fundraiser-id="@item.FundraiserId">
+                                                <iconify-icon icon="mdi:eye-off-outline"></iconify-icon>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>
+
+@await Html.PartialAsync("_ModalCambiarEstado")
+
+@section Scripts {
+    <script src="~/js/Fundraiser.js"></script>
 }
