@@ -3,18 +3,21 @@
 @{
     ViewData["Title"] = "Mi Perfil";
     Layout = "_Layout";
+
+    var imagenPerfil = string.IsNullOrEmpty(Model.ImagenPerfil) ? "/uploads/default.jpg" : Model.ImagenPerfil;
+
 }
 
-<section class="text-center text-lg-start p-4">
+<section class="text-center text-lg-start mb-3">
     <div class="perfil-section">
-        <div class="container-fluid">
-            <div class="row g-0 align-items-center">
+        <div class="container py-3">
+            <div class="row justify-content-center">
 
-                <div class="mb-5 mb-lg-0">
-                    <div class="card bg-body-tertiary">
-                        <div class="card-body p-4 shadow-5 text-center m-10 perfil-card">
-
-                            <h2 class="fw-bold mb-3">Editar Perfil</h2>
+                <div class="col-lg-8 col-md-11">
+                    <div class="card bg-body-tertiary shadow-sm">
+                        <div class="card-body p-3 shadow-5 text-center perfil-card">
+                            <iconify-icon icon="mdi:paw" class="login-icon" style="font-size: 28px;"></iconify-icon>
+                            <h4 class="fw-bold mb-2">Editar Perfil</h4>
 
                             @if (ViewBag.Mensaje != null)
                             {
@@ -27,15 +30,20 @@
 
                                 <!-- Imagen actual -->
                                 <div class="mb-4">
-                                    <img src="@Model.ImagenPerfil"
-                                         class="rounded-circle mb-3"
-                                         width="120" height="120"
+                                    <img src="@imagenPerfil"
+                                         class="rounded-circle mb-2"
+                                         width="90" height="90"
                                          style="object-fit: cover;" />
 
                                     <input type="file" name="ImagenPerfil" class="form-control" />
                                 </div>
+                                <!-- Correo -->
+                                <div class="form-floating mb-2">
+                                    <input asp-for="CorreoElectronico" class="form-control" />
+                                    <label>Correo Electrónico</label>
+                                </div>
 
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <div class="form-floating">
                                         <input asp-for="Cedula" class="form-control" onkeyup="ConsultarNombre();" />
                                         <label>Cédula</label>
@@ -44,14 +52,14 @@
 
                                 <!-- Nombres -->
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <input asp-for="PrimerNombre" class="form-control" readonly="readonly" />
                                             <label>Primer Nombre</label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <input asp-for="SegundoNombre" class="form-control" readonly="readonly" />
                                             <label>Segundo Nombre</label>
@@ -60,14 +68,14 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <input asp-for="PrimerApellido" class="form-control" readonly="readonly" />
                                             <label>Primer Apellido</label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <input asp-for="SegundoApellido" class="form-control" readonly="readonly" />
                                             <label>Segundo Apellido</label>
@@ -77,13 +85,13 @@
 
                                 <!-- Contacto -->
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <input asp-for="Telefono" class="form-control" />
                                             <label>Teléfono</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-floating">
                                             <select asp-for="Provincia" class="form-select">
                                                 <option value="">Seleccione...</option>
@@ -99,17 +107,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Correo -->
-                                <div class="form-floating mb-3">
-                                    <input asp-for="CorreoElectronico" class="form-control" />
-                                    <label>Correo Electrónico</label>
-                                </div>
-@* 
-                                <!-- Password opcional -->
-                                <div class="form-floating mb-4">
-                                    <input asp-for="Contrasenna" type="password" class="form-control" />
-                                    <label>Nueva Contraseña (opcional)</label>
-                                </div> *@
 
                                 <button type="submit" class="btn btn-primary w-100">
                                     Guardar Cambios

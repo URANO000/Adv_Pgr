@@ -1,9 +1,39 @@
 ﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
+
+    var nombreUsuario = Context.Session.GetString("NombreUsuario");
+
+    if(nombreUsuario != null)
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        Layout = "_LayoutExterno";
+    }
 }
 
-<section class="d-flex justify-content-center">
-    <h1 class="text-danger">Error.</h1>
-    <h2 class="text-danger">Ha ocurrido un error.</h2>
+<section>
+    <div class="container d-flex flex-column justify-content-center align-items-center text-center p-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error-template">
+                    <h2 class="error-danger">
+                        Error
+                    </h2>
+                    <div class="error-details">
+                        Lo sentimos, un error ha ocurrido, por favor intentar más tarde
+                    </div>
+                    <div class="error-actions">
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-primary btn-lg">
+                            <iconify class="glyphicon glyphicon-home"></iconify>
+                            Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>

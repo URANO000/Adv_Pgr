@@ -4,7 +4,7 @@ CREATE DATABASE patitassocial;
 USE patitassocial;
 GO
 
---Creación de tablas y junction tables--
+--Creaci�n de tablas y junction tables--
 --Roles & Usuarios--
 CREATE TABLE Rol (
 	RolId INT PRIMARY KEY IDENTITY (1,1),
@@ -54,7 +54,7 @@ CREATE TABLE AnimalTipo(
 
 CREATE TABLE Animal(
 	AnimalId INT IDENTITY PRIMARY KEY,
-	UsuarioId  NVARCHAR(450) NOT NULL,  --Es el dueño actual
+	UsuarioId  NVARCHAR(450) NOT NULL,  --Es el due�o actual
 	TipoId INT NOT NULL,
 
 	Nombre NVARCHAR(100) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE AnimalMedia (
 	REFERENCES Usuario(UsuarioId)
 );
 
---Publicación, es necesaria por cosas como Título, Descripción
+--Publicaci�n, es necesaria por cosas como T�tulo, Descripci�n
 CREATE TABLE Publicacion(
 	PublicacionId INT IDENTITY PRIMARY KEY NOT NULL,
 	Titulo NVARCHAR(200),
@@ -129,7 +129,7 @@ CREATE TABLE Solicitud(
 );
 
 --Fundraiser y donaciones
---La tabla fundraiser es la publicación por así decirlo
+--La tabla fundraiser es la publicaci�n por as� decirlo
 CREATE TABLE Fundraiser (
 	FundraiserId INT IDENTITY PRIMARY KEY,
 	AnimalId INT NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE Fundraiser (
 	REFERENCES Animal(AnimalId)
 );
 
---La tabla donación es especificamente las donaciones por usuarios
+--La tabla donaci�n es especificamente las donaciones por usuarios
 CREATE TABLE Donacion(
 	DonacionId INT IDENTITY PRIMARY KEY,
 	FundraiserId INT NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE Donacion(
 -- Datos de prueba
 -- =============================================
 
--- Categorías
+-- Categor�as
 INSERT INTO dbo.AnimalCategoria (NombreTipo) VALUES
 ('Caninos'),
 ('Felinos'),
@@ -179,18 +179,23 @@ INSERT INTO dbo.AnimalTipo (NombreTipo, CategoriaId) VALUES
 ('Periquito',   4);
 GO
 
--- Animales (UsuarioId y CreatedBy en NULL por ahora, sin autenticación)
+-- Animales (UsuarioId y CreatedBy en NULL por ahora, sin autenticaci�n)
 INSERT INTO dbo.Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy) VALUES
-('1', 1, 'Luna',   8.50,  '3 años',   'H', 'Muy juguetona',      NULL),
-('1', 1, 'Rocky',  12.00, '5 años',   'M', 'Necesita cirugía',   NULL),
-('1', 2, 'Milo',   4.20,  '2 años',   'M', 'Alérgico al polen',  NULL),
-('1', 2, 'Nala',   3.80,  '1 año',    'H', 'Muy cariñosa',       NULL),
+('1', 1, 'Luna',   8.50,  '3 a�os',   'H', 'Muy juguetona',      NULL),
+('1', 1, 'Rocky',  12.00, '5 a�os',   'M', 'Necesita cirug�a',   NULL),
+('1', 2, 'Milo',   4.20,  '2 a�os',   'M', 'Al�rgico al polen',  NULL),
+('1', 2, 'Nala',   3.80,  '1 a�o',    'H', 'Muy cari�osa',       NULL),
 ('1', 3, 'Toto',   1.20,  '8 meses',  'M', 'Le gusta la lechuga',NULL);
 GO
 
 --Rol Id --19/3/2026
 INSERT INTO dbo.Rol(NombreRol)
 VALUES ('Administrador'), ('Usuario Normal');
+
+--Usuario admin de prueba -- 23/3/2026
+--Password es 12345678
+INSERT INTO dbo.Usuario(CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, Telefono, Provincia, RolId, IsActive)
+VALUES ('admin@gmail.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Dean', 'Winchester', '8878-1949', 'Heredia', 1, 1 );
 
 /* PROCESOS ALMACENADOS */
 
@@ -287,7 +292,7 @@ END
 GO
 
 
--- 19/3/2026 -----------Autenticación----------------------------
+-- 19/3/2026 -----------Autenticaci�n----------------------------
 CREATE PROCEDURE [dbo].[sp_RegistrarCuenta]
 	@CorreoElectronico NVARCHAR(255),
 	@Contrasenna NVARCHAR(500),
@@ -321,7 +326,7 @@ AS
 BEGIN
 
 	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
-	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive,
+	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
 	r.NombreRol
 	FROM Usuario u
 	INNER JOIN Rol r ON u.RolId = r.RolId
@@ -768,3 +773,4 @@ BEGIN
 END
 GO
 
+GO

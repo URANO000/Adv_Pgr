@@ -115,6 +115,12 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
                                 <li class="nav-item">
                                     <a asp-controller="Fundraiser" asp-action="Registrar" class="nav-link">Fundraisers</a>
                                 </li>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <li class="nav-item">
+                                        <a asp-controller="Usuario" asp-action="ListarUsuarios" class="nav-link">Gestión Administrativa</a>
+                                    </li>
+                                }
 
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">Contacto</a>
@@ -131,9 +137,24 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
                                     @if (!string.IsNullOrEmpty(nombreUsuario))
                                     {
                                         <li>
-                                            <a asp-action="CambiarPerfil" asp-controller="Usuario" class="dropdown-item" title="Perfil">
-                                                <img src="@imagenPerfil" width="40" height="40" class="rounded-circle" />
-                                            </a>
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" asp-action="CambiarPerfil" asp-controller="Usuario" title="Perfil">
+                                                  <img src="@imagenPerfil" width="40" height="40" class="rounded-circle" />
+
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a asp-action="CambiarPerfil" asp-controller="Usuario" class="dropdown-item">
+                                                        Editar Perfil
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-action="CambiarAcceso" asp-controller="Usuario" class="dropdown-item">
+                                                        Cambiar Acceso
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                         </li>
                                         <li>
                                             <a class="nav-link" asp-action="CerrarSesion" asp-controller="Home">
@@ -159,7 +180,7 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
             </div>
         </header>
 
-    <main role="main" class="pb-3">
+    <main role="main">
         @RenderBody()
     </main>
 
