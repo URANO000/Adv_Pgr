@@ -75,11 +75,16 @@ namespace AP_MVC.Controllers
             if(result.StatusCode == HttpStatusCode.OK)
             {
                 var objeto = result.Content.ReadFromJsonAsync<Usuario>().Result;
-                var NombreCompleto = objeto!.PrimerNombre + " " + objeto!.SegundoNombre + " " + objeto!.PrimerApellido + " " + objeto!.SegundoApellido;
-                HttpContext.Session.SetString("NombreUsuario", NombreCompleto);
+                HttpContext.Session.SetString("NombreUsuario", objeto!.nombreCompleto);
                 HttpContext.Session.SetString("UsuarioId", objeto!.UsuarioId);
                 HttpContext.Session.SetString("Token", objeto!.Token);
-                HttpContext.Session.SetString("ImagenPerfil", objeto!.ImagenPerfil);
+                HttpContext.Session.SetString(
+                    "ImagenPerfil",
+                    string.IsNullOrEmpty(objeto!.ImagenPerfil)
+                        ? "/uploads/default.jpg"
+                        : objeto.ImagenPerfil
+                );
+                HttpContext.Session.SetInt32("Rol", (int)objeto!.RolId);
 
                 return RedirectToAction("Index", "Home");
             }

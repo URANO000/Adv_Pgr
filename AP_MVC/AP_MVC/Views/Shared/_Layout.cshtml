@@ -1,6 +1,6 @@
 ﻿﻿@{
 var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
-// var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.png" : Context.Session.GetString("ImagenPerfil");
+var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.jpg" : Context.Session.GetString("ImagenPerfil");
 }
 
 <!DOCTYPE html>
@@ -24,130 +24,163 @@ var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
 <body>
     <header class="header-color">
         <div class="container py-2">
-            <div class="row py-4 pb-0 pb-sm-4 align-items-center ">
+            <div class="row py-4 pb-0 pb-sm-4 align-items-center">
 
                 <div class="col-sm-4 col-lg-3 text-center text-sm-start">
                     <div class="main-logo">
                         <a asp-area="" asp-controller="Home" asp-action="Index">
                             <img src="~/img/logo-footer.png" alt="logo" class="logo-img">
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-                    <div class="search-bar border rounded-2 px-4 py-2 d-flex align-items-center gap-3 shadow-sm">
-                        <iconify-icon icon="mdi:paw" class="fs-5 text-accent"></iconify-icon>
+                    <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+                        <div class="search-bar border rounded-2 px-4 py-2 d-flex align-items-center gap-3 shadow-sm">
+                            <iconify-icon icon="mdi:paw" class="fs-5 text-accent"></iconify-icon>
 
-                        <form id="search-form" class="d-flex align-items-center flex-grow-1 m-0">
-                            <input type="text"
-                                   class="form-control border-0 bg-transparent shadow-none"
-                                   placeholder="Busca a tu próxima mascota" />
-                        </form>
+                            <form id="search-form" class="d-flex align-items-center flex-grow-1 m-0">
+                                <input type="text"
+                                       class="form-control border-0 bg-transparent shadow-none"
+                                       placeholder="Busca a tu próxima mascota" />
+                            </form>
 
-                        <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
-
+                            <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
+                        </div>
                     </div>
 
                 </div>
             </div>
-        </div>
 
-        <div class="container-fluid">
-            <hr class="m-0">
-        </div>
+            <div class="container-fluid">
+                <hr class="m-0">
+            </div>
 
-        <div class="container">
-            <nav class="main-menu d-flex navbar navbar-expand-lg ">
+            <div class="container">
+                <nav class="main-menu d-flex navbar navbar-expand-lg">
 
-                <div class="d-flex d-lg-none align-items-end mt-3">
-                    <ul class="d-flex justify-content-end list-unstyled m-0">
-                        <li>
-                                <p>@nombreUsuario</p>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
-                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
-                               aria-controls="offcanvasSearch">
-                                <iconify-icon icon="tabler:search" class="fs-4"></iconify-icon>
-                            </a>
-                        </li>
-                    </ul>
-
-                </div>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                        aria-controls="offcanvasNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="offcanvas offcanvas-end button-category" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-
-                    <div class="offcanvas-header justify-content-center">
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-
-                    <div class="offcanvas-body d-flex align-items-center w-100">
-
-
-                        <ul class="navbar-nav menu-list list-unstyled d-flex justify-content-center align-items-center gap-4 mx-auto mb-0">
-
-
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
-                                   aria-expanded="false">Categorías</a>
-                                <ul class="dropdown-menu" aria-labelledby="pages">
-                                    <li><a href="#" class="dropdown-item">Gatos</a></li>
-                                    <li><a href="#" class="dropdown-item">Perros</a></li>
-                                    <li><a href="#" class="dropdown-item">Roedores</a></li>
-                                    <li><a href="#" class="dropdown-item">Aves</a></li>
-
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="Fundraiser" asp-action="Registrar" class="nav-link">Fundraisers</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Contacto</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Nosotros</a>
-                            </li>
-                        </ul>
-
-
-                        <div class="d-none d-lg-flex align-items-end">
-                            <ul class="d-flex justify-content-end list-unstyled m-0">
+                    <!-- MOBILE AUTH -->
+                    <div class="d-flex d-lg-none align-items-end mt-3">
+                        <ul class="d-flex justify-content-end list-unstyled m-0">
+                            @if (!string.IsNullOrEmpty(nombreUsuario))
+                            {
                                 <li>
-                                    <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3" title="Iniciar Sesión">
+                                    <a asp-controller="Home" asp-action="Index" class="smoothscroll ms-3">
+                                        <img src="@imagenPerfil" width="50" height="50" />
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" asp-action="CerrarSesion" asp-controller="Home">Salir</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
                                         <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#" class="mx-3" title="Favoritos">
-                                        <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
-                                    </a>
+                            }
+                        </ul>
+                    </div>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                            aria-controls="offcanvasNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="offcanvas offcanvas-end button-category" tabindex="-1" id="offcanvasNavbar">
+
+                        <div class="offcanvas-header justify-content-center">
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                        </div>
+
+                        <div class="offcanvas-body d-flex align-items-center w-100">
+
+                            <!-- MENU -->
+                            <ul class="navbar-nav menu-list list-unstyled d-flex justify-content-center align-items-center gap-4 mx-auto mb-0">
+                                <li class="nav-item">
+                                    <a asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categorías</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" class="dropdown-item">Gatos</a></li>
+                                        <li><a href="#" class="dropdown-item">Perros</a></li>
+                                        <li><a href="#" class="dropdown-item">Roedores</a></li>
+                                        <li><a href="#" class="dropdown-item">Aves</a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a asp-controller="Fundraiser" asp-action="Registrar" class="nav-link">Fundraisers</a>
+                                </li>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <li class="nav-item">
+                                        <a asp-controller="Usuario" asp-action="ListarUsuarios" class="nav-link">Gestión Administrativa</a>
+                                    </li>
+                                }
+
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Contacto</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">Nosotros</a>
                                 </li>
                             </ul>
 
-                        </div>
+                            <!-- DESKTOP AUTH -->
+                            <div class="d-none d-lg-flex align-items-end">
+                                <ul class="d-flex justify-content-end list-unstyled m-0 gap-3">
+                                    @if (!string.IsNullOrEmpty(nombreUsuario))
+                                    {
+                                        <li>
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" asp-action="CambiarPerfil" asp-controller="Usuario" title="Perfil">
+                                                  <img src="@imagenPerfil" width="40" height="40" class="rounded-circle" />
 
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a asp-action="CambiarPerfil" asp-controller="Usuario" class="dropdown-item">
+                                                        Editar Perfil
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-action="CambiarAcceso" asp-controller="Usuario" class="dropdown-item">
+                                                        Cambiar Acceso
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link" asp-action="CerrarSesion" asp-controller="Home">
+                                                <iconify-icon icon="material-symbols:logout" class="fs-4 mt-2"></iconify-icon>
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3" title="Iniciar Sesión">
+                                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
                     </div>
 
-                </div>
+                </nav>
+            </div>
+        </header>
 
-            </nav>
-        </div>
-    </header>
-
-
-    <main role="main" class="pb-3">
+    <main role="main">
         @RenderBody()
     </main>
 

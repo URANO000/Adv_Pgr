@@ -192,6 +192,11 @@ GO
 INSERT INTO dbo.Rol(NombreRol)
 VALUES ('Administrador'), ('Usuario Normal');
 
+--Usuario admin de prueba -- 23/3/2026
+--Password es 12345678
+INSERT INTO dbo.Usuario(CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, Telefono, Provincia, RolId, IsActive)
+VALUES ('admin@gmail.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Dean', 'Winchester', '8878-1949', 'Heredia', 1, 1 );
+
 /* PROCESOS ALMACENADOS */
 
 CREATE PROCEDURE [dbo].[sp_ListarAnimales]
@@ -314,16 +319,17 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_IniciarSesion]
+CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
 	@CorreoElectronico NVARCHAR(255),
 	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
 
-	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId
-	FROM Usuario
+	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
+	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
+	r.NombreRol
+	FROM Usuario u
+	INNER JOIN Rol r ON u.RolId = r.RolId
 	WHERE CorreoElectronico = @CorreoElectronico
 		AND ContrasenaHash = @Contrasenna
 		AND IsActive = 1
