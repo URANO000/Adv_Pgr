@@ -11,11 +11,13 @@ namespace AP_MVC.Controllers
     {
         private readonly IHttpClientFactory _http;
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _env;
 
-        public MascotaController(IHttpClientFactory http, IConfiguration config)
+        public MascotaController(IHttpClientFactory http, IConfiguration config, IWebHostEnvironment env)
         {
             _http = http;
             _config = config;
+            _env = env;
         }
 
         private string UrlAPI => _config.GetValue<string>("Valores:UrlAPI")!;
@@ -30,7 +32,6 @@ namespace AP_MVC.Controllers
             using var client = _http.CreateClient();
 
             var url = UrlAPI + "Animal/ListarTiposAnimal";
-
             var result = client.GetAsync(url).Result;
 
             if (result.StatusCode == HttpStatusCode.OK)
@@ -39,10 +40,10 @@ namespace AP_MVC.Controllers
                     .ReadFromJsonAsync<List<AnimalTipoViewModel>>().Result
                     ?? new List<AnimalTipoViewModel>();
 
-                return new SelectList(lista, "TipoId", "Nombre", selectedId);
+                return new SelectList(lista, "TipoId", "NombreTipo", selectedId);
             }
 
-            return new SelectList(new List<AnimalTipoViewModel>(), "TipoId", "Nombre");
+            return new SelectList(new List<AnimalTipoViewModel>(), "TipoId", "NombreTipo");
         }
 
         [HttpGet]
@@ -54,9 +55,54 @@ namespace AP_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Registrar(MascotaPublicacionCrearViewModel model)
+        public IActionResult Registrar(MascotaPublicacionCrearViewModel model, List<IFormFile> ImagenesArchivos)
         {
+
+            List<(string ruta, long size)> archivosGuardados = new();
+
+            if (ImagenesArchivos != null && ImagenesArchivos.Count > 0)
+            {
+                foreach (var archivo in ImagenesArchivos)
+                {
+                    if (archivo.Length == 0)
+                        continue;
+
+                    var extension = Path.GetExtension(archivo.FileName).ToLower();
+
+                    var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+
+                    if (!extensionesPermitidas.Contains(extension))
+                        continue;
+
+                    var nombreArchivo = Guid.NewGuid().ToString() + extension;
+
+                    var carpetaDestino = Path.Combine(
+                        _env.WebRootPath,
+                        "uploads",
+                        "mascotas"
+                    );
+
+                    var rutaFisica = Path.Combine(carpetaDestino, nombreArchivo);
+
+                    using (var stream = new FileStream(rutaFisica, FileMode.Create))
+                    {
+                        archivo.CopyTo(stream);
+                    }
+
+                    var rutaRelativa = "/uploads/mascotas/" + nombreArchivo;
+
+                    archivosGuardados.Add((rutaRelativa, archivo.Length));
+                }
+            }
+
             model.UsuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(model.UsuarioId))
+            {
+                ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
+                ViewBag.Mensaje = "La sesión expiró o no contiene un UsuarioId válido.";
+                return View(model);
+            }
 
             if (!ModelState.IsValid)
             {
@@ -65,22 +111,60 @@ namespace AP_MVC.Controllers
             }
 
             using var client = _http.CreateClient();
-            var url = UrlAPI + "Mascota/RegistrarPublicacionMascota";
-            var result = client.PostAsJsonAsync(url, model).Result;
 
-            if (result.StatusCode == HttpStatusCode.OK)
+            var urlRegistrar = UrlAPI + "Mascota/RegistrarPublicacionMascota";
+            var responseRegistrar = client.PostAsJsonAsync(urlRegistrar, model).Result;
+
+            if (!responseRegistrar.IsSuccessStatusCode)
             {
-                TempData["Exito"] = "La publicación de mascota se registró correctamente.";
-                return RedirectToAction("MisPublicaciones");
-            }
-            else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new Exception();
+                ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
+                ViewBag.Mensaje = responseRegistrar.Content.ReadAsStringAsync().Result;
+                return View(model);
             }
 
-            ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
-            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
-            return View(model);
+            var registro = responseRegistrar.Content
+                .ReadFromJsonAsync<RegistrarPublicacionMascotaResultViewModel>()
+                .Result;
+
+            if (registro == null || registro.AnimalId <= 0)
+            {
+                ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
+                ViewBag.Mensaje = "La publicación se registró, pero no se obtuvo el AnimalId.";
+                return View(model);
+            }
+
+            if (archivosGuardados.Count > 0)
+            {
+                foreach (var img in archivosGuardados)
+                {
+                    var mediaRequest = new RegistrarAnimalMediaViewModel
+                    {
+                        AnimalId = registro.AnimalId,
+                        ArchivoUrl = img.ruta,
+                        FileSize = img.size,
+                        CreatedBy = model.UsuarioId
+                    };
+
+                    var urlMedia = UrlAPI + "Mascota/RegistrarAnimalMedia";
+
+                    var responseMedia =
+                        client.PostAsJsonAsync(urlMedia, mediaRequest).Result;
+
+                    if (!responseMedia.IsSuccessStatusCode)
+                    {
+                        ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
+
+                        ViewBag.Mensaje =
+                            "Error registrando una imagen: "
+                            + responseMedia.Content.ReadAsStringAsync().Result;
+
+                        return View(model);
+                    }
+                }
+            }
+
+            TempData["Exito"] = "La publicación de mascota se registró correctamente.";
+            return RedirectToAction("MisPublicaciones");
         }
 
         [HttpGet]

@@ -3,6 +3,6 @@
     public class AnimalTipoViewModel
     {
         public int TipoId { get; set; }
-        public string Nombre { get; set; } = string.Empty;
+        public string NombreTipo { get; set; } = string.Empty;
     }
 }

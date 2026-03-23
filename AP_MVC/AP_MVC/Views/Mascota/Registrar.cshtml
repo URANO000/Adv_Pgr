@@ -1,5 +1,188 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AP_MVC.Models.Mascotas.MascotaPublicacionCrearViewModel
+
 @{
+    ViewData["Title"] = "Registrar mascota";
+}
+
+<section class="mascota-page-section">
+    <div class="container py-5">
+        <div class="row align-items-start g-4">
+
+            <div class="col-lg-5">
+                <div class="mascota-side-panel">
+                    <span class="mascota-badge">Nueva publicación</span>
+                    <h1 class="mascota-title">Registrar mascota en adopción</h1>
+                    <p class="mascota-subtitle">
+                        Publica una mascota con toda su información para que otras personas puedan conocerla
+                        y encontrarle un hogar responsable.
+                    </p>
+
+                    <div class="mascota-side-card">
+                        <h5>¿Qué puedes registrar aquí?</h5>
+                        <ul class="mascota-checklist">
+                            <li>Información general de la mascota</li>
+                            <li>Detalles médicos y alimenticios</li>
+                            <li>Título y descripción de la publicación</li>
+                            <li>Luego podrás asociar imágenes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card mascota-form-card shadow-sm border-0">
+                    <div class="card-body p-4 p-md-5">
+
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold mb-2">Formulario de publicación</h2>
+                            <p class="text-muted mb-0">
+                                Completa los datos de la mascota y de la publicación.
+                            </p>
+                        </div>
+
+                        @if (ViewBag.Mensaje != null)
+                        {
+                            <div class="alert alert-danger text-center">
+                                @ViewBag.Mensaje
+                            </div>
+                        }
+
+                        <form asp-action="Registrar" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+
+                            <div class="mascota-form-section">
+                                <div class="section-header">
+                                    <h4>Datos de la mascota</h4>
+                                    <p>Información básica para identificar a la mascota.</p>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <select asp-for="TipoId" asp-items="ViewBag.TiposAnimal" class="form-select">
+                                                <option value="">Seleccione...</option>
+                                            </select>
+                                            <label asp-for="TipoId">Tipo de animal</label>
+                                        </div>
+                                        <span asp-validation-for="TipoId" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
+                                            <label asp-for="Nombre">Nombre</label>
+                                        </div>
+                                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="Peso" class="form-control" placeholder="Peso" />
+                                            <label asp-for="Peso">Peso</label>
+                                        </div>
+                                        <span asp-validation-for="Peso" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="Edad" class="form-control" placeholder="Edad" />
+                                            <label asp-for="Edad">Edad</label>
+                                        </div>
+                                        <span asp-validation-for="Edad" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select asp-for="Sexo" class="form-select">
+                                                <option value="">Seleccione...</option>
+                                                <option value="M">Macho</option>
+                                                <option value="H">Hembra</option>
+                                            </select>
+                                            <label asp-for="Sexo">Sexo</label>
+                                        </div>
+                                        <span asp-validation-for="Sexo" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input asp-for="Enfermedades" class="form-control" placeholder="Enfermedades" />
+                                            <label asp-for="Enfermedades">Enfermedades</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea asp-for="HistorialMedico" class="form-control mascota-textarea" placeholder="Historial médico"></textarea>
+                                            <label asp-for="HistorialMedico">Historial médico</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea asp-for="PreferenciasAlimenticias" class="form-control mascota-textarea" placeholder="Preferencias alimenticias"></textarea>
+                                            <label asp-for="PreferenciasAlimenticias">Preferencias alimenticias</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea asp-for="Notas" class="form-control mascota-textarea" placeholder="Notas"></textarea>
+                                            <label asp-for="Notas">Notas</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mascota-form-section mt-4">
+                                <div class="section-header">
+                                    <h4>Datos de la publicación</h4>
+                                    <p>Esto será lo que vea la persona interesada.</p>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input asp-for="Titulo" class="form-control" placeholder="Título" />
+                                            <label asp-for="Titulo">Título</label>
+                                        </div>
+                                        <span asp-validation-for="Titulo" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea asp-for="Descripcion" class="form-control mascota-textarea-lg" placeholder="Descripción"></textarea>
+                                            <label asp-for="Descripcion">Descripción</label>
+                                        </div>
+                                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Agrega las imágenes de la mascota</label>
+                                <input type="file" name="ImagenesArchivos" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple/>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary mascota-submit-btn">
+                                    Guardar publicación
+                                </button>
+
+                                <a asp-action="MisPublicaciones" class="btn btn-outline-primary mascota-secondary-btn">
+                                    Ver mis publicaciones
+                                </a>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

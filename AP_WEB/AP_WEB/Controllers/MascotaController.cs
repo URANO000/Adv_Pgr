@@ -20,28 +20,39 @@ namespace AP_WEB.Controllers
         [HttpPost("RegistrarPublicacionMascota")]
         public IActionResult RegistrarPublicacionMascota(RegistrarPublicacionMascotaRequest model)
         {
-            using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
 
-            var parametros = new DynamicParameters();
-            parametros.Add("@UsuarioId", model.UsuarioId);
-            parametros.Add("@TipoId", model.TipoId);
-            parametros.Add("@Nombre", model.Nombre);
-            parametros.Add("@Peso", model.Peso);
-            parametros.Add("@Edad", model.Edad);
-            parametros.Add("@Sexo", model.Sexo);
-            parametros.Add("@Enfermedades", model.Enfermedades);
-            parametros.Add("@HistorialMedico", model.HistorialMedico);
-            parametros.Add("@PreferenciasAlimenticias", model.PreferenciasAlimenticias);
-            parametros.Add("@Notas", model.Notas);
-            parametros.Add("@Titulo", model.Titulo);
-            parametros.Add("@Descripcion", model.Descripcion);
+                var parametros = new DynamicParameters();
+                parametros.Add("@UsuarioId", model.UsuarioId);
+                parametros.Add("@TipoId", model.TipoId);
+                parametros.Add("@Nombre", model.Nombre);
+                parametros.Add("@Peso", model.Peso);
+                parametros.Add("@Edad", model.Edad);
+                parametros.Add("@Sexo", model.Sexo);
+                parametros.Add("@Enfermedades", model.Enfermedades);
+                parametros.Add("@HistorialMedico", model.HistorialMedico);
+                parametros.Add("@PreferenciasAlimenticias", model.PreferenciasAlimenticias);
+                parametros.Add("@Notas", model.Notas);
+                parametros.Add("@Titulo", model.Titulo);
+                parametros.Add("@Descripcion", model.Descripcion);
 
-            var result = context.Execute("sp_RegistrarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
+                var result = context.QueryFirstOrDefault<RegistrarPublicacionMascotaResult>(
+                    "sp_RegistrarPublicacionMascota",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                );
 
-            if (result <= 0)
-                return BadRequest("La publicación no se registró correctamente");
+                if (result == null || result.PublicacionId <= 0 || result.AnimalId <= 0)
+                    return BadRequest("La publicación no se registró correctamente");
 
-            return Ok("La publicación se registró correctamente");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("ListarMisPublicacionesMascota/{usuarioId}")]
@@ -116,20 +127,31 @@ namespace AP_WEB.Controllers
         [HttpPost("RegistrarAnimalMedia")]
         public IActionResult RegistrarAnimalMedia(RegistrarAnimalMediaRequest model)
         {
-            using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
 
-            var parametros = new DynamicParameters();
-            parametros.Add("@AnimalId", model.AnimalId);
-            parametros.Add("@ArchivoUrl", model.ArchivoUrl);
-            parametros.Add("@FileSize", model.FileSize);
-            parametros.Add("@CreatedBy", model.CreatedBy);
+                var parametros = new DynamicParameters();
+                parametros.Add("@AnimalId", model.AnimalId);
+                parametros.Add("@ArchivoUrl", model.ArchivoUrl);
+                parametros.Add("@FileSize", model.FileSize);
+                parametros.Add("@CreatedBy", model.CreatedBy);
 
-            var result = context.Execute("sp_RegistrarAnimalMedia", parametros, commandType: CommandType.StoredProcedure);
+                var result = context.QueryFirstOrDefault<RegistrarAnimalMediaResult>(
+                    "sp_RegistrarAnimalMedia",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                );
 
-            if (result <= 0)
-                return BadRequest("La imagen no se registró correctamente");
+                if (result == null || result.MediaId <= 0)
+                    return BadRequest("La imagen no se registró correctamente");
 
-            return Ok("La imagen se registró correctamente");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("ListarAnimalMedia/{animalId}")]

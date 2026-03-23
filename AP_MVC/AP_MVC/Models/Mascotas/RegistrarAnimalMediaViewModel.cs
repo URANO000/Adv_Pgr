@@ -11,7 +11,7 @@ namespace AP_MVC.Models.Mascotas
         public string ArchivoUrl { get; set; } = string.Empty;
 
         [Display(Name = "Tamaño del archivo")]
-        public int? FileSize { get; set; }
+        public long FileSize { get; set; }
 
         public string CreatedBy { get; set; } = string.Empty;
     }
