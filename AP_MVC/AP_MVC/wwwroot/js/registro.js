@@ -9,8 +9,14 @@
             PrimerNombre: {
                 required: true
             },
+            SegundoNombre: {
+                required: false
+            },
             PrimerApellido: {
                 required: true
+            },
+            SegundoApellido: {
+                required: false
             },
             CorreoElectronico: {
                 required: true,

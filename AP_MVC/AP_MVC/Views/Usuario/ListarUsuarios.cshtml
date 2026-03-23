@@ -1,5 +1,55 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Usuario>
 @{
+    ViewData["Title"] = "Listado de Usuarios";
 }
+
+
+<section class="container-fluid m-5">
+   <div class="row justify-content-center">
+        <div class="col-lg-11 col-md-10">
+            <div class="card fundraiser-card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="fw-bold mb-2">Listado de Usuarios en PatitasSocial</h2>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Cédula</th>
+                                <th scope="col">Correo Electrónico</th>
+                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Provincia</th>
+                                <th scope="col">Fecha Creación</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model)
+                            {
+                                <tr>
+                                    <td scope="row">@u.Cedula</td>
+                                    <td scope="row">@u.CorreoElectronico</td>
+                                    <td scope="row">@u.nombreCompleto</td>
+                                    <td scope="row">@u.Telefono</td>
+                                    <td scope="row">@u.Provincia</td>
+                                    <td scope="row">@u.CreatedAt</td>
+                                    <td scope="row">
+                                        @if (u.IsActive)
+                                        {
+                                            <span class="badge bg-success">Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactivo</span>
+                                        }
+                                    </td>
+                                    <td scope="row">@u.RolId</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+       </div>
+   </div>
+</section>

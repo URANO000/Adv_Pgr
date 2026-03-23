@@ -1,7 +1,6 @@
 ﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Http.Headers;
@@ -9,7 +8,7 @@ using System.Net.Http.Headers;
 namespace AP_MVC.Controllers
 {
     [SesionActiva]
-    public class UsuarioController : Controller
+    public class UsuarioController : BaseController
     {
         private readonly IHttpClientFactory _http;
         private readonly IConfiguration _config;
@@ -31,45 +30,63 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult CambiarAcceso(Seguridad model)
+        public async Task<IActionResult> CambiarAcceso(Seguridad model)
         {
+            var token = ValidarToken(out IActionResult redirect);
+
             model.NuevaContrasenna = _password.Encrypt(model.NuevaContrasenna);
             model.ConfirmarContrasenna = _password.Encrypt(model.ConfirmarContrasenna);
 
-            var token = HttpContext.Session.GetString("Token");
 
             using var client = _http.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Usuario/CambiarAcceso";
             var result = client.PutAsJsonAsync(url, model).Result;
 
+            //Manejo de errores
+            if (result.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+
+            if (!result.IsSuccessStatusCode)
+            {
+                var errorContent = await result.Content.ReadAsStringAsync();
+
+                ViewBag.Mensaje = string.IsNullOrWhiteSpace(errorContent)
+                    ? $"Error: {result.StatusCode}"
+                    : errorContent;
+
+                return View(model);
+            }
+
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                return RedirectToAction("CerrarSesion", "Home");
+                return RedirectToAction("Login", "Home");
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
                 throw new Exception();
             }
 
+
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
             return View();
         }
-        
+
 
         #endregion
 
-            #region Perfil
-            [HttpGet]
+        #region Perfil
+        [HttpGet]
         public async Task<IActionResult> CambiarPerfil()
         {
-            var token = HttpContext.Session.GetString("Token");
+            var token = ValidarToken(out IActionResult redirect);
 
-            if (string.IsNullOrEmpty(token))
-            {
-                return RedirectToAction("CerrarSesion", "Home");
-            }
-
+            if (redirect != null)
+                return redirect;
 
             using var client = _http.CreateClient();
             client.DefaultRequestHeaders.Authorization =
@@ -78,10 +95,16 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Usuario/VerPerfil";
 
             var result = await client.GetAsync(url);
-            var objeto = await result.Content.ReadFromJsonAsync<Usuario>();
+
+            if (result.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
+                var objeto = await result.Content.ReadFromJsonAsync<Usuario>();
                 return View(objeto);
             }
 
@@ -97,11 +120,11 @@ namespace AP_MVC.Controllers
         [HttpPost]
         public IActionResult CambiarPerfil(Usuario model, IFormFile? ImagenPerfil)
         {
-            var token = HttpContext.Session.GetString("Token");
+            var token = ValidarToken(out IActionResult redirect);
 
             if (string.IsNullOrEmpty(token))
             {
-                return RedirectToAction("CerrarSesion", "Home");
+                return RedirectToAction("Login", "Home");
             }
 
 
@@ -158,12 +181,24 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Usuario/EditarPerfil";
             var result = client.PutAsJsonAsync(url, model).Result;
 
-            if(result.StatusCode == HttpStatusCode.OK)
+            //Por si el token está vacío
+            if (!result.IsSuccessStatusCode)
             {
-                var NombreCompleto = model!.PrimerNombre + " " + model!.SegundoNombre + " " + model!.PrimerApellido + " " + model!.SegundoApellido;
-                HttpContext.Session.SetString("NombreUsuario", NombreCompleto);
+                if (result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    HttpContext.Session.Clear();
+                    return RedirectToAction("Login", "Home");
+                }
 
-                if(ImagenPerfil != null && ImagenPerfil.Length > 0)
+                ViewBag.Mensaje = $"Error: {result.StatusCode}";
+                return View(model);
+            }
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                HttpContext.Session.SetString("NombreUsuario", model.nombreCompleto);
+
+                if (ImagenPerfil != null && ImagenPerfil.Length > 0)
                 {
                     HttpContext.Session.SetString("ImagenPerfil", model.ImagenPerfil);
 
@@ -185,21 +220,21 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region ListaUsuarios
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public IActionResult ListarUsuarios()
         {
-            var token = HttpContext.Session.GetString("Token");
+            var token = ValidarToken(out IActionResult redirect);
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Usuario/ListaUsuarios";
             var result = client.GetAsync(url).Result;
-            if(result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
                 var usuarios = result.Content.ReadFromJsonAsync<List<Usuario>>().Result ?? new List<Usuario>();
                 return View(usuarios);
             }
-            else if(result.StatusCode == HttpStatusCode.InternalServerError)
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
                 throw new Exception();
             }

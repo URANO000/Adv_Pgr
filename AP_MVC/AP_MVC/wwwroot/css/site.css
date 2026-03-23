@@ -103,6 +103,7 @@ CSS STRUCTURE:
     }
 }
 
+
 /* Theme Colors */
 :root {
     --accent-color: #FFFDFA;
@@ -148,6 +149,7 @@ body {
     --bs-danger-rgb: 249, 235, 231;
     --bs-warning-rgb: 255, 255, 233;
     --bs-info-rgb: 128, 204, 255;
+    --text-danger: red;
 }
 
 .btn-primary {
@@ -1020,6 +1022,12 @@ Estilos de login y registro
     display:grid;
 }
 
-.perfil-card{
+.perfil-section .card {
+    background-color: #F6EDE3;
+}
 
+.error-danger{
+    color: firebrick;
+    font-size: 50px;
+    font-weight: bold;
 }
