@@ -293,7 +293,7 @@ GO
 
 
 -- 19/3/2026 -----------Autenticación----------------------------
-CREATE PROCEDURE [dbo].[sp_RegistrarCuenta]
+CREATE or ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
 	@CorreoElectronico NVARCHAR(255),
 	@Contrasenna NVARCHAR(500),
 	@PrimerNombre NVARCHAR(100),
@@ -337,7 +337,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[sp_ActualizarContrasenna]
+CREATE OR ALTER PROCEDURE [dbo].[sp_ActualizarContrasenna]
 	@UsuarioId NVARCHAR(450),
 	@Contrasenna NVARCHAR(500)
 AS
@@ -348,7 +348,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ValidarCorreo]
+CREATE OR ALTER PROCEDURE [dbo].[sp_ValidarCorreo]
 	@CorreoElectronico NVARCHAR(255)
 AS
 BEGIN
@@ -361,7 +361,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ObtenerUsuario]
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuario]
 	@UsuarioId NVARCHAR(450)
 AS
 BEGIN
@@ -381,7 +381,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ObtenerUsuarios]
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuarios]
 AS
 BEGIN
 	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
@@ -393,7 +393,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[sp_EditarUsuario]
+CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
 	@UsuarioId NVARCHAR(450),
 	@CorreoElectronico NVARCHAR(255),
 	@PrimerNombre NVARCHAR(100),
@@ -423,7 +423,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_DesactivarUsuario]
+CREATE OR ALTER PROCEDURE [dbo].[sp_DesactivarUsuario]
 	@UsuarioId NVARCHAR(450)
 AS
 BEGIN
