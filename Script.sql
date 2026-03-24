@@ -1,434 +1,496 @@
-DROP DATABASE patitassocial
--- 11.02.2026::6:30 PM --
+﻿-- =============================================
+-- PATITAS SOCIAL â Script completo
+-- Tablas + SPs + Datos de prueba
+-- =============================================
+
+DROP DATABASE IF EXISTS patitassocial;
+GO
+
 CREATE DATABASE patitassocial;
+GO
+
 USE patitassocial;
 GO
 
---Creaci�n de tablas y junction tables--
---Roles & Usuarios--
+-- =============================================
+-- 1. TABLAS BASE
+-- =============================================
+
 CREATE TABLE Rol (
-	RolId INT PRIMARY KEY IDENTITY (1,1),
-	NombreRol NVARCHAR(100) NOT NULL
+    RolId INT IDENTITY PRIMARY KEY,
+    NombreRol NVARCHAR(100) NOT NULL
 );
 
+CREATE TABLE AnimalCategoria (
+    CategoriaId INT IDENTITY PRIMARY KEY,
+    NombreTipo NVARCHAR(100)
+);
+
+-- =============================================
+-- 2. TABLAS CON DEPENDENCIAS
+-- =============================================
 
 CREATE TABLE Usuario (
-	UsuarioId NVARCHAR(450) PRIMARY KEY DEFAULT NEWID(),
-	CorreoElectronico NVARCHAR(255) NOT NULL UNIQUE,
-	ContrasenaHash NVARCHAR(500) NOT NULL,
-	PrimerNombre NVARCHAR(100) NOT NULL,
-	SegundoNombre NVARCHAR(100) NULL,
-	PrimerApellido NVARCHAR(100) NOT NULL,
-	SegundoApellido NVARCHAR(100) NULL,
-	Cedula NVARCHAR(200) NULL,
-	Telefono NVARCHAR(30) NULL,
-	Provincia NVARCHAR(100) null,
-	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-	IsActive BIT NOT NULL,
-	RolId INT NOT NULL,
-	ImagenPerfil VARCHAR(MAX) NULL,
+    UsuarioId NVARCHAR(450) PRIMARY KEY DEFAULT NEWID(),
+    CorreoElectronico NVARCHAR(255) NOT NULL UNIQUE,
+    ContrasenaHash NVARCHAR(500) NOT NULL,
+    PrimerNombre NVARCHAR(100) NOT NULL,
+    SegundoNombre NVARCHAR(100) NULL,
+    PrimerApellido NVARCHAR(100) NOT NULL,
+    SegundoApellido NVARCHAR(100) NULL,
+    Cedula NVARCHAR(200) NULL,
+    Telefono NVARCHAR(30) NULL,
+    Provincia NVARCHAR(100) NULL,
+    ImagenPerfil VARCHAR(MAX) NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    IsActive BIT NOT NULL DEFAULT 1,
+    RolId INT NOT NULL,
 
-	CONSTRAINT [FK_Usuario_Rol_RolId] FOREIGN KEY (RolId)
-	REFERENCES Rol(RolId),
+    CONSTRAINT [FK_Usuario_Rol] FOREIGN KEY (RolId) REFERENCES Rol(RolId)
 );
 
-ALTER TABLE Usuario
-ADD CONSTRAINT UQ_UsuarioId UNIQUE (UsuarioId);
+CREATE TABLE AnimalTipo (
+    TipoId INT IDENTITY PRIMARY KEY,
+    NombreTipo NVARCHAR(100),
+    CategoriaId INT,
 
---Animales, Tipos
---Caninos, felinos, conejos, roedores, aves, etc....
-CREATE TABLE AnimalCategoria(
-	CategoriaId INT PRIMARY KEY IDENTITY(1,1),
-	NombreTipo NVARCHAR(100)
+    CONSTRAINT [FK_AnimalTipo_Categoria] FOREIGN KEY (CategoriaId) REFERENCES AnimalCategoria(CategoriaId)
 );
 
---Perros, gatos, conejos, ratones, chinchillas, periquitos, etc.....
-CREATE TABLE AnimalTipo(
-	TipoId INT PRIMARY KEY IDENTITY(1,1),
-	NombreTipo NVARCHAR(100),
-	CategoriaId INT,
+CREATE TABLE Animal (
+    AnimalId INT IDENTITY PRIMARY KEY,
+    UsuarioId NVARCHAR(450) NOT NULL,
+    TipoId INT NOT NULL,
+    Nombre NVARCHAR(100) NOT NULL,
+    Peso DECIMAL(5,2) NULL,
+    Edad NVARCHAR(100) NULL,
+    Sexo CHAR(1) NULL CHECK (Sexo IN('M','H')),
+    Enfermedades NVARCHAR(MAX) NULL,
+    HistorialMedico NVARCHAR(MAX) NULL,
+    PreferenciasAlimenticias NVARCHAR(MAX) NULL,
+    Notas NVARCHAR(MAX) NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    CreatedBy NVARCHAR(450) NULL,
 
-	CONSTRAINT [FK_AnimalTipo_AnimalCategoria_CategoriaId] FOREIGN KEY (CategoriaId)
-	REFERENCES AnimalCategoria (CategoriaId)
+    CONSTRAINT [FK_Animal_Usuario] FOREIGN KEY (UsuarioId) REFERENCES Usuario(UsuarioId),
+    CONSTRAINT [FK_Animal_CreatedBy] FOREIGN KEY (CreatedBy) REFERENCES Usuario(UsuarioId),
+    CONSTRAINT [FK_Animal_Tipo] FOREIGN KEY (TipoId) REFERENCES AnimalTipo(TipoId)
 );
 
-CREATE TABLE Animal(
-	AnimalId INT IDENTITY PRIMARY KEY,
-	UsuarioId  NVARCHAR(450) NOT NULL,  --Es el due�o actual
-	TipoId INT NOT NULL,
-
-	Nombre NVARCHAR(100) NOT NULL,
-	Peso DECIMAL (5,2) NULL,
-	Edad NVARCHAR(100) NULL,
-	Sexo CHAR(1) NULL CHECK (Sexo IN('M', 'H')),
-	
-	Enfermedades NVARCHAR(MAX) NULL,
-	HistorialMedico NVARCHAR(MAX) NULL,
-	PreferenciasAlimenticias NVARCHAR(MAX) NUll,
-	Notas NVARCHAR(MAX) NULL,
-
-	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-	CreatedBy NVARCHAR(450),
-	
-	CONSTRAINT [FK_Animal_Usuario_CreatedBy] FOREIGN KEY(CreatedBy)
-	REFERENCES Usuario(UsuarioId),
-	CONSTRAINT [FK_Animal_Tipo_TipoId] FOREIGN KEY (TipoId)
-	REFERENCES AnimalTipo(TipoId)
-);
-
-
---Media (Videos, fotos) guarda archivo en url, etc--
 CREATE TABLE AnimalMedia (
-	MediaId INT IDENTITY PRIMARY KEY NOT NULL,
-	AnimalId INT NOT NULL,
-	ArchivoUrl VARCHAR(MAX),
-	FileSize BIGINT NOT NULL,
-	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-	CreatedBy NVARCHAR(450),
+    MediaId INT IDENTITY PRIMARY KEY NOT NULL,
+    AnimalId INT NOT NULL,
+    ArchivoUrl VARCHAR(MAX) NULL,
+    FileSize BIGINT NOT NULL DEFAULT 0,
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    CreatedBy NVARCHAR(450) NULL,
 
-	CONSTRAINT [FK_AnimalMedia_Animal_AnimalId] FOREIGN KEY(AnimalId)
-	REFERENCES Animal(AnimalId),
-	CONSTRAINT [FK_AnimalMedia_Usuario_CreatedBy] FOREIGN KEY(CreatedBy)
-	REFERENCES Usuario(UsuarioId)
+    CONSTRAINT [FK_AnimalMedia_Animal] FOREIGN KEY (AnimalId) REFERENCES Animal(AnimalId),
+    CONSTRAINT [FK_AnimalMedia_Usuario] FOREIGN KEY (CreatedBy) REFERENCES Usuario(UsuarioId)
 );
 
---Publicaci�n, es necesaria por cosas como T�tulo, Descripci�n
-CREATE TABLE Publicacion(
-	PublicacionId INT IDENTITY PRIMARY KEY NOT NULL,
-	Titulo NVARCHAR(200),
-	Descripcion NVARCHAR(300),
-	AnimalId INT NOT NULL,
-	IsActive BIT,
-	PublishedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-	PublishedBy NVARCHAR(450),
-	UpdatedAt DATETIME2 DEFAULT SYSDATETIME(),
-	UpdatedBy NVARCHAR(450),
-	ClosedAt DATETIME2 DEFAULT SYSDATETIME(),
+CREATE TABLE Publicacion (
+    PublicacionId INT IDENTITY PRIMARY KEY NOT NULL,
+    Titulo NVARCHAR(200) NULL,
+    Descripcion NVARCHAR(300) NULL,
+    AnimalId INT NOT NULL,
+    IsActive BIT NULL,
+    PublishedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    PublishedBy NVARCHAR(450) NULL,
+    UpdatedAt DATETIME2 NULL DEFAULT SYSDATETIME(),
+    UpdatedBy NVARCHAR(450) NULL,
+    ClosedAt DATETIME2 NULL,
 
-	CONSTRAINT [FK_Publicacion_Animal_AnimalId] FOREIGN KEY (AnimalId)
-	REFERENCES Animal (AnimalId),
-	CONSTRAINT [FK_Publicacion_Usuario_PublishedBy] FOREIGN KEY (PublishedBy)
-	REFERENCES Usuario (UsuarioId),
-	CONSTRAINT [FK_Publicacion_Usuario_UpdatedBy] FOREIGN KEY (UpdatedBy)
-	REFERENCES Usuario (UsuarioId)
+    CONSTRAINT [FK_Publicacion_Animal] FOREIGN KEY (AnimalId) REFERENCES Animal(AnimalId),
+    CONSTRAINT [FK_Publicacion_PublishedBy] FOREIGN KEY (PublishedBy) REFERENCES Usuario(UsuarioId),
+    CONSTRAINT [FK_Publicacion_UpdatedBy] FOREIGN KEY (UpdatedBy) REFERENCES Usuario(UsuarioId)
 );
 
---Solicitudes--
-CREATE TABLE Solicitud(
-	Id INT IDENTITY PRIMARY KEY,
-	PublicacionId INT NOT NULL,
-	UsuarioInteresadoId NVARCHAR(450) NOT NULL,
+CREATE TABLE Solicitud (
+    Id INT IDENTITY PRIMARY KEY,
+    PublicacionId INT NOT NULL,
+    UsuarioInteresadoId NVARCHAR(450) NOT NULL,
+    Mensaje NVARCHAR(MAX) NOT NULL,
+    SentAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 
-	Mensaje NVARCHAR(MAX) NOT NULL,
-	SentAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-
-	CONSTRAINT [FK_Solicitud_Publicacion_PublicacionId] FOREIGN KEY(PublicacionId)
-	REFERENCES Publicacion(PublicacionId),
-	CONSTRAINT [FK_Solicitud_Usuario_UsuarioInteresadoId] FOREIGN KEY(UsuarioInteresadoId)
-	REFERENCES Usuario(UsuarioId)
+    CONSTRAINT [FK_Solicitud_Publicacion] FOREIGN KEY (PublicacionId) REFERENCES Publicacion(PublicacionId),
+    CONSTRAINT [FK_Solicitud_Usuario] FOREIGN KEY (UsuarioInteresadoId) REFERENCES Usuario(UsuarioId)
 );
 
---Fundraiser y donaciones
---La tabla fundraiser es la publicaci�n por as� decirlo
 CREATE TABLE Fundraiser (
-	FundraiserId INT IDENTITY PRIMARY KEY,
-	AnimalId INT NOT NULL,
-	Titulo NVARCHAR(200) NOT NULL,
-	Descripcion NVARCHAR(MAX) NOT NULL,
-	MetaTotal DECIMAL(10,2) NOT NULL,
-	TotalActual DECIMAL(10,2) NOT NULL DEFAULT 0,
-	IsActive BIT NOT NULL,
-	CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME()
+    FundraiserId INT IDENTITY PRIMARY KEY,
+    AnimalId INT NOT NULL,
+    Titulo NVARCHAR(200) NOT NULL,
+    Descripcion NVARCHAR(MAX) NOT NULL,
+    MetaTotal DECIMAL(10,2) NOT NULL,
+    TotalActual DECIMAL(10,2) NOT NULL DEFAULT 0,
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 
-	CONSTRAINT [FK_Fundraiser_Animal_AnimalId] FOREIGN KEY(AnimalId)
-	REFERENCES Animal(AnimalId)
+    CONSTRAINT [FK_Fundraiser_Animal] FOREIGN KEY (AnimalId) REFERENCES Animal(AnimalId)
 );
 
---La tabla donaci�n es especificamente las donaciones por usuarios
-CREATE TABLE Donacion(
-	DonacionId INT IDENTITY PRIMARY KEY,
-	FundraiserId INT NOT NULL,
-	UsuarioId NVARCHAR(450) NULL,
-	Total DECIMAL(10,2) NOT NULL,
-	DonatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+CREATE TABLE Donacion (
+    DonacionId INT IDENTITY PRIMARY KEY,
+    FundraiserId INT NOT NULL,
+    UsuarioId NVARCHAR(450) NULL,
+    Total DECIMAL(10,2) NOT NULL,
+    DonatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 
-	CONSTRAINT [FK_Donacion_Fundraiser_FundraiserId] FOREIGN KEY(FundraiserId)
-	REFERENCES Fundraiser(FundraiserId),
-	CONSTRAINT [FK_Donacion_Usuario_UsuarioId] FOREIGN KEY(UsuarioId)
-	REFERENCES Usuario(UsuarioId)
+    CONSTRAINT [FK_Donacion_Fundraiser] FOREIGN KEY (FundraiserId) REFERENCES Fundraiser(FundraiserId),
+    CONSTRAINT [FK_Donacion_Usuario] FOREIGN KEY (UsuarioId) REFERENCES Usuario(UsuarioId)
 );
+GO
 
 -- =============================================
--- Datos de prueba
+-- 3. DATOS INICIALES
 -- =============================================
 
--- Categor�as
-INSERT INTO dbo.AnimalCategoria (NombreTipo) VALUES
-('Caninos'),
-('Felinos'),
-('Roedores'),
-('Aves');
+INSERT INTO Rol (NombreRol) VALUES ('Administrador'), ('Usuario Normal');
+
+INSERT INTO AnimalCategoria (NombreTipo) VALUES ('Caninos'), ('Felinos'), ('Roedores'), ('Aves');
+
+INSERT INTO AnimalTipo (NombreTipo, CategoriaId) VALUES
+('Perro',     1),
+('Gato',      2),
+('Conejo',    3),
+('Hamster',   3),
+('Periquito', 4);
 GO
 
--- Tipos
-INSERT INTO dbo.AnimalTipo (NombreTipo, CategoriaId) VALUES
-('Perro',       1),
-('Gato',        2),
-('Conejo',      3),
-('Hamster',     3),
-('Periquito',   4);
-GO
+-- =============================================
+-- 4. SPs â AutenticaciÃ³n (Adriana)
+-- =============================================
 
--- Animales (UsuarioId y CreatedBy en NULL por ahora, sin autenticaci�n)
-INSERT INTO dbo.Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy) VALUES
-('1', 1, 'Luna',   8.50,  '3 a�os',   'H', 'Muy juguetona',      NULL),
-('1', 1, 'Rocky',  12.00, '5 a�os',   'M', 'Necesita cirug�a',   NULL),
-('1', 2, 'Milo',   4.20,  '2 a�os',   'M', 'Al�rgico al polen',  NULL),
-('1', 2, 'Nala',   3.80,  '1 a�o',    'H', 'Muy cari�osa',       NULL),
-('1', 3, 'Toto',   1.20,  '8 meses',  'M', 'Le gusta la lechuga',NULL);
-GO
-
---Rol Id --19/3/2026
-INSERT INTO dbo.Rol(NombreRol)
-VALUES ('Administrador'), ('Usuario Normal');
-
---Usuario admin de prueba -- 23/3/2026
---Password es 12345678
-INSERT INTO dbo.Usuario(CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, Telefono, Provincia, RolId, IsActive)
-VALUES ('admin@gmail.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Dean', 'Winchester', '8878-1949', 'Heredia', 1, 1 );
-
-/* PROCESOS ALMACENADOS */
-
-CREATE PROCEDURE [dbo].[sp_ListarAnimales]
+CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
+    @CorreoElectronico NVARCHAR(255),
+    @Contrasenna NVARCHAR(500),
+    @PrimerNombre NVARCHAR(100),
+    @SegundoNombre NVARCHAR(100) = NULL,
+    @PrimerApellido NVARCHAR(100),
+    @SegundoApellido NVARCHAR(100) = NULL,
+    @Cedula NVARCHAR(200) = NULL,
+    @Telefono NVARCHAR(30) = NULL,
+    @Provincia NVARCHAR(100) = NULL,
+    @CreatedAt DATETIME2 = NULL
 AS
 BEGIN
-
-    SELECT  a.AnimalId,
-            a.Nombre + ' (' + t.NombreTipo + ')' AS Nombre
-    FROM    dbo.Animal      a
-    JOIN    dbo.AnimalTipo  t ON t.TipoId = a.TipoId
-    ORDER BY a.Nombre ASC
-
-END
-GO
-
-CREATE PROCEDURE [dbo].[sp_RegistrarFundraiser]
-    @AnimalId       INT,
-    @Titulo         NVARCHAR(200),
-    @Descripcion    NVARCHAR(MAX),
-    @MetaTotal      DECIMAL(10,2)
-AS
-BEGIN
-
-    IF EXISTS (SELECT 1 FROM dbo.Animal WHERE AnimalId = @AnimalId)
+    IF NOT EXISTS (
+        SELECT 1 FROM Usuario
+        WHERE Cedula = @Cedula OR CorreoElectronico = @CorreoElectronico
+    )
     BEGIN
-
-        INSERT INTO dbo.Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
-        VALUES (@AnimalId, @Titulo, @Descripcion, @MetaTotal, 0, 1)
-
+        INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, SegundoNombre,
+                             PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
+                             CreatedAt, IsActive, RolId)
+        VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre,
+                @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia,
+                ISNULL(@CreatedAt, SYSDATETIME()), 1, 2);
     END
-
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_EditarFundraiser]
-    @FundraiserId   INT,
-    @AnimalId       INT,
-    @Titulo         NVARCHAR(200),
-    @Descripcion    NVARCHAR(MAX),
-    @MetaTotal      DECIMAL(10,2)
+CREATE OR ALTER PROCEDURE [dbo].[sp_IniciarSesion]
+    @CorreoElectronico NVARCHAR(255),
+    @Contrasenna NVARCHAR(500)
 AS
 BEGIN
- 
-    IF EXISTS (SELECT 1 FROM dbo.Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
-    BEGIN
- 
-        UPDATE  dbo.Fundraiser
-        SET     AnimalId    = @AnimalId,
-                Titulo      = @Titulo,
-                Descripcion = @Descripcion,
-                MetaTotal   = @MetaTotal
-        WHERE   FundraiserId = @FundraiserId
- 
-    END
- 
+    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
+           ISNULL(ImagenPerfil, '') AS ImagenPerfil,
+           CreatedAt, IsActive, RolId,
+           '' AS Token
+    FROM Usuario
+    WHERE CorreoElectronico = @CorreoElectronico
+      AND ContrasenaHash = @Contrasenna
+      AND IsActive = 1;
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ObtenerFundraiser]
+CREATE OR ALTER PROCEDURE [dbo].[sp_ValidarCorreo]
+    @CorreoElectronico NVARCHAR(255)
+AS
+BEGIN
+    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+           PrimerApellido, SegundoApellido
+    FROM Usuario
+    WHERE CorreoElectronico = @CorreoElectronico AND IsActive = 1;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ActualizarContrasenna]
+    @UsuarioId NVARCHAR(450),
+    @Contrasenna NVARCHAR(500)
+AS
+BEGIN
+    UPDATE Usuario SET ContrasenaHash = @Contrasenna WHERE UsuarioId = @UsuarioId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuario]
+    @UsuarioId NVARCHAR(450)
+AS
+BEGIN
+    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
+           ISNULL(ImagenPerfil, '') AS ImagenPerfil, CreatedAt
+    FROM Usuario
+    WHERE UsuarioId = @UsuarioId AND IsActive = 1;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuarios]
+AS
+BEGIN
+    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
+           CreatedAt, RolId, ISNULL(ImagenPerfil, '') AS ImagenPerfil
+    FROM Usuario
+    ORDER BY CreatedAt;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
+    @UsuarioId NVARCHAR(450),
+    @CorreoElectronico NVARCHAR(255),
+    @PrimerNombre NVARCHAR(100),
+    @SegundoNombre NVARCHAR(100) = NULL,
+    @PrimerApellido NVARCHAR(100),
+    @SegundoApellido NVARCHAR(100) = NULL,
+    @Cedula NVARCHAR(200) = NULL,
+    @Telefono NVARCHAR(30) = NULL,
+    @Provincia NVARCHAR(100) = NULL,
+    @ImagenPerfil VARCHAR(MAX) = NULL
+AS
+BEGIN
+    UPDATE Usuario
+    SET CorreoElectronico = @CorreoElectronico,
+        PrimerNombre      = @PrimerNombre,
+        SegundoNombre     = @SegundoNombre,
+        PrimerApellido    = @PrimerApellido,
+        SegundoApellido   = @SegundoApellido,
+        Cedula            = @Cedula,
+        Telefono          = @Telefono,
+        Provincia         = @Provincia,
+        ImagenPerfil      = ISNULL(@ImagenPerfil, ImagenPerfil)
+    WHERE UsuarioId = @UsuarioId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_DesactivarUsuario]
+    @UsuarioId NVARCHAR(450)
+AS
+BEGIN
+    UPDATE Usuario SET IsActive = 0 WHERE UsuarioId = @UsuarioId;
+END
+GO
+
+-- =============================================
+-- 5. SPs â Animales
+-- =============================================
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarAnimales]
+AS
+BEGIN
+    SELECT a.AnimalId,
+           a.Nombre + ' (' + t.NombreTipo + ')' AS Nombre
+    FROM Animal a
+    JOIN AnimalTipo t ON t.TipoId = a.TipoId
+    ORDER BY a.Nombre;
+END
+GO
+
+-- =============================================
+-- 6. SPs â Fundraiser (Evelyn: RF-015,016,018,019)
+-- =============================================
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarFundraiser]
+    @AnimalId INT,
+    @Titulo NVARCHAR(200),
+    @Descripcion NVARCHAR(MAX),
+    @MetaTotal DECIMAL(10,2)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Animal WHERE AnimalId = @AnimalId)
+    BEGIN
+        INSERT INTO Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
+        VALUES (@AnimalId, @Titulo, @Descripcion, @MetaTotal, 0, 1);
+    END
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_EditarFundraiser]
+    @FundraiserId INT,
+    @AnimalId INT,
+    @Titulo NVARCHAR(200),
+    @Descripcion NVARCHAR(MAX),
+    @MetaTotal DECIMAL(10,2)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
+    BEGIN
+        UPDATE Fundraiser
+        SET AnimalId    = @AnimalId,
+            Titulo      = @Titulo,
+            Descripcion = @Descripcion,
+            MetaTotal   = @MetaTotal
+        WHERE FundraiserId = @FundraiserId;
+    END
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_InactivarFundraiser]
     @FundraiserId INT
 AS
 BEGIN
-
-    SELECT  FundraiserId,
-            AnimalId,
-            Titulo,
-            Descripcion,
-            MetaTotal,
-            TotalActual,
-            IsActive,
-            CreatedAt
-    FROM    dbo.Fundraiser
-    WHERE   FundraiserId = @FundraiserId
-
+    UPDATE Fundraiser SET IsActive = 0
+    WHERE FundraiserId = @FundraiserId AND IsActive = 1;
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_InactivarFundraiser]
+CREATE PROCEDURE sp_ValidarCampanaActivaPorAnimal
+    @AnimalId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1 FROM Fundraiser 
+        WHERE AnimalId = @AnimalId AND IsActive = 1
+    )
+        SELECT CAST(1 AS BIT) AS TieneCampanaActiva;
+    ELSE
+        SELECT CAST(0 AS BIT) AS TieneCampanaActiva;
+END
+
+CREATE OR ALTER PROCEDURE sp_ListarAnimalesPorUsuario
+    @UsuarioId NVARCHAR(450)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT a.AnimalId,
+           a.Nombre + ' (' + t.NombreTipo + ')' AS Nombre
+    FROM Animal a
+    JOIN AnimalTipo t ON t.TipoId = a.TipoId
+    WHERE a.UsuarioId = @UsuarioId
+    ORDER BY a.Nombre;
+END
+GO
+
+-- =============================================
+-- 7. SPs â Fundraiser (Isaac: RF-017,020,021,022,030)
+-- =============================================
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerFundraiser]
     @FundraiserId INT
 AS
 BEGIN
-
-    IF EXISTS (SELECT 1 FROM dbo.Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
-    BEGIN
-
-        UPDATE  dbo.Fundraiser
-        SET     IsActive = 0
-        WHERE   FundraiserId = @FundraiserId
-
-    END
-
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE f.FundraiserId = @FundraiserId;
 END
 GO
 
-
--- 19/3/2026 -----------Autenticaci�n----------------------------
-CREATE PROCEDURE [dbo].[sp_RegistrarCuenta]
-	@CorreoElectronico NVARCHAR(255),
-	@Contrasenna NVARCHAR(500),
-	@PrimerNombre NVARCHAR(100),
-	@SegundoNombre NVARCHAR(100) NULL,
-	@PrimerApellido NVARCHAR(100),
-	@SegundoApellido NVARCHAR(100) NULL,
-	@Cedula NVARCHAR(200),
-	@Telefono NVARCHAR(30) NULL,
-	@Provincia NVARCHAR(100) NULL,
-	@CreatedAt DATETIME2
+-- RF-017: CatÃ¡logo pÃºblico
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarFundraisers]
 AS
 BEGIN
-	IF NOT EXISTS (
-		SELECT 1 FROM Usuario
-		WHERE Cedula = @Cedula
-		OR CorreoElectronico = @CorreoElectronico)
-	BEGIN
-
-		INSERT INTO [dbo].[Usuario] (CorreoElectronico,ContrasenaHash, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive, RolId)
-		VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia, @CreatedAt, 1, 2)
-
-	END
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE f.IsActive = 1
+    ORDER BY f.CreatedAt DESC;
 END
 GO
 
-CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
-	@CorreoElectronico NVARCHAR(255),
-	@Contrasenna NVARCHAR(500)
+-- RF-017: Donaciones de un fundraiser (detalle)
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarDonacionesPorFundraiser]
+    @FundraiserId INT
 AS
 BEGIN
-
-	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
-	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
-	r.NombreRol
-	FROM Usuario u
-	INNER JOIN Rol r ON u.RolId = r.RolId
-	WHERE CorreoElectronico = @CorreoElectronico
-		AND ContrasenaHash = @Contrasenna
-		AND IsActive = 1
+    SELECT d.DonacionId, d.FundraiserId, d.UsuarioId,
+           ISNULL(u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '') + u.PrimerApellido, 'AnÃ³nimo') AS NombreDonante,
+           d.Total, d.DonatedAt
+    FROM Donacion d
+    LEFT JOIN Usuario u ON d.UsuarioId = u.UsuarioId
+    WHERE d.FundraiserId = @FundraiserId
+    ORDER BY d.DonatedAt DESC;
 END
 GO
 
-
-CREATE PROCEDURE [dbo].[sp_ActualizarContrasenna]
-	@UsuarioId NVARCHAR(450),
-	@Contrasenna NVARCHAR(500)
+-- RF-022: Historial del usuario (activos + inactivos)
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarHistorialFundraisers]
+    @UsuarioId NVARCHAR(450)
 AS
 BEGIN
-	UPDATE [dbo].[Usuario]
-	SET ContrasenaHash = @Contrasenna
-	WHERE UsuarioId = @UsuarioId
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE a.UsuarioId = @UsuarioId
+    ORDER BY f.CreatedAt DESC;
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ValidarCorreo]
-	@CorreoElectronico NVARCHAR(255)
+-- RF-020 + RF-030: Registrar donaciÃ³n y retornar datos para notificaciÃ³n
+CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarDonacion]
+    @FundraiserId INT,
+    @UsuarioId NVARCHAR(450) = NULL,
+    @Total DECIMAL(10,2)
 AS
 BEGIN
-	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId
-	FROM Usuario
-	WHERE CorreoElectronico = @CorreoElectronico
-	AND IsActive = 1
+    INSERT INTO Donacion (FundraiserId, UsuarioId, Total)
+    VALUES (@FundraiserId, @UsuarioId, @Total);
+
+    UPDATE Fundraiser
+    SET TotalActual = TotalActual + @Total
+    WHERE FundraiserId = @FundraiserId;
+
+    -- Datos para notificaciÃ³n RF-030
+    SELECT u.CorreoElectronico,
+           u.PrimerNombre,
+           f.Titulo AS TituloFundraiser,
+           f.TotalActual AS NuevoTotal,
+           f.MetaTotal
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    INNER JOIN Usuario u ON a.UsuarioId = u.UsuarioId
+    WHERE f.FundraiserId = @FundraiserId;
 END
 GO
 
-CREATE PROCEDURE [dbo].[sp_ObtenerUsuario]
-	@UsuarioId NVARCHAR(450)
-AS
-BEGIN
-	SELECT 
-		u.CorreoElectronico,
-		u.PrimerNombre,
-		u.SegundoNombre,
-		u.PrimerApellido,
-		u.SegundoApellido,
-		u.Cedula,
-		u.Telefono,
-		u.Provincia,
-		u.ImagenPerfil
-	FROM Usuario u
-	WHERE u.UsuarioId = @UsuarioId
-	AND u.IsActive = 1
-END
-GO
+-- =============================================
+-- 8. DATOS DE PRUEBA
+-- =============================================
+-- Usuario de prueba (pass: 12345678)
+INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
+VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
 
-CREATE PROCEDURE [dbo].[sp_ObtenerUsuarios]
-AS
-BEGIN
-	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt,
-	RolId, ImagenPerfil
-	FROM Usuario
-	ORDER BY CreatedAt 
-END
-GO
+-- Animales de prueba
+INSERT INTO Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy)
+VALUES
+('usr-prueba-001', 1, 'Rocky', 12.00, '5 aÃ±os',  'M', 'Necesita cirugÃ­a de cadera', 'usr-prueba-001'),
+('usr-prueba-001', 2, 'Luna',  3.80,  '1 aÃ±o',   'H', 'Muy cariÃ±osa',              'usr-prueba-001'),
+('usr-prueba-001', 1, 'Max',   8.50,  '3 aÃ±os',  'M', 'Muy juguetÃ³n',              'usr-prueba-001');
 
+-- Fundraisers de prueba
+INSERT INTO Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
+VALUES
+(1, 'Ayuda para operaciÃ³n de Rocky', 'Rocky necesita una cirugÃ­a urgente de cadera. Cada colÃ³n cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
+(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunaciÃ³n. Ayudanos a mantenerla sana.', 50000, 10000, 1),
+(3, 'Tratamiento dental de Max',     'CampaÃ±a finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
 
-CREATE PROCEDURE [dbo].[sp_EditarUsuario]
-	@UsuarioId NVARCHAR(450),
-	@CorreoElectronico NVARCHAR(255),
-	@PrimerNombre NVARCHAR(100),
-	@SegundoNombre NVARCHAR(100) NULL,
-	@PrimerApellido NVARCHAR(100),
-	@SegundoApellido NVARCHAR(100) NULL,
-	@Cedula NVARCHAR(200),
-	@Telefono NVARCHAR(30) NULL,
-	@Provincia NVARCHAR(100) NULL,
-
-	@ImagenPerfil VARCHAR(MAX) NULL
-AS
-BEGIN
-
-	UPDATE dbo.Usuario
-	SET CorreoElectronico = @CorreoElectronico,
-		PrimerNombre = @PrimerNombre,
-		SegundoNombre = @SegundoNombre,
-		PrimerApellido = @PrimerApellido,
-		SegundoApellido = @SegundoApellido,
-		Cedula = @Cedula,
-		Telefono = @Telefono,
-		Provincia = @Provincia,
-		ImagenPerfil = @ImagenPerfil
-
-	WHERE UsuarioId = @UsuarioId;
-END
-GO
-
-CREATE PROCEDURE [dbo].[sp_DesactivarUsuario]
-	@UsuarioId NVARCHAR(450)
-AS
-BEGIN
-	UPDATE [dbo].[Usuario]
-	SET IsActive = 0
-	WHERE UsuarioId = @UsuarioId
-END
+-- Donaciones de prueba
+INSERT INTO Donacion (FundraiserId, UsuarioId, Total)
+VALUES
+(1, 'usr-prueba-001', 25000),
+(1, NULL,             20000),
+(2, 'usr-prueba-001', 10000);
 GO
