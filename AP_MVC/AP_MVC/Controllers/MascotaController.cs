@@ -126,10 +126,10 @@ namespace AP_MVC.Controllers
                 .ReadFromJsonAsync<RegistrarPublicacionMascotaResultViewModel>()
                 .Result;
 
-            if (registro == null || registro.AnimalId <= 0)
+            if (registro == null || registro.AnimalId <= 0 || registro.PublicacionId <= 0)
             {
                 ViewBag.TiposAnimal = GetTiposAnimal(model.TipoId);
-                ViewBag.Mensaje = "La publicación se registró, pero no se obtuvo el AnimalId.";
+                ViewBag.Mensaje = "La publicación se registró, pero no se obtuvo la información completa.";
                 return View(model);
             }
 
@@ -164,7 +164,7 @@ namespace AP_MVC.Controllers
             }
 
             TempData["Exito"] = "La publicación de mascota se registró correctamente.";
-            return RedirectToAction("MisPublicaciones");
+            return RedirectToAction("Detalle", new { id = registro.PublicacionId });
         }
 
         [HttpGet]
@@ -195,6 +195,71 @@ namespace AP_MVC.Controllers
 
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
             return View(new List<MascotaPublicacionViewModel>());
+        }
+        [HttpGet]
+        public IActionResult Detalle(int id)
+        {
+            var usuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "La sesión expiró o no contiene un UsuarioId válido.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            using var client = _http.CreateClient();
+
+            var urlPublicacion = UrlAPI + $"Mascota/ObtenerPublicacionMascota/{id}/{usuarioId}";
+            var resultPublicacion = client.GetAsync(urlPublicacion).Result;
+
+            if (resultPublicacion.StatusCode == HttpStatusCode.NotFound)
+            {
+                TempData["Error"] = "No se encontró la publicación.";
+                return RedirectToAction("MisPublicaciones");
+            }
+            else if (resultPublicacion.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+            else if (resultPublicacion.StatusCode != HttpStatusCode.OK)
+            {
+                TempData["Error"] = resultPublicacion.Content.ReadAsStringAsync().Result;
+                return RedirectToAction("MisPublicaciones");
+            }
+
+            var publicacion = resultPublicacion.Content
+                .ReadFromJsonAsync<MascotaDetalleViewModel>()
+                .Result;
+
+            if (publicacion == null)
+            {
+                TempData["Error"] = "No se pudo cargar el detalle de la publicación.";
+                return RedirectToAction("MisPublicaciones");
+            }
+
+            var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{publicacion.AnimalId}";
+            var resultMedia = client.GetAsync(urlMedia).Result;
+
+            if (resultMedia.StatusCode == HttpStatusCode.OK)
+            {
+                publicacion.Imagenes = resultMedia.Content
+                    .ReadFromJsonAsync<List<AnimalMediaViewModel>>()
+                    .Result ?? new List<AnimalMediaViewModel>();
+            }
+            else if (resultMedia.StatusCode == HttpStatusCode.NotFound)
+            {
+                publicacion.Imagenes = new List<AnimalMediaViewModel>();
+            }
+            else if (resultMedia.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                publicacion.Imagenes = new List<AnimalMediaViewModel>();
+            }
+
+            return View(publicacion);
         }
 
         [HttpGet]

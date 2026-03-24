@@ -1,0 +1,95 @@
+﻿@model AP_MVC.Models.Mascotas.MascotaDetalleViewModel
+
+@{
+    ViewData["Title"] = "Detalle de publicación";
+    var imagenPrincipal = Model.Imagenes != null && Model.Imagenes.Any()
+        ? Model.Imagenes.First().ArchivoUrl
+        : Url.Content("~/img/no-image.png");
+}
+
+<div class="container mt-4 mb-5">
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Exito"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="detalle-publicacion-card">
+
+        <div class="detalle-imagen-principal">
+            <img src="@imagenPrincipal" alt="Imagen de la mascota" />
+        </div>
+
+        <div class="detalle-contenido">
+            <div class="detalle-encabezado">
+                <h1 class="detalle-titulo">@Model.Titulo</h1>
+
+                <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
+                    @(Model.IsActive ? "Activa" : "Inactiva")
+                </span>
+            </div>
+
+            <p class="detalle-descripcion">
+                @Model.Descripcion
+            </p>
+
+            <div class="detalle-info-rapida">
+                <div><strong>Nombre:</strong> @Model.NombreMascota</div>
+                <div><strong>Tipo:</strong> @Model.TipoAnimal</div>
+                <div><strong>Categoría:</strong> @Model.CategoriaAnimal</div>
+                <div><strong>Edad:</strong> @Model.Edad</div>
+                <div><strong>Sexo:</strong> @Model.Sexo</div>
+                <div><strong>Peso:</strong> @(Model.Peso.HasValue? Model.Peso.Value.ToString("0.##") + " kg" : "No registrado")</div>
+            </div>
+
+            <hr />
+
+            <div class="detalle-info-extra">
+                <p><strong>Enfermedades:</strong> @(string.IsNullOrWhiteSpace(Model.Enfermedades) ? "No registradas" : Model.Enfermedades)</p>
+                <p><strong>Historial médico:</strong> @(string.IsNullOrWhiteSpace(Model.HistorialMedico) ? "No registrado" : Model.HistorialMedico)</p>
+                <p><strong>Preferencias alimenticias:</strong> @(string.IsNullOrWhiteSpace(Model.PreferenciasAlimenticias) ? "No registradas" : Model.PreferenciasAlimenticias)</p>
+                <p><strong>Notas:</strong> @(string.IsNullOrWhiteSpace(Model.Notas) ? "Sin notas" : Model.Notas)</p>
+                <p><strong>Fecha de publicación:</strong> @Model.PublishedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+
+            @if (Model.Imagenes != null && Model.Imagenes.Count > 1)
+            {
+                <div class="detalle-galeria">
+                    @foreach (var imagen in Model.Imagenes.Skip(1))
+                    {
+                        <img src="@imagen.ArchivoUrl" alt="Imagen secundaria" />
+                    }
+                </div>
+            }
+
+            <div class="detalle-acciones">
+                <a asp-controller="Mascota" asp-action="MisPublicaciones" class="btn btn-secondary detalle-btn">
+                    Volver
+                </a>
+
+                <a asp-controller="Mascota" asp-action="Editar" asp-route-id="@Model.PublicacionId" class="btn btn-warning detalle-btn">
+                    Editar
+                </a>
+
+                @if (Model.IsActive)
+                {
+                    <form asp-controller="Mascota" asp-action="Inactivar" asp-route-id="@Model.PublicacionId" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger detalle-btn"
+                                onclick="return confirm('¿Deseas inactivar esta publicación?');">
+                            Inactivar
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
