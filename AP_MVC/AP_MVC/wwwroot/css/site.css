@@ -1085,11 +1085,12 @@ Estilos de login y registro
         background-color: #F6EDE3;
     }
 
-    .error-danger {
-        color: firebrick;
-        font-size: 50px;
-        font-weight: bold;
-    }
+.error-danger {
+    color: #ac2a1d;
+    font-size: 50px;
+    font-weight: bold;
+}
+
     /*--------------------------------------------------------------
 Botones de Filtro
 --------------------------------------------------------------*/

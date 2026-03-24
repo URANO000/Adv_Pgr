@@ -20,6 +20,8 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
           rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 </head>
 <body>
     <header class="header-color">
@@ -126,6 +128,7 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
                                         <a asp-controller="Usuario" asp-action="ListarUsuarios" class="nav-link">Gestión Administrativa</a>
                                     </li>
                                 }
+
 
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">Contacto</a>
@@ -269,6 +272,7 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
     <script src="~/js/modernizr.js" asp-append-version="true"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -224,6 +224,10 @@ namespace AP_MVC.Controllers
         public IActionResult ListarUsuarios()
         {
             var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
