@@ -11,5 +11,7 @@
         public string Titulo { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+
+        public string ImagenUrl { get; set; } = "/img/no-image.png";
     }
 }

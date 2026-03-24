@@ -1156,9 +1156,7 @@ Módulo Mascotas
         padding: 0;
     }
 }
-}
 
-.perfil-card {
     .perfil-section .card {
         background-color: #F6EDE3;
     }
@@ -1265,3 +1263,142 @@ Módulo Mascotas
         align-items: center;
         justify-content: center;
     }
+
+    .mispub-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+
+    .mispub-title {
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+
+    .mispub-subtitle {
+        margin: 8px 0 0 0;
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .mispub-main-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 230px;
+        height: 48px;
+        padding: 0 20px;
+        background-color: #d8a866;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: 0.2s ease-in-out;
+    }
+
+        .mispub-main-btn:hover {
+            background-color: #c99752;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .mispub-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .mispub-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        min-height: 420px;
+    }
+
+    .mispub-card-image {
+        width: 100%;
+        height: 230px;
+        background: #f3f3f3;
+        overflow: hidden;
+    }
+
+        .mispub-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .mispub-card-content {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .mispub-card-status {
+        margin-bottom: 10px;
+    }
+
+    .mispub-card-title {
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.35;
+        min-height: 52px;
+    }
+
+    .mispub-card-description {
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+        min-height: 76px;
+        flex-grow: 1;
+    }
+
+    .mispub-card-actions {
+        margin-top: 18px;
+    }
+
+    .mispub-btn-info {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 42px;
+        border: 1px solid #d8a866;
+        color: #d8a866;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.2s ease-in-out;
+    }
+
+        .mispub-btn-info:hover {
+            background-color: #d8a866;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    @media (max-width: 1100px) {
+        .mispub-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 700px) {
+        .mispub-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mispub-main-btn {
+            width: 100%;
+        }
+    

@@ -181,6 +181,27 @@ namespace AP_MVC.Controllers
                 var model = result.Content.ReadFromJsonAsync<List<MascotaPublicacionViewModel>>().Result
                             ?? new List<MascotaPublicacionViewModel>();
 
+                foreach (var item in model)
+                {
+                    var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{item.AnimalId}";
+                    var resultMedia = client.GetAsync(urlMedia).Result;
+
+                    if (resultMedia.StatusCode == HttpStatusCode.OK)
+                    {
+                        var imagenes = resultMedia.Content.ReadFromJsonAsync<List<AnimalMediaViewModel>>().Result
+                                       ?? new List<AnimalMediaViewModel>();
+
+                        var primeraImagen = imagenes.FirstOrDefault();
+
+                        if (primeraImagen != null && !string.IsNullOrWhiteSpace(primeraImagen.ArchivoUrl))
+                        {
+                            item.ImagenUrl = primeraImagen.ArchivoUrl.StartsWith("/")
+                                ? primeraImagen.ArchivoUrl
+                                : "/" + primeraImagen.ArchivoUrl;
+                        }
+                    }
+                }
+
                 return View(model);
             }
             else if (result.StatusCode == HttpStatusCode.NotFound)
@@ -196,6 +217,7 @@ namespace AP_MVC.Controllers
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
             return View(new List<MascotaPublicacionViewModel>());
         }
+
         [HttpGet]
         public IActionResult Detalle(int id)
         {
