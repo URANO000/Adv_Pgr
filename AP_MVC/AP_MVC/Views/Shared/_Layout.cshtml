@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿﻿@{
+var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
+// var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.png" : Context.Session.GetString("ImagenPerfil");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -40,6 +45,7 @@
                         </form>
 
                         <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
+
                     </div>
 
                 </div>
@@ -56,20 +62,17 @@
                 <div class="d-flex d-lg-none align-items-end mt-3">
                     <ul class="d-flex justify-content-end list-unstyled m-0">
                         <li>
-                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
-                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
-                            </a>
+                                <p>@nombreUsuario</p>
                         </li>
                         <li>
-                            <a href="wishlist.html" class="mx-3">
-                                <iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon>
+                            <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3">
+                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
                             </a>
                         </li>
                         <li>
                             <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
                                aria-controls="offcanvasSearch">
                                 <iconify-icon icon="tabler:search" class="fs-4"></iconify-icon>
-                                </span>
                             </a>
                         </li>
                     </ul>
@@ -107,8 +110,14 @@
 
                                 </ul>
                             </li>
-                            <li class="nav-item">
-                                <a asp-controller="Fundraiser" asp-action="Registrar" class="nav-link">Fundraisers</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
+                                   aria-expanded="false">Fundraisers</a>
+                                <ul class="dropdown-menu" aria-labelledby="pages">
+                                    <li><a asp-controller="Fundraiser" asp-action="Registrar" class="dropdown-item">Registrar Donacion</a></li>
+                                    <li><a asp-controller="Fundraiser" asp-action="Catalogo" class="dropdown-item">Catalogo</a></li>
+                                    <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">Contacto</a>
