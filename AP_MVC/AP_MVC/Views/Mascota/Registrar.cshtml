@@ -157,9 +157,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Agrega las imágenes de la mascota</label>
-                                <input type="file" name="ImagenesArchivos" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple/>
+                            <div class="mascota-form-section mt-4">
+                                <div class="section-header">
+                                    <h4>Imágenes de la mascota</h4>
+                                    <p>Selecciona una o varias imágenes para que la publicación se vea más atractiva.</p>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label for="ImagenesArchivos" class="form-label">Agrega las imágenes de la mascota</label>
+                                        <input type="file"
+                                               id="ImagenesArchivos"
+                                               name="ImagenesArchivos"
+                                               class="form-control"
+                                               multiple
+                                               accept=".jpg,.jpeg,.png,.webp" />
+
+                                        <small class="text-muted">
+                                            Puedes agregar varias imágenes, quitarlas individualmente y volver a añadir más antes de guardar.
+                                        </small>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div id="previewVacio" class="mascota-preview-empty">
+                                            <div class="mascota-preview-empty-icon">📷</div>
+                                            <p class="mb-0">Aquí se mostrarán las imágenes seleccionadas.</p>
+                                        </div>
+
+                                        <div id="previewGrid" class="mascota-preview-grid d-none"></div>
+
+                                        <div id="previewContador" class="mascota-preview-counter mt-2 d-none"></div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="d-flex flex-column flex-md-row gap-3 mt-4">
@@ -185,4 +214,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script src="~/js/registrar-mascota.js"></script>
 }

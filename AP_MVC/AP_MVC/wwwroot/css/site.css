@@ -1439,3 +1439,87 @@ Módulo Mascotas
     border-radius: 10px;
     font-weight: 600;
 }
+
+/*Para registrar mascota*/
+.mascota-preview-empty {
+    min-height: 180px;
+    border: 2px dashed #d9c8af;
+    border-radius: 18px;
+    background: #fcfaf7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8a7d6c;
+    text-align: center;
+    padding: 24px;
+}
+
+.mascota-preview-empty-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.mascota-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.mascota-preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mascota-preview-image-box {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f3f3f3;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.mascota-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mascota-preview-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(185, 54, 69, 0.95);
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+    .mascota-preview-remove:hover {
+        background: rgba(162, 45, 59, 1);
+    }
+
+.mascota-preview-name {
+    font-size: 0.85rem;
+    color: #6a6a6a;
+    text-align: center;
+    word-break: break-word;
+}
+
+.mascota-preview-counter {
+    font-weight: 600;
+    color: #7a6c5c;
+}
