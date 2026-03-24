@@ -99,12 +99,16 @@ namespace AP_WEB.Controllers
             parametros.Add("@Titulo", model.Titulo);
             parametros.Add("@Descripcion", model.Descripcion);
 
-            var result = context.Execute("sp_EditarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
+            var resultado = context.ExecuteScalar<int>(
+                "sp_EditarPublicacionMascota",
+                parametros,
+                commandType: CommandType.StoredProcedure
+            );
 
-            if (result <= 0)
-                return BadRequest("La publicación no se actualizó correctamente");
+            if (resultado == 0)
+                return BadRequest("La publicación no se actualizó correctamente.");
 
-            return Ok("La publicación se actualizó correctamente");
+            return Ok("La publicación se actualizó correctamente.");
         }
 
         [HttpPost("InactivarPublicacionMascota/{publicacionId}/{usuarioId}")]
