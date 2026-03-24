@@ -112,8 +112,13 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
                                     </ul>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a asp-controller="Fundraiser" asp-action="Registrar" class="nav-link">Fundraisers</a>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
+                                       aria-expanded="false">Fundraisers</a>
+                                    <ul class="dropdown-menu" aria-labelledby="pages">
+                                        <li><a asp-controller="Fundraiser" asp-action="Catalogo" class="dropdown-item">Catalogo</a></li>
+                                        <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
+                                    </ul>
                                 </li>
                                 @if (User.IsInRole("Administrador"))
                                 {

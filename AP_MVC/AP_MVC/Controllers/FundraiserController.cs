@@ -1,4 +1,5 @@
-﻿using AP_MVC.Models;
+﻿using AP_MVC.Filters;
+using AP_MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
@@ -16,17 +17,25 @@ namespace AP_MVC.Controllers
             _config = config;
         }
 
-        #region Obtener Animales
-        // Consulta dinámica de animales desde el API
+        #region Obtener Animales del usuario logueado
         private SelectList GetAnimales(int? selectedId = null)
         {
+            var usuarioId = HttpContext.Session.GetString("UsuarioId");
+
+            if (string.IsNullOrEmpty(usuarioId))
+                return new SelectList(new List<Animal>(), "AnimalId", "Nombre");
+
             using var client = _http.CreateClient();
-            var url = _config.GetValue<string>("Valores:UrlAPI") + "Animal/ListarAnimales";
+
+            // Llama al endpoint dentro de FundraiserController (API)
+            var url = _config.GetValue<string>("Valores:UrlAPI")
+                      + $"Fundraiser/ListarAnimalesPorUsuario/{usuarioId}";
             var result = client.GetAsync(url).Result;
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                var animales = result.Content.ReadFromJsonAsync<List<Animal>>().Result ?? new List<Animal>();
+                var animales = result.Content.ReadFromJsonAsync<List<Animal>>().Result
+                               ?? new List<Animal>();
                 return new SelectList(animales, "AnimalId", "Nombre", selectedId);
             }
 
@@ -35,22 +44,49 @@ namespace AP_MVC.Controllers
 
         private string GetAnimalNombre(int animalId)
         {
+            var usuarioId = HttpContext.Session.GetString("UsuarioId");
+
+            if (string.IsNullOrEmpty(usuarioId)) return string.Empty;
+
             using var client = _http.CreateClient();
-            var url = _config.GetValue<string>("Valores:UrlAPI") + "Animal/ListarAnimales";
+            var url = _config.GetValue<string>("Valores:UrlAPI")
+                      + $"Fundraiser/ListarAnimalesPorUsuario/{usuarioId}";
             var result = client.GetAsync(url).Result;
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                var animales = result.Content.ReadFromJsonAsync<List<Animal>>().Result ?? new List<Animal>();
-                return animales.FirstOrDefault(a => a.AnimalId == animalId)?.Nombre ?? string.Empty;
+                var animales = result.Content.ReadFromJsonAsync<List<Animal>>().Result
+                               ?? new List<Animal>();
+                return animales.FirstOrDefault(a => a.AnimalId == animalId)?.Nombre
+                       ?? string.Empty;
             }
 
             return string.Empty;
         }
         #endregion
 
+        #region Verificar propiedad del fundraiser
+        private bool EsFundraiserDelUsuario(int fundraiserId)
+        {
+            var usuarioId = HttpContext.Session.GetString("UsuarioId");
+            if (string.IsNullOrEmpty(usuarioId)) return false;
+
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI")
+                      + $"Fundraiser/ListarHistorial/{usuarioId}";
+            var result = client.GetAsync(url).Result;
+
+            if (result.StatusCode != HttpStatusCode.OK) return false;
+
+            var lista = result.Content.ReadFromJsonAsync<List<Fundraiser>>().Result
+                        ?? new List<Fundraiser>();
+
+            return lista.Any(f => f.FundraiserId == fundraiserId);
+        }
+        #endregion
+
         #region Registrar
-        // GET: Fundraiser/Registrar
+        [SesionActiva]
         [HttpGet]
         public IActionResult Registrar()
         {
@@ -58,7 +94,6 @@ namespace AP_MVC.Controllers
             return View("RegistrarPublicacionDonacion");
         }
 
-        // POST: Fundraiser/Registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(Fundraiser model)
@@ -79,9 +114,7 @@ namespace AP_MVC.Controllers
                 return RedirectToAction("Catalogo");
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
                 throw new Exception();
-            }
 
             ViewBag.Animales = GetAnimales(model.AnimalId);
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
@@ -90,10 +123,17 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region Editar
-        // GET: Fundraiser/Editar/5
+        [SesionActiva]
         [HttpGet]
         public IActionResult Editar(int id = 1)
         {
+            // Verificar propiedad antes de mostrar el formulario
+            if (!EsFundraiserDelUsuario(id))
+            {
+                TempData["Error"] = "No tenés permiso para editar esta publicación.";
+                return RedirectToAction("MisDonaciones");
+            }
+
             using var client = _http.CreateClient();
             var url = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/ObtenerFundraiser/{id}";
             var result = client.GetAsync(url).Result;
@@ -112,19 +152,23 @@ namespace AP_MVC.Controllers
                 return View("EditarPublicacion", model);
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
                 throw new Exception();
-            }
 
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
             return View("EditarPublicacion");
         }
 
-        // POST: Fundraiser/Editar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(Fundraiser model)
         {
+            // Re-verificar propiedad en el POST
+            if (!EsFundraiserDelUsuario(model.FundraiserId))
+            {
+                TempData["Error"] = "No tenés permiso para editar esta publicación.";
+                return RedirectToAction("MisDonaciones");
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.AnimalNombre = GetAnimalNombre(model.AnimalId);
@@ -141,9 +185,7 @@ namespace AP_MVC.Controllers
                 return RedirectToAction("Catalogo");
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
                 throw new Exception();
-            }
 
             ViewBag.Animales = GetAnimales(model.AnimalId);
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
@@ -151,37 +193,19 @@ namespace AP_MVC.Controllers
         }
         #endregion
 
-        #region Detalles
-        // GET: Fundraiser/Detalle/5
-        [HttpGet]
-        public IActionResult Detalle(int id = 1)
-        {
-            using var client = _http.CreateClient();
-            var url = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/ObtenerFundraiser/{id}";
-            var result = client.GetAsync(url).Result;
-
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                var model = result.Content.ReadFromJsonAsync<Fundraiser>().Result;
-                ViewBag.Animales = GetAnimales(model!.AnimalId);
-                return View("DetalleFundraiser", model);
-            }
-            else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new Exception();
-            }
-
-            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
-            return View("DetalleFundraiser");
-        }
-        #endregion
-
-        #region Inactivar / Cambiar Estado
-        // POST: Fundraiser/Inactivar
+        #region Inactivar
+        [SesionActiva]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Inactivar(int id)
         {
+            // Solo el dueño puede inactivar su propia campaña
+            if (!EsFundraiserDelUsuario(id))
+            {
+                TempData["Error"] = "No tenés permiso para inactivar esta publicación.";
+                return RedirectToAction("MisDonaciones");
+            }
+
             using var client = _http.CreateClient();
             var url = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/InactivarFundraiser/{id}";
             var result = client.PostAsJsonAsync(url, new { }).Result;
@@ -189,23 +213,112 @@ namespace AP_MVC.Controllers
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 TempData["Exito"] = "La publicación fue inactivada correctamente.";
-                return RedirectToAction("Catalogo");
+                return RedirectToAction("MisDonaciones");
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
-            {
                 throw new Exception();
+
+            TempData["Error"] = result.Content.ReadAsStringAsync().Result;
+            return RedirectToAction("MisDonaciones");
+        }
+        #endregion
+
+        #region RF-017: Catálogo de fundraisers activos
+        public IActionResult Catalogo()
+        {
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + "Fundraiser/ListarFundraisers";
+            var result = client.GetAsync(url).Result;
+
+            var fundraisers = new List<Fundraiser>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+                fundraisers = result.Content.ReadFromJsonAsync<List<Fundraiser>>().Result ?? new List<Fundraiser>();
+
+            return View("CatalogoDonaciones", fundraisers);
+        }
+        #endregion
+
+        #region RF-017: Detalle + donaciones recibidas
+        [HttpGet]
+        public IActionResult Detalle(int id)
+        {
+            using var client = _http.CreateClient();
+            var urlFundraiser = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/ObtenerFundraiser/{id}";
+            var result = client.GetAsync(urlFundraiser).Result;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var model = result.Content.ReadFromJsonAsync<Fundraiser>().Result;
+
+                // Donaciones del fundraiser
+                var urlDonaciones = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/ListarDonaciones/{id}";
+                var resDonaciones = client.GetAsync(urlDonaciones).Result;
+                ViewBag.Donaciones = resDonaciones.StatusCode == HttpStatusCode.OK
+                    ? resDonaciones.Content.ReadFromJsonAsync<List<Donacion>>().Result ?? new List<Donacion>()
+                    : new List<Donacion>();
+
+                ViewBag.EstaLogueado = !string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId"));
+                return View("DetalleFundraiser", model);
             }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                throw new Exception();
 
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
             return RedirectToAction("Catalogo");
         }
         #endregion
 
-        #region Catálogo
-        // GET: Fundraiser/Catalogo
-        public IActionResult Catalogo()
+        #region RF-020: Simulación de donación
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Donar(int fundraiserId, decimal monto, string metodoPago)
         {
-            return View("CatalogoDonaciones");
+            var usuarioId = HttpContext.Session.GetString("UsuarioId");
+
+            var payload = new
+            {
+                FundraiserId = fundraiserId,
+                UsuarioId = usuarioId,
+                Total = monto,
+                MetodoPago = metodoPago
+            };
+
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + "Fundraiser/RealizarDonacion";
+            var result = client.PostAsJsonAsync(url, payload).Result;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                TempData["DonacionExito"] = $"PS-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(1000, 9999)}";
+                TempData["MetodoPago"] = metodoPago;
+                TempData["MontoDonado"] = monto.ToString("N2");
+                return RedirectToAction("Detalle", new { id = fundraiserId });
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                throw new Exception();
+
+            TempData["Error"] = result.Content.ReadAsStringAsync().Result;
+            return RedirectToAction("Detalle", new { id = fundraiserId });
+        }
+        #endregion
+
+        #region RF-022: Historial (activos + inactivos) del usuario logueado
+        [SesionActiva]
+        public IActionResult MisDonaciones()
+        {
+            var usuarioId = HttpContext.Session.GetString("UsuarioId");
+
+            using var client = _http.CreateClient();
+            var url = _config.GetValue<string>("Valores:UrlAPI") + $"Fundraiser/ListarHistorial/{usuarioId}";
+            var result = client.GetAsync(url).Result;
+
+            var fundraisers = new List<Fundraiser>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+                fundraisers = result.Content.ReadFromJsonAsync<List<Fundraiser>>().Result ?? new List<Fundraiser>();
+
+            return View("MisDonaciones", fundraisers);
         }
         #endregion
     }
