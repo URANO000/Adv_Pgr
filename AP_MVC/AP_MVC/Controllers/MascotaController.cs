@@ -394,6 +394,12 @@ namespace AP_MVC.Controllers
         {
             var usuarioId = ObtenerUsuarioIdSesion();
 
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "La sesión expiró o no contiene un UsuarioId válido.";
+                return RedirectToAction("Login", "Home");
+            }
+
             using var client = _http.CreateClient();
             var url = UrlAPI + $"Mascota/InactivarPublicacionMascota/{id}/{usuarioId}";
             var result = client.PostAsJsonAsync(url, new { }).Result;
@@ -401,7 +407,7 @@ namespace AP_MVC.Controllers
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 TempData["Exito"] = "La publicación se inactivó correctamente.";
-                return RedirectToAction("MisPublicaciones");
+                return RedirectToAction("Detalle", new { id });
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
@@ -409,7 +415,7 @@ namespace AP_MVC.Controllers
             }
 
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
-            return RedirectToAction("MisPublicaciones");
+            return RedirectToAction("Detalle", new { id });
         }
 
         [HttpGet]

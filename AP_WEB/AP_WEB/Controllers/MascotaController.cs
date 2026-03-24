@@ -120,9 +120,13 @@ namespace AP_WEB.Controllers
             parametros.Add("@PublicacionId", publicacionId);
             parametros.Add("@UsuarioId", usuarioId);
 
-            var result = context.Execute("sp_InactivarPublicacionMascota", parametros, commandType: CommandType.StoredProcedure);
+            var resultado = context.ExecuteScalar<int>(
+                "sp_InactivarPublicacionMascota",
+                parametros,
+                commandType: CommandType.StoredProcedure
+            );
 
-            if (result <= 0)
+            if (resultado == 0)
                 return BadRequest("La publicación no se pudo inactivar");
 
             return Ok("La publicación se inactivó correctamente");
