@@ -348,6 +348,36 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE sp_ValidarCampanaActivaPorAnimal
+    @AnimalId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1 FROM Fundraiser 
+        WHERE AnimalId = @AnimalId AND IsActive = 1
+    )
+        SELECT CAST(1 AS BIT) AS TieneCampanaActiva;
+    ELSE
+        SELECT CAST(0 AS BIT) AS TieneCampanaActiva;
+END
+
+CREATE OR ALTER PROCEDURE sp_ListarAnimalesPorUsuario
+    @UsuarioId NVARCHAR(450)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT a.AnimalId,
+           a.Nombre + ' (' + t.NombreTipo + ')' AS Nombre
+    FROM Animal a
+    JOIN AnimalTipo t ON t.TipoId = a.TipoId
+    WHERE a.UsuarioId = @UsuarioId
+    ORDER BY a.Nombre;
+END
+GO
+
 -- =============================================
 -- 7. SPs — Fundraiser (Isaac: RF-017,020,021,022,030)
 -- =============================================

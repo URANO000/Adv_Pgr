@@ -165,7 +165,38 @@ namespace AP_WEB.Controllers
             }
         }
 
-        // Registrar fundraiser — Evelyn
+        // Animales registrados por un usuario
+        [HttpGet("ListarAnimalesPorUsuario/{usuarioId}")]
+        public IActionResult ListarAnimalesPorUsuario(string usuarioId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(usuarioId))
+                    return BadRequest("UsuarioId requerido");
+
+                using var db = GetConnection();
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@UsuarioId", usuarioId);
+
+                var result = db.Query<AnimalResponse>(
+                    "sp_ListarAnimalesPorUsuario",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                );
+
+                if (result == null || !result.Any())
+                    return NotFound("No tenés animales registrados");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // Registrar fundraiser
         [HttpPost("RegistrarFundraiser")]
         public IActionResult RegistrarFundraiser([FromBody] RegistrarFundraiserRequest model)
         {
@@ -175,6 +206,19 @@ namespace AP_WEB.Controllers
             try
             {
                 using var db = GetConnection();
+
+                // Validar duplicado
+                var parametrosValidacion = new DynamicParameters();
+                parametrosValidacion.Add("@AnimalId", model.AnimalId);
+
+                var tieneCampana = db.ExecuteScalar<bool>(
+                    "sp_ValidarCampanaActivaPorAnimal",
+                    parametrosValidacion,
+                    commandType: CommandType.StoredProcedure
+                );
+
+                if (tieneCampana)
+                    return BadRequest("Ya existe una campaña de donación activa para este animal. Primero inactivá la campaña existente antes de crear una nueva.");
 
                 var parametros = new DynamicParameters();
                 parametros.Add("@AnimalId", model.AnimalId);
@@ -199,7 +243,7 @@ namespace AP_WEB.Controllers
             }
         }
 
-        // Editar fundraiser — Evelyn
+        // Editar fundraiser
         [HttpPut("EditarFundraiser")]
         public IActionResult EditarFundraiser([FromBody] EditarFundraiserRequest model)
         {
@@ -234,7 +278,7 @@ namespace AP_WEB.Controllers
             }
         }
 
-        // Inactivar — Evelyn
+        // Inactivar
         [HttpPost("InactivarFundraiser/{id}")]
         public IActionResult InactivarFundraiser(int id)
         {
@@ -279,24 +323,24 @@ namespace AP_WEB.Controllers
                 : 0;
 
             return $@"
-<!DOCTYPE html>
-<html lang='es'>
-<head><meta charset='UTF-8'></head>
-<body style='font-family:Arial,sans-serif;background:#f4f4f4;padding:20px;'>
-  <div style='max-width:600px;margin:0 auto;background:#fff;border-radius:10px;padding:30px;'>
-    <h2 style='color:#e67e22;'>🐾 ¡Recibiste una donación!</h2>
-    <p>Hola <strong>{datos.PrimerNombre}</strong>,</p>
-    <p>Tu campaña <strong>""{datos.TituloFundraiser}""</strong> acaba de recibir una nueva donación.</p>
-    <div style='background:#fef9f0;border-left:4px solid #e67e22;padding:15px;margin:20px 0;border-radius:5px;'>
-      <p style='margin:0;font-size:18px;'>💰 Monto donado: <strong>₡{montoDonado:N2}</strong></p>
-      <p style='margin:8px 0 0;'>Total acumulado: <strong>₡{datos.NuevoTotal:N2}</strong> de ₡{datos.MetaTotal:N2} ({porcentaje}%)</p>
-    </div>
-    <p>Ingresá a <strong>Patitas Social</strong> para ver el detalle de tu campaña.</p>
-    <hr style='border:none;border-top:1px solid #eee;margin:20px 0;'/>
-    <p style='color:#999;font-size:12px;'>Patitas Social — Conectando corazones con patitas 🐾</p>
-  </div>
-</body>
-</html>";
+                <!DOCTYPE html>
+                <html lang='es'>
+                <head><meta charset='UTF-8'></head>
+                <body style='font-family:Arial,sans-serif;background:#f4f4f4;padding:20px;'>
+                  <div style='max-width:600px;margin:0 auto;background:#fff;border-radius:10px;padding:30px;'>
+                    <h2 style='color:#e67e22;'>🐾 ¡Recibiste una donación!</h2>
+                    <p>Hola <strong>{datos.PrimerNombre}</strong>,</p>
+                    <p>Tu campaña <strong>""{datos.TituloFundraiser}""</strong> acaba de recibir una nueva donación.</p>
+                    <div style='background:#fef9f0;border-left:4px solid #e67e22;padding:15px;margin:20px 0;border-radius:5px;'>
+                      <p style='margin:0;font-size:18px;'>💰 Monto donado: <strong>₡{montoDonado:N2}</strong></p>
+                      <p style='margin:8px 0 0;'>Total acumulado: <strong>₡{datos.NuevoTotal:N2}</strong> de ₡{datos.MetaTotal:N2} ({porcentaje}%)</p>
+                    </div>
+                    <p>Ingresá a <strong>Patitas Social</strong> para ver el detalle de tu campaña.</p>
+                    <hr style='border:none;border-top:1px solid #eee;margin:20px 0;'/>
+                    <p style='color:#999;font-size:12px;'>Patitas Social — Conectando corazones con patitas 🐾</p>
+                  </div>
+                </body>
+                </html>";
         }
     }
 }
