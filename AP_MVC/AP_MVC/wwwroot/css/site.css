@@ -1393,12 +1393,49 @@ Módulo Mascotas
         }
     }
 
-    @media (max-width: 700px) {
-        .mispub-grid {
-            grid-template-columns: 1fr;
-        }
+@media (max-width: 700px) {
+    .mispub-grid {
+        grid-template-columns: 1fr;
+    }
 
-        .mispub-main-btn {
-            width: 100%;
-        }
-    
+    .mispub-main-btn {
+        width: 100%;
+    }
+}
+
+.editpub-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.editpub-header {
+    margin-bottom: 24px;
+}
+
+.editpub-title {
+    margin: 0 0 8px 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.editpub-subtitle {
+    margin: 0;
+    color: #666;
+}
+
+.editpub-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.editpub-btn {
+    min-width: 140px;
+    border-radius: 10px;
+    font-weight: 600;
+}

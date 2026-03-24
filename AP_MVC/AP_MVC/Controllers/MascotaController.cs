@@ -289,31 +289,18 @@ namespace AP_MVC.Controllers
         {
             var usuarioId = ObtenerUsuarioIdSesion();
 
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "La sesión expiró o no contiene un UsuarioId válido.";
+                return RedirectToAction("Login", "Home");
+            }
+
             using var client = _http.CreateClient();
+
             var url = UrlAPI + $"Mascota/ObtenerPublicacionMascota/{id}/{usuarioId}";
             var result = client.GetAsync(url).Result;
 
-            if (result.StatusCode == HttpStatusCode.OK)
-            {
-                var data = result.Content.ReadFromJsonAsync<MascotaPublicacionViewModel>().Result;
-
-                if (data == null)
-                {
-                    TempData["Error"] = "No se encontró la publicación.";
-                    return RedirectToAction("MisPublicaciones");
-                }
-
-                var model = new MascotaPublicacionEditarViewModel
-                {
-                    PublicacionId = data.PublicacionId,
-                    UsuarioId = usuarioId,
-                    Titulo = data.Titulo,
-                    Descripcion = data.Descripcion
-                };
-
-                return View(model);
-            }
-            else if (result.StatusCode == HttpStatusCode.NotFound)
+            if (result.StatusCode == HttpStatusCode.NotFound)
             {
                 TempData["Error"] = "No se encontró la publicación.";
                 return RedirectToAction("MisPublicaciones");
@@ -322,28 +309,75 @@ namespace AP_MVC.Controllers
             {
                 throw new Exception();
             }
+            else if (result.StatusCode != HttpStatusCode.OK)
+            {
+                TempData["Error"] = result.Content.ReadAsStringAsync().Result;
+                return RedirectToAction("MisPublicaciones");
+            }
 
-            TempData["Error"] = result.Content.ReadAsStringAsync().Result;
-            return RedirectToAction("MisPublicaciones");
+            var publicacion = result.Content.ReadFromJsonAsync<MascotaDetalleViewModel>().Result;
+
+            if (publicacion == null)
+            {
+                TempData["Error"] = "No se pudo cargar la publicación.";
+                return RedirectToAction("MisPublicaciones");
+            }
+
+            if (!publicacion.IsActive)
+            {
+                TempData["Error"] = "No se puede editar una publicación inactiva.";
+                return RedirectToAction("Detalle", new { id });
+            }
+
+            var model = new EditarPublicacionMascotaViewModel
+            {
+                PublicacionId = publicacion.PublicacionId,
+                UsuarioId = usuarioId,
+                Titulo = publicacion.Titulo,
+                Descripcion = publicacion.Descripcion,
+                IsActive = publicacion.IsActive
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Editar(MascotaPublicacionEditarViewModel model)
+        public IActionResult Editar(EditarPublicacionMascotaViewModel model)
         {
-            model.UsuarioId = ObtenerUsuarioIdSesion();
+            var usuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "La sesión expiró o no contiene un UsuarioId válido.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            model.UsuarioId = usuarioId;
 
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
             using var client = _http.CreateClient();
+
             var url = UrlAPI + "Mascota/EditarPublicacionMascota";
-            var result = client.PutAsJsonAsync(url, model).Result;
+
+            var request = new
+            {
+                PublicacionId = model.PublicacionId,
+                UsuarioId = model.UsuarioId,
+                Titulo = model.Titulo,
+                Descripcion = model.Descripcion
+            };
+
+            var result = client.PutAsJsonAsync(url, request).Result;
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 TempData["Exito"] = "La publicación se actualizó correctamente.";
-                return RedirectToAction("MisPublicaciones");
+                return RedirectToAction("Detalle", new { id = model.PublicacionId });
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
