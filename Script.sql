@@ -241,17 +241,18 @@ BEGIN
 		u.Cedula,
 		u.Telefono,
 		u.Provincia,
-		u.ImagenPerfil
+		u.ImagenPerfil,
+		u.IsActive,
+		u.RolId
 	FROM Usuario u
 	WHERE u.UsuarioId = @UsuarioId
-	AND u.IsActive = 1
 END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuarios]
 AS
 BEGIN
-	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
+	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
 	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt,
 	RolId, ImagenPerfil, IsActive
 	FROM Usuario

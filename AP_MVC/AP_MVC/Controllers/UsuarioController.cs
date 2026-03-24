@@ -251,6 +251,40 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region VerPerfil
+        [HttpGet]
+        public async Task<IActionResult> Detalle(string usuarioId)
+        {
+            var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+            {
+                return redirect;
+            }
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+            {
+                return BadRequest("UsuarioId es requerido.");
+            }
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var url = _config.GetValue<string>("Valores:UrlAPI") + $"Usuario/VerDetalle/{usuarioId}";
+            var result = await client.GetAsync(url);
+
+            if(result.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            if(result.StatusCode == HttpStatusCode.OK)
+            {
+                var objeto = await result.Content.ReadFromJsonAsync<Usuario>();
+                return View(objeto);
+            }
+
+            return View();
+        }
         #endregion
 
 

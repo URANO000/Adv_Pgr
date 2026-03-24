@@ -1,0 +1,107 @@
+﻿@model Usuario
+
+@{
+    ViewData["Title"] = "Detalle de Usuario";
+    Layout = "_Layout";
+
+    var imagenPerfil = string.IsNullOrEmpty(Model.ImagenPerfil)
+        ? "/uploads/default.jpg"
+        : Model.ImagenPerfil;
+}
+
+<section class="container-fluid mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <!-- HEADER -->
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="@imagenPerfil"
+                                 class="rounded-circle"
+                                 width="70" height="70"
+                                 style="object-fit: cover;" />
+
+                            <div>
+                                <h5 class="mb-0 fw-bold">
+                                    @Model.nombreCompleto
+                                </h5>
+                                <small class="text-muted">@Model.CorreoElectronico</small>
+                            </div>
+                        </div>
+
+                        <!-- Rol-->
+                        <div>
+                            <span class="badge bg-dark">
+                                @Model.RolId
+                            </span>
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success text-black">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- INFO GRID -->
+                    <div class="row g-4">
+
+                        <!-- Identity -->
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Información Personal</small>
+
+                            <p><strong>Cédula:</strong> @Model.Cedula</p>
+                            <p>
+                                <strong>Nombre completo:</strong>
+                                @Model.PrimerNombre @Model.SegundoNombre
+                                @Model.PrimerApellido @Model.SegundoApellido
+                            </p>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Contacto</small>
+
+                            <p><strong>Teléfono:</strong> @Model.Telefono</p>
+                            <p><strong>Provincia:</strong> @Model.Provincia</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Sistema</small>
+
+                            <p><strong>Fecha de registro:</strong> @Model.CreatedAt</p>
+                        </div>
+
+                    </div>
+
+                    <hr />
+
+                    <!-- ADMIN ACTIONS -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Eliminar"
+                               asp-route-usuarioId="@Model.UsuarioId"
+                               class="btn btn-danger">
+                            Desactivar
+                        </a>
+
+                        <a
+                               onclick="window.history.back()"
+                               class="btn btn-primary">
+                            Regresar
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -45,12 +45,20 @@ namespace AP_WEB.Controllers
         {
             var UsuarioId = User.FindFirst("UsuarioId")?.Value;
 
-            using var context = _helper.CreateConnection();
-            var parametros = new DynamicParameters();
-            parametros.Add("@UsuarioId", UsuarioId);
-
-            var model = context.QueryFirstOrDefault<PerfilResponse>("sp_ObtenerUsuario", parametros);
+            var model = ObtenerUsuarioPorId(UsuarioId);
             if(model == null)
+            {
+                return NotFound("No se encontró el perfil de usuario.");
+            }
+
+            return Ok(model);
+        }
+
+        [HttpGet("VerDetalle/{UsuarioId}")]
+        public IActionResult VerDetalle(string UsuarioId)
+        {
+            var model = ObtenerUsuarioPorId(UsuarioId);
+            if (model == null)
             {
                 return NotFound("No se encontró el perfil de usuario.");
             }
@@ -102,5 +110,16 @@ namespace AP_WEB.Controllers
 
             return Ok("El perfil fue editado exitosamente.");
         }
+
+        #region Helper
+        private UsuarioResponse? ObtenerUsuarioPorId(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            return context.QueryFirstOrDefault<UsuarioResponse>("sp_ObtenerUsuario", parametros);
+        }
+        #endregion
     }
 }
