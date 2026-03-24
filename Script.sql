@@ -1,5 +1,5 @@
 -- =============================================
--- PATITAS SOCIAL — Script completo
+-- PATITAS SOCIAL â Script completo
 -- Tablas + SPs + Datos de prueba
 -- =============================================
 
@@ -159,7 +159,7 @@ INSERT INTO AnimalTipo (NombreTipo, CategoriaId) VALUES
 GO
 
 -- =============================================
--- 4. SPs — Autenticación (Adriana)
+-- 4. SPs â AutenticaciÃ³n (Adriana)
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
@@ -286,7 +286,7 @@ END
 GO
 
 -- =============================================
--- 5. SPs — Animales
+-- 5. SPs â Animales
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarAnimales]
@@ -301,7 +301,7 @@ END
 GO
 
 -- =============================================
--- 6. SPs — Fundraiser (Evelyn: RF-015,016,018,019)
+-- 6. SPs â Fundraiser (Evelyn: RF-015,016,018,019)
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarFundraiser]
@@ -379,7 +379,7 @@ END
 GO
 
 -- =============================================
--- 7. SPs — Fundraiser (Isaac: RF-017,020,021,022,030)
+-- 7. SPs â Fundraiser (Isaac: RF-017,020,021,022,030)
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerFundraiser]
@@ -395,7 +395,7 @@ BEGIN
 END
 GO
 
--- RF-017: Catálogo público
+-- RF-017: CatÃ¡logo pÃºblico
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarFundraisers]
 AS
 BEGIN
@@ -415,7 +415,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_ListarDonacionesPorFundraiser]
 AS
 BEGIN
     SELECT d.DonacionId, d.FundraiserId, d.UsuarioId,
-           ISNULL(u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '') + u.PrimerApellido, 'Anónimo') AS NombreDonante,
+           ISNULL(u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '') + u.PrimerApellido, 'AnÃ³nimo') AS NombreDonante,
            d.Total, d.DonatedAt
     FROM Donacion d
     LEFT JOIN Usuario u ON d.UsuarioId = u.UsuarioId
@@ -439,7 +439,7 @@ BEGIN
 END
 GO
 
--- RF-020 + RF-030: Registrar donación y retornar datos para notificación
+-- RF-020 + RF-030: Registrar donaciÃ³n y retornar datos para notificaciÃ³n
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarDonacion]
     @FundraiserId INT,
     @UsuarioId NVARCHAR(450) = NULL,
@@ -453,7 +453,7 @@ BEGIN
     SET TotalActual = TotalActual + @Total
     WHERE FundraiserId = @FundraiserId;
 
-    -- Datos para notificación RF-030
+    -- Datos para notificaciÃ³n RF-030
     SELECT u.CorreoElectronico,
            u.PrimerNombre,
            f.Titulo AS TituloFundraiser,
@@ -477,16 +477,16 @@ VALUES ('usr-prueba-001', 'prueba@patitas.com', 'jZae727K08KaOmKSgOaGzww/XVqGr/P
 -- Animales de prueba
 INSERT INTO Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy)
 VALUES
-('usr-prueba-001', 1, 'Rocky', 12.00, '5 años',  'M', 'Necesita cirugía de cadera', 'usr-prueba-001'),
-('usr-prueba-001', 2, 'Luna',  3.80,  '1 año',   'H', 'Muy cariñosa',              'usr-prueba-001'),
-('usr-prueba-001', 1, 'Max',   8.50,  '3 años',  'M', 'Muy juguetón',              'usr-prueba-001');
+('usr-prueba-001', 1, 'Rocky', 12.00, '5 aÃ±os',  'M', 'Necesita cirugÃ­a de cadera', 'usr-prueba-001'),
+('usr-prueba-001', 2, 'Luna',  3.80,  '1 aÃ±o',   'H', 'Muy cariÃ±osa',              'usr-prueba-001'),
+('usr-prueba-001', 1, 'Max',   8.50,  '3 aÃ±os',  'M', 'Muy juguetÃ³n',              'usr-prueba-001');
 
 -- Fundraisers de prueba
 INSERT INTO Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
 VALUES
-(1, 'Ayuda para operación de Rocky', 'Rocky necesita una cirugía urgente de cadera. Cada colón cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
-(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunación. Ayudanos a mantenerla sana.', 50000, 10000, 1),
-(3, 'Tratamiento dental de Max',     'Campaña finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
+(1, 'Ayuda para operaciÃ³n de Rocky', 'Rocky necesita una cirugÃ­a urgente de cadera. Cada colÃ³n cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
+(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunaciÃ³n. Ayudanos a mantenerla sana.', 50000, 10000, 1),
+(3, 'Tratamiento dental de Max',     'CampaÃ±a finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
 
 -- Donaciones de prueba
 INSERT INTO Donacion (FundraiserId, UsuarioId, Total)

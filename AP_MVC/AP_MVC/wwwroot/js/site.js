@@ -186,3 +186,16 @@
     }); // End of a document
 
 })(jQuery);
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    new Swiper(".main-swiper", {
+        loop: true,
+        speed: 600,
+        pagination: {
+            el: ".main-swiper .swiper-pagination",
+            clickable: true
+        }
+    });
+});

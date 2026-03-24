@@ -103,6 +103,7 @@ CSS STRUCTURE:
     }
 }
 
+
 /* Theme Colors */
 :root {
     --accent-color: #FFFDFA;
@@ -164,6 +165,7 @@ body {
     --bs-danger-rgb: 249, 235, 231;
     --bs-warning-rgb: 255, 255, 233;
     --bs-info-rgb: 128, 204, 255;
+    --text-danger: red;
 }
 
 .btn-primary {
