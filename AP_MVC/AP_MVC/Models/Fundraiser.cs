@@ -10,6 +10,9 @@ namespace AP_MVC.Models
         [Display(Name = "Animal")]
         public int AnimalId { get; set; }
 
+        // Se llena desde el API (JOIN con Animal)
+        public string NombreAnimal { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "El título es obligatorio")]
         [Display(Name = "Título")]
         [StringLength(200, ErrorMessage = "El título no puede exceder los 200 caracteres")]
@@ -24,7 +27,12 @@ namespace AP_MVC.Models
         [Range(1, double.MaxValue, ErrorMessage = "La meta debe ser mayor a 0")]
         public decimal MetaTotal { get; set; }
 
+        // Solo lectura — viene del API
+        public decimal TotalActual { get; set; }
+
         [Display(Name = "Publicación Activa")]
         public bool IsActive { get; set; } = true;
+
+        public DateTime CreatedAt { get; set; }
     }
 }

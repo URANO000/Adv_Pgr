@@ -1,5 +1,5 @@
 ﻿-- =============================================
--- PATITAS SOCIAL â Script completo
+-- PATITAS SOCIAL  Script completo
 -- Tablas + SPs + Datos de prueba
 -- =============================================
 
@@ -161,127 +161,142 @@ GO
 -- =============================================
 -- 4. SPs â AutenticaciÃ³n (Adriana)
 -- =============================================
-
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
-    @CorreoElectronico NVARCHAR(255),
-    @Contrasenna NVARCHAR(500),
-    @PrimerNombre NVARCHAR(100),
-    @SegundoNombre NVARCHAR(100) = NULL,
-    @PrimerApellido NVARCHAR(100),
-    @SegundoApellido NVARCHAR(100) = NULL,
-    @Cedula NVARCHAR(200) = NULL,
-    @Telefono NVARCHAR(30) = NULL,
-    @Provincia NVARCHAR(100) = NULL,
-    @CreatedAt DATETIME2 = NULL
+	@CorreoElectronico NVARCHAR(255),
+	@Contrasenna NVARCHAR(500),
+	@PrimerNombre NVARCHAR(100),
+	@SegundoNombre NVARCHAR(100) NULL,
+	@PrimerApellido NVARCHAR(100),
+	@SegundoApellido NVARCHAR(100) NULL,
+	@Cedula NVARCHAR(200),
+	@Telefono NVARCHAR(30) NULL,
+	@Provincia NVARCHAR(100) NULL,
+	@CreatedAt DATETIME2
 AS
 BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM Usuario
-        WHERE Cedula = @Cedula OR CorreoElectronico = @CorreoElectronico
-    )
-    BEGIN
-        INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, SegundoNombre,
-                             PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
-                             CreatedAt, IsActive, RolId)
-        VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre,
-                @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia,
-                ISNULL(@CreatedAt, SYSDATETIME()), 1, 2);
-    END
+	IF NOT EXISTS (
+		SELECT 1 FROM Usuario
+		WHERE Cedula = @Cedula
+		OR CorreoElectronico = @CorreoElectronico)
+	BEGIN
+
+		INSERT INTO [dbo].[Usuario] (CorreoElectronico,ContrasenaHash, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive, RolId)
+		VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia, @CreatedAt, 1, 2)
+
+	END
 END
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_IniciarSesion]
-    @CorreoElectronico NVARCHAR(255),
-    @Contrasenna NVARCHAR(500)
+CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
+	@CorreoElectronico NVARCHAR(255),
+	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
-    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
-           ISNULL(ImagenPerfil, '') AS ImagenPerfil,
-           CreatedAt, IsActive, RolId,
-           '' AS Token
-    FROM Usuario
-    WHERE CorreoElectronico = @CorreoElectronico
-      AND ContrasenaHash = @Contrasenna
-      AND IsActive = 1;
-END
-GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_ValidarCorreo]
-    @CorreoElectronico NVARCHAR(255)
-AS
-BEGIN
-    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-           PrimerApellido, SegundoApellido
-    FROM Usuario
-    WHERE CorreoElectronico = @CorreoElectronico AND IsActive = 1;
+	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
+	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
+	r.NombreRol
+	FROM Usuario u
+	INNER JOIN Rol r ON u.RolId = r.RolId
+	WHERE CorreoElectronico = @CorreoElectronico
+		AND ContrasenaHash = @Contrasenna
+		AND IsActive = 1
 END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ActualizarContrasenna]
-    @UsuarioId NVARCHAR(450),
-    @Contrasenna NVARCHAR(500)
+	@UsuarioId NVARCHAR(450),
+	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
-    UPDATE Usuario SET ContrasenaHash = @Contrasenna WHERE UsuarioId = @UsuarioId;
+	UPDATE [dbo].[Usuario]
+	SET ContrasenaHash = @Contrasenna
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ValidarCorreo]
+	@CorreoElectronico NVARCHAR(255)
+AS
+BEGIN
+	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
+	RolId
+	FROM Usuario
+	WHERE CorreoElectronico = @CorreoElectronico
+	AND IsActive = 1
 END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuario]
-    @UsuarioId NVARCHAR(450)
+	@UsuarioId NVARCHAR(450)
 AS
 BEGIN
-    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
-           ISNULL(ImagenPerfil, '') AS ImagenPerfil, CreatedAt
-    FROM Usuario
-    WHERE UsuarioId = @UsuarioId AND IsActive = 1;
+	SELECT 
+		u.CorreoElectronico,
+		u.PrimerNombre,
+		u.SegundoNombre,
+		u.PrimerApellido,
+		u.SegundoApellido,
+		u.Cedula,
+		u.Telefono,
+		u.Provincia,
+		u.ImagenPerfil
+	FROM Usuario u
+	WHERE u.UsuarioId = @UsuarioId
+	AND u.IsActive = 1
 END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuarios]
 AS
 BEGIN
-    SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-           PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia,
-           CreatedAt, RolId, ISNULL(ImagenPerfil, '') AS ImagenPerfil
-    FROM Usuario
-    ORDER BY CreatedAt;
+	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
+	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt,
+	RolId, ImagenPerfil, IsActive
+	FROM Usuario
+	ORDER BY CreatedAt 
 END
 GO
 
+
 CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
-    @UsuarioId NVARCHAR(450),
-    @CorreoElectronico NVARCHAR(255),
-    @PrimerNombre NVARCHAR(100),
-    @SegundoNombre NVARCHAR(100) = NULL,
-    @PrimerApellido NVARCHAR(100),
-    @SegundoApellido NVARCHAR(100) = NULL,
-    @Cedula NVARCHAR(200) = NULL,
-    @Telefono NVARCHAR(30) = NULL,
-    @Provincia NVARCHAR(100) = NULL,
-    @ImagenPerfil VARCHAR(MAX) = NULL
+	@UsuarioId NVARCHAR(450),
+	@CorreoElectronico NVARCHAR(255),
+	@PrimerNombre NVARCHAR(100),
+	@SegundoNombre NVARCHAR(100) NULL,
+	@PrimerApellido NVARCHAR(100),
+	@SegundoApellido NVARCHAR(100) NULL,
+	@Cedula NVARCHAR(200),
+	@Telefono NVARCHAR(30) NULL,
+	@Provincia NVARCHAR(100) NULL,
+
+	@ImagenPerfil VARCHAR(MAX) NULL
 AS
 BEGIN
-    UPDATE Usuario
-    SET CorreoElectronico = @CorreoElectronico,
-        PrimerNombre      = @PrimerNombre,
-        SegundoNombre     = @SegundoNombre,
-        PrimerApellido    = @PrimerApellido,
-        SegundoApellido   = @SegundoApellido,
-        Cedula            = @Cedula,
-        Telefono          = @Telefono,
-        Provincia         = @Provincia,
-        ImagenPerfil      = ISNULL(@ImagenPerfil, ImagenPerfil)
-    WHERE UsuarioId = @UsuarioId;
+
+	UPDATE dbo.Usuario
+	SET CorreoElectronico = @CorreoElectronico,
+		PrimerNombre = @PrimerNombre,
+		SegundoNombre = @SegundoNombre,
+		PrimerApellido = @PrimerApellido,
+		SegundoApellido = @SegundoApellido,
+		Cedula = @Cedula,
+		Telefono = @Telefono,
+		Provincia = @Provincia,
+		ImagenPerfil = @ImagenPerfil
+
+	WHERE UsuarioId = @UsuarioId;
 END
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_DesactivarUsuario]
-    @UsuarioId NVARCHAR(450)
+	@UsuarioId NVARCHAR(450)
 AS
 BEGIN
-    UPDATE Usuario SET IsActive = 0 WHERE UsuarioId = @UsuarioId;
+	UPDATE [dbo].[Usuario]
+	SET IsActive = 0
+	WHERE UsuarioId = @UsuarioId
 END
 GO
 
@@ -362,6 +377,7 @@ BEGIN
     ELSE
         SELECT CAST(0 AS BIT) AS TieneCampanaActiva;
 END
+GO
 
 CREATE OR ALTER PROCEDURE sp_ListarAnimalesPorUsuario
     @UsuarioId NVARCHAR(450)
@@ -395,7 +411,7 @@ BEGIN
 END
 GO
 
--- RF-017: CatÃ¡logo pÃºblico
+-- RF-017: Catálogo público
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarFundraisers]
 AS
 BEGIN
@@ -439,7 +455,7 @@ BEGIN
 END
 GO
 
--- RF-020 + RF-030: Registrar donaciÃ³n y retornar datos para notificaciÃ³n
+-- RF-020 + RF-030: Registrar donación y retornar datos para notificación
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarDonacion]
     @FundraiserId INT,
     @UsuarioId NVARCHAR(450) = NULL,
@@ -469,6 +485,7 @@ GO
 -- =============================================
 -- 8. DATOS DE PRUEBA
 -- =============================================
+
 -- Usuario de prueba (pass: 12345678)
 INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
@@ -476,16 +493,16 @@ VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usu
 -- Animales de prueba
 INSERT INTO Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy)
 VALUES
-('usr-prueba-001', 1, 'Rocky', 12.00, '5 aÃ±os',  'M', 'Necesita cirugÃ­a de cadera', 'usr-prueba-001'),
-('usr-prueba-001', 2, 'Luna',  3.80,  '1 aÃ±o',   'H', 'Muy cariÃ±osa',              'usr-prueba-001'),
-('usr-prueba-001', 1, 'Max',   8.50,  '3 aÃ±os',  'M', 'Muy juguetÃ³n',              'usr-prueba-001');
+('usr-prueba-001', 1, 'Rocky', 12.00, '5 años',  'M', 'Necesita cirugía de cadera', 'usr-prueba-001'),
+('usr-prueba-001', 2, 'Luna',  3.80,  '1 año',   'H', 'Muy cariñosa',              'usr-prueba-001'),
+('usr-prueba-001', 1, 'Max',   8.50,  '3 años',  'M', 'Muy juguetón',              'usr-prueba-001');
 
 -- Fundraisers de prueba
 INSERT INTO Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
 VALUES
-(1, 'Ayuda para operaciÃ³n de Rocky', 'Rocky necesita una cirugÃ­a urgente de cadera. Cada colÃ³n cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
-(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunaciÃ³n. Ayudanos a mantenerla sana.', 50000, 10000, 1),
-(3, 'Tratamiento dental de Max',     'CampaÃ±a finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
+(1, 'Ayuda para operación de Rocky', 'Rocky necesita una cirugí­a urgente de cadera. Cada colón cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
+(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunación. Ayudanos a mantenerla sana.', 50000, 10000, 1),
+(3, 'Tratamiento dental de Max',     'Campaña finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
 
 -- Donaciones de prueba
 INSERT INTO Donacion (FundraiserId, UsuarioId, Total)

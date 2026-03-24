@@ -3,6 +3,10 @@ using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace AP_MVC.Controllers
 {
@@ -64,7 +68,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(Usuario model)
+        public async Task<IActionResult> Login(Usuario model)
         {
             model.Contrasenna = _password.Encrypt(model.Contrasenna);
 
@@ -75,6 +79,33 @@ namespace AP_MVC.Controllers
             if(result.StatusCode == HttpStatusCode.OK)
             {
                 var objeto = result.Content.ReadFromJsonAsync<Usuario>().Result;
+
+                //Convierto JWT a claims
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(objeto!.Token);
+
+                var claims = jwt.Claims.ToList();
+
+                //Verificar que el rol sirve
+                var roleClaim = claims.FirstOrDefault(c => c.Type.Contains("role"));
+                if (roleClaim != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, roleClaim.Value));
+                }
+
+                var identity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme
+                );
+
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal
+                );
+
+                //Lo demás de la UI
                 HttpContext.Session.SetString("NombreUsuario", objeto!.nombreCompleto);
                 HttpContext.Session.SetString("UsuarioId", objeto!.UsuarioId);
                 HttpContext.Session.SetString("Token", objeto!.Token);
@@ -84,7 +115,6 @@ namespace AP_MVC.Controllers
                         ? "/uploads/default.jpg"
                         : objeto.ImagenPerfil
                 );
-                HttpContext.Session.SetInt32("Rol", (int)objeto!.RolId);
 
                 return RedirectToAction("Index", "Home");
             }

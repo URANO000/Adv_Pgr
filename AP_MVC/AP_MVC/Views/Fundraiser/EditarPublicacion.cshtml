@@ -18,6 +18,16 @@
                             <p class="text-muted">Modificá los datos de tu campaña de donación</p>
                         </div>
 
+                        @* Mensaje de error de validación o de la API *@
+                        @if (ViewBag.Mensaje != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+                                @ViewBag.Mensaje
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
                         <form asp-controller="Fundraiser" asp-action="Editar" method="post">
 
                             @Html.AntiForgeryToken()
@@ -62,16 +72,6 @@
                                 <span asp-validation-for="MetaTotal" class="text-danger small"></span>
                             </div>
 
-                            <div class="text-center mb-3">
-                                <button type="button"
-                                        class="btn btn-modal-inactivar"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalInactivar"
-                                        data-fundraiser-id="@Model.FundraiserId">
-                                    <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>
-                                    Inactivar publicación
-                                </button>
-                            </div>
                             <div class="row g-3 mt-1">
                                 <div class="col-12 col-sm-6">
                                     <a asp-controller="Fundraiser" asp-action="Catalogo"
@@ -96,11 +96,15 @@
     </div>
 </section>
 
-@* Partial del modal *@
-@await Html.PartialAsync("_ModalCambiarEstado")
+@await Html.PartialAsync("_ModalInactivo")
 
 @section Scripts {
     <script src="~/js/Fundraiser.js"></script>
+    
+    @if (TempData["MostrarModalInactivo"] != null)
+    {
+        <script>var mostrarModalInactivo = true;</script>
+    }
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
