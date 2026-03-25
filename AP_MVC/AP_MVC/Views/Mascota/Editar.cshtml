@@ -1,0 +1,55 @@
+﻿@model AP_MVC.Models.Mascotas.EditarPublicacionMascotaViewModel
+
+@{
+    ViewData["Title"] = "Editar publicación";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="editpub-card">
+        <div class="editpub-header">
+            <h2 class="editpub-title">Editar publicación</h2>
+            <p class="editpub-subtitle">Modifica el título y la descripción de tu publicación.</p>
+        </div>
+
+        @if (ViewBag.Mensaje != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Mensaje
+            </div>
+        }
+
+        <form asp-action="Editar" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="PublicacionId" />
+            <input type="hidden" asp-for="UsuarioId" />
+            <input type="hidden" asp-for="IsActive" />
+
+            <div class="mb-3">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="editpub-actions">
+                <a asp-action="Detalle" asp-route-id="@Model.PublicacionId" class="btn btn-secondary editpub-btn">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-primary editpub-btn">
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

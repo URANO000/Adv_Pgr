@@ -1,0 +1,89 @@
+﻿@model List<AP_MVC.Models.Mascotas.MascotaPublicacionViewModel>
+
+@{
+    ViewData["Title"] = "Mis publicaciones";
+}
+
+<div class="container mt-4 mb-5">
+
+    <!-- ESTE BLOQUE ES EL QUE TE DI -->
+    <!-- ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ -->
+
+    <div class="mispub-header">
+        <div>
+            <h2 class="mispub-title">Mis publicaciones</h2>
+            <p class="mispub-subtitle">Aquí puedes ver las publicaciones que has registrado.</p>
+        </div>
+
+        <a asp-controller="Mascota"
+               asp-action="Registrar"
+               class="mispub-main-btn">
+            Registrar nueva publicación
+        </a>
+    </div>
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Exito"]
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Mensaje))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Mensaje
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="mispub-grid">
+
+            @foreach (var item in Model)
+            {
+                var descripcionCorta = item.Descripcion;
+
+                if (!string.IsNullOrWhiteSpace(descripcionCorta) && descripcionCorta.Length > 85)
+                {
+                    descripcionCorta = descripcionCorta.Substring(0, 85) + "...";
+                }
+
+                <div class="mispub-card">
+
+                    <div class="mispub-card-image">
+                        <img src="@item.ImagenUrl" />
+                    </div>
+
+                    <div class="mispub-card-content">
+
+                        <span class="badge @(item.IsActive ? "bg-success" : "bg-secondary")">
+                            @(item.IsActive ? "Activa" : "Inactiva")
+                        </span>
+
+                        <h3 class="mispub-card-title">
+                            @item.Titulo
+                        </h3>
+
+                        <p class="mispub-card-description">
+                            @descripcionCorta
+                        </p>
+
+                        <div class="mispub-card-actions">
+                            <a asp-controller="Mascota"
+                                   asp-action="Detalle"
+                                   asp-route-id="@item.PublicacionId"
+                                   class="mispub-btn-info">
+                                Ver info
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
