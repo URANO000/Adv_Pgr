@@ -98,11 +98,23 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
 
                         <div class="offcanvas-body d-flex align-items-center w-100">
 
-                            <!-- MENU -->
-                            <ul class="navbar-nav menu-list list-unstyled d-flex justify-content-center align-items-center gap-4 mx-auto mb-0">
-                                <li class="nav-item">
-                                    <a asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
-                                </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
+                                   aria-expanded="false">Fundraisers</a>
+                                <ul class="dropdown-menu" aria-labelledby="pages">
+                                    <li><a asp-controller="Fundraiser" asp-action="Catalogo" class="dropdown-item">Catalogo</a></li>
+                                    <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Contacto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Nosotros</a>
+                            </li>
+                        </ul>
 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categorías</a>

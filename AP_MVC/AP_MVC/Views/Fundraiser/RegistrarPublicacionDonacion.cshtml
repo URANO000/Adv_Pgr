@@ -18,6 +18,16 @@
                             <p class="text-muted">Completa los datos para crear una campaña de donación para tu mascota</p>
                         </div>
 
+                        @* Mensaje de error de validación o de la API *@
+                        @if (ViewBag.Mensaje != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+                                @ViewBag.Mensaje
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+
                         <form asp-controller="Fundraiser" asp-action="Registrar" method="post">
 
                             @Html.AntiForgeryToken()
@@ -67,20 +77,6 @@
                                 <span asp-validation-for="MetaTotal" class="text-danger small"></span>
                             </div>
 
-                            <div class="mb-4">
-                                <label class="fundraiser-label mb-2">
-                                    <iconify-icon icon="mdi:toggle-switch-outline" class="me-1"></iconify-icon>Estado de la publicación
-                                </label>
-                                <div class="fundraiser-toggle-wrap d-flex align-items-center gap-3">
-                                    <div class="form-check form-switch mb-0">
-                                        <input class="form-check-input fundraiser-switch" type="checkbox"
-                                               id="IsActive" name="IsActive" asp-for="IsActive" role="switch" />
-                                        <label class="form-check-label" for="IsActive" id="isActiveLabel">Activa</label>
-                                    </div>
-                                </div>
-                                <span asp-validation-for="IsActive" class="text-danger small"></span>
-                            </div>
-
                             <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
                                 <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
                                 Publicar campaña
@@ -93,22 +89,6 @@
                             </div>
 
                         </form>
-
-                        @* --- BOTÓN DE PRUEBA: quitar cuando no sea necesario --- *@
-                        <hr class="my-4" />
-                        <div class="text-center">
-                            <p class="text-muted small mb-2">Prueba del modal de inactivar</p>
-                            <button type="button"
-                                    class="btn btn-modal-inactivar"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalInactivar"
-                                    data-fundraiser-id="99">
-                                <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>
-                                Inactivar publicación
-                            </button>
-                        </div>
-                        @* --- FIN BOTÓN DE PRUEBA --- *@
-
                     </div>
                 </div>
             </div>
@@ -116,17 +96,6 @@
     </div>
 </section>
 
-@* Partial del modal *@
-@await Html.PartialAsync("_ModalCambiarEstado")
-@await Html.PartialAsync("_ModalInactivo")
-
 @section Scripts {
     <script src="~/js/Fundraiser.js"></script>
-    @if (TempData["MostrarModalInactivo"] != null)
-    {
-        <script>var mostrarModalInactivo = true;</script>
-    }
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

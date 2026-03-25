@@ -5,17 +5,14 @@
     Layout = "_LayoutExterno";
 }
 
-<!-- Section: Design Block -->
 <section class="text-center text-lg-start">
     <!-- Jumbotron -->
     <div class="login-section">
         <div class="container login-container">
             <div class="row g-0 align-items-center">
-                <!-- Imagen primero (lado izquierdo) -->
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <img src="~/img/login.png" class="w-100 rounded-4 shadow-4" />
                 </div>
-                <!-- Tarjeta después (lado derecho) -->
                 <div class="col-lg-5 mb-5 mb-lg-0">
                     <div class="card cascading-left bg-body-tertiary" style="backdrop-filter: blur(30px);">
                         <div class="card-body p-4 shadow-5 text-center">
@@ -29,25 +26,19 @@
                                     @ViewBag.Mensaje
                                 </div>
                             }
-
-
+                        
                             <form id="formLogin" asp-controller="Home" asp-action="Login" method="post">
-
                                 <div class="form-floating mb-4">
                                     <input type="email" id="CorreoElectronico" name="CorreoElectronico" class="form-control" asp-for="CorreoElectronico"
                                     placeholder="Correo Electrónico" required />
                                     <label>CorreoElectronico</label>
                                     <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
                                 </div>
-
-                                <!-- Contraseña input -->
                                 <div class="form-floating mb-4">
                                     <input type="password" id="Contrasenna" name="Contrasenna" class="form-control" asp-for="Contrasenna" placeholder="Contraseña" required />
                                     <label>Contraseña</label>
                                     <span asp-validation-for="Contrasenna" class="text-danger"></span>
                                 </div>
-
-                                <!-- Checkbox y enlace -->
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="rememberMe" />
@@ -57,19 +48,17 @@
                                     </div>
                                     <a asp-action="RecuperarAcceso" asp-controller="Home" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
                                 </div>
-
-                                <!-- Submit button -->
+                            
                                 <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
                                     <iconify-icon icon="mdi:login" class="me-2"></iconify-icon>
-                                    Ingresar
+                                        Ingresar
                                 </button>
-
-                                <!-- Link para registro -->
+                                
                                 <div class="text-center">
                                     <p class="mb-0">
-                                        ¿No tienes cuenta?
-                                        <a asp-controller="Home" asp-action="Registro" class="fw-bold text-decoration-none">Regístrate aquí</a>
-                                </div>
+                                    ¿No tienes cuenta?
+                                    <a asp-controller="Home" asp-action="Registro" class="fw-bold text-decoration-none">Regístrate aquí</a>
+                                 </div>
                             </form>
                         </div>
                     </div>

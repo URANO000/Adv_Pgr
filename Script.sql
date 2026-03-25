@@ -174,33 +174,24 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
 	@CreatedAt DATETIME2
 AS
 BEGIN
-	IF NOT EXISTS (
-		SELECT 1 FROM Usuario
-		WHERE Cedula = @Cedula
-		OR CorreoElectronico = @CorreoElectronico)
-	BEGIN
-
-		INSERT INTO [dbo].[Usuario] (CorreoElectronico,ContrasenaHash, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive, RolId)
-		VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia, @CreatedAt, 1, 2)
-
-	END
+    IF EXISTS (SELECT 1 FROM Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
+    BEGIN
+        UPDATE Fundraiser
+        SET AnimalId    = @AnimalId,
+            Titulo      = @Titulo,
+            Descripcion = @Descripcion,
+            MetaTotal   = @MetaTotal
+        WHERE FundraiserId = @FundraiserId;
+    END
 END
 GO
 
-CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
-	@CorreoElectronico NVARCHAR(255),
-	@Contrasenna NVARCHAR(500)
+CREATE OR ALTER PROCEDURE [dbo].[sp_InactivarFundraiser]
+    @FundraiserId INT
 AS
 BEGIN
-
-	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
-	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
-	r.NombreRol
-	FROM Usuario u
-	INNER JOIN Rol r ON u.RolId = r.RolId
-	WHERE CorreoElectronico = @CorreoElectronico
-		AND ContrasenaHash = @Contrasenna
-		AND IsActive = 1
+    UPDATE Fundraiser SET IsActive = 0
+    WHERE FundraiserId = @FundraiserId AND IsActive = 1;
 END
 GO
 
@@ -209,46 +200,51 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_ActualizarContrasenna]
 	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
-	UPDATE [dbo].[Usuario]
-	SET ContrasenaHash = @Contrasenna
-	WHERE UsuarioId = @UsuarioId
+    SET NOCOUNT ON;
+
+    SELECT a.AnimalId,
+           a.Nombre + ' (' + t.NombreTipo + ')' AS Nombre
+    FROM Animal a
+    JOIN AnimalTipo t ON t.TipoId = a.TipoId
+    WHERE a.UsuarioId = @UsuarioId
+    ORDER BY a.Nombre;
 END
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_ValidarCorreo]
-	@CorreoElectronico NVARCHAR(255)
+-- =============================================
+-- 7. SPs â Fundraiser (Isaac: RF-017,020,021,022,030)
+-- =============================================
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerFundraiser]
+    @FundraiserId INT
 AS
 BEGIN
-	SELECT UsuarioId, CorreoElectronico, PrimerNombre, SegundoNombre,
-	PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive,
-	RolId
-	FROM Usuario
-	WHERE CorreoElectronico = @CorreoElectronico
-	AND IsActive = 1
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE f.FundraiserId = @FundraiserId;
 END
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuario]
-	@UsuarioId NVARCHAR(450)
+-- RF-017: CatÃ¡logo pÃºblico
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarFundraisers]
 AS
 BEGIN
-	SELECT 
-		u.CorreoElectronico,
-		u.PrimerNombre,
-		u.SegundoNombre,
-		u.PrimerApellido,
-		u.SegundoApellido,
-		u.Cedula,
-		u.Telefono,
-		u.Provincia,
-		u.ImagenPerfil
-	FROM Usuario u
-	WHERE u.UsuarioId = @UsuarioId
-	AND u.IsActive = 1
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE f.IsActive = 1
+    ORDER BY f.CreatedAt DESC;
 END
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuarios]
+-- RF-017: Donaciones de un fundraiser (detalle)
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarDonacionesPorFundraiser]
+    @FundraiserId INT
 AS
 BEGIN
 	SELECT CorreoElectronico, PrimerNombre, SegundoNombre,
@@ -259,44 +255,45 @@ BEGIN
 END
 GO
 
-
-CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
-	@UsuarioId NVARCHAR(450),
-	@CorreoElectronico NVARCHAR(255),
-	@PrimerNombre NVARCHAR(100),
-	@SegundoNombre NVARCHAR(100) NULL,
-	@PrimerApellido NVARCHAR(100),
-	@SegundoApellido NVARCHAR(100) NULL,
-	@Cedula NVARCHAR(200),
-	@Telefono NVARCHAR(30) NULL,
-	@Provincia NVARCHAR(100) NULL,
-
-	@ImagenPerfil VARCHAR(MAX) NULL
+-- RF-022: Historial del usuario (activos + inactivos)
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarHistorialFundraisers]
+    @UsuarioId NVARCHAR(450)
 AS
 BEGIN
-
-	UPDATE dbo.Usuario
-	SET CorreoElectronico = @CorreoElectronico,
-		PrimerNombre = @PrimerNombre,
-		SegundoNombre = @SegundoNombre,
-		PrimerApellido = @PrimerApellido,
-		SegundoApellido = @SegundoApellido,
-		Cedula = @Cedula,
-		Telefono = @Telefono,
-		Provincia = @Provincia,
-		ImagenPerfil = @ImagenPerfil
-
-	WHERE UsuarioId = @UsuarioId;
+    SELECT f.FundraiserId, f.AnimalId, a.Nombre AS NombreAnimal,
+           f.Titulo, f.Descripcion, f.MetaTotal, f.TotalActual,
+           f.IsActive, f.CreatedAt
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    WHERE a.UsuarioId = @UsuarioId
+    ORDER BY f.CreatedAt DESC;
 END
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_DesactivarUsuario]
-	@UsuarioId NVARCHAR(450)
+-- RF-020 + RF-030: Registrar donaciÃ³n y retornar datos para notificaciÃ³n
+CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarDonacion]
+    @FundraiserId INT,
+    @UsuarioId NVARCHAR(450) = NULL,
+    @Total DECIMAL(10,2)
 AS
 BEGIN
-	UPDATE [dbo].[Usuario]
-	SET IsActive = 0
-	WHERE UsuarioId = @UsuarioId
+    INSERT INTO Donacion (FundraiserId, UsuarioId, Total)
+    VALUES (@FundraiserId, @UsuarioId, @Total);
+
+    UPDATE Fundraiser
+    SET TotalActual = TotalActual + @Total
+    WHERE FundraiserId = @FundraiserId;
+
+    -- Datos para notificaciÃ³n RF-030
+    SELECT u.CorreoElectronico,
+           u.PrimerNombre,
+           f.Titulo AS TituloFundraiser,
+           f.TotalActual AS NuevoTotal,
+           f.MetaTotal
+    FROM Fundraiser f
+    INNER JOIN Animal a ON f.AnimalId = a.AnimalId
+    INNER JOIN Usuario u ON a.UsuarioId = u.UsuarioId
+    WHERE f.FundraiserId = @FundraiserId;
 END
 GO
 

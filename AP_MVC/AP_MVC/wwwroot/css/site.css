@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 Theme Name: Waggy
 Theme URI: https://templatesjungle.com/
 Author: TemplatesJungle
@@ -118,6 +118,22 @@ CSS STRUCTURE:
     --body-bg-color: #FFF8F0;
     --header-footer-color: #F0F9FF;
     --login-card-color: #FFFCF7;
+    --blue-dark-color: #2271A3;
+    --orange-color: #e67e22;
+    --danger-color: #c0392b;
+    --danger-hover-color: #a93226;
+    --text-body-color: #41403E;
+    --muted-color: #6B6460;
+    --muted-border-color: #b0a89e;
+    --warm-grey-color: #E8E3DE;
+    --warm-grey-text: #4A4540;
+    --warm-grey-border: #9E9590;
+    --table-head-text: #2C2B29;
+    --green-color: #2E9E6B;
+    --green-hover-color: #237A53;
+    --green-light-color: #D6F0E5;
+    --green-text-color: #1D6644;
+    --white-color: #ffffff;
 }
 
 /* Fonts */
@@ -244,7 +260,7 @@ body {
 
 body {
     letter-spacing: 0.01625rem;
-    background-color: #FFFFFF;
+    background-color: var(--white-color);
 }
 
 h1,
@@ -291,7 +307,7 @@ a {
     top: 0;
     left: 0;
     z-index: 111;
-    background: #FFFFE9;
+    background: var(--off-white-color);
 }
 
     .preloader-wrapper .preloader {
@@ -331,17 +347,17 @@ a {
 @keyframes animation {
 
     0%, 80%, 100% {
-        box-shadow: 0 2em 0 -1em #80CCFF;
+        box-shadow: 0 2em 0 -1em var(--primary-color);
     }
 
     40% {
-        box-shadow: 0 2em 0 0 #80CCFF;
+        box-shadow: 0 2em 0 0 var(--primary-color);
     }
 }
 
 /* Text for headers*/
 .text-primary {
-    color: #DEAD6F !important;
+    color: var(--secondary-color) !important;
 }
 
 /* Logo */
@@ -350,7 +366,7 @@ a {
 }
 /* search bar style  */
 .header-color {
-    background-color: #F0F9FF;
+    background-color: var(--header-footer-color);
 }
 
 .search-bar {
@@ -362,42 +378,42 @@ a {
     }
 
         .search-bar .form-control::placeholder {
-            color: #999;
+            color: var(--placeholder-color);
         }
 
 .text-accent {
-    color: #DEAD6F;
+    color: var(--secondary-color);
 }
 
 header .nav-link {
-    color: #000;
+    color: var(--black-color);
     transition: all 0.3s ease-in;
 }
 
     header .nav-link:hover {
-        color: #DEAD6F;
+        color: var(--secondary-color);
     }
 
 
 header iconify-icon {
-    color: #000;
+    color: var(--black-color);
     font-size: 100px;
     transition: all 0.3s ease-in;
 }
 
     header iconify-icon:hover {
-        color: #DEAD6F;
+        color: var(--secondary-color);
     }
 
 /* category style */
 iconify-icon.category-icon {
-    color: #DEAD6F;
+    color: var(--secondary-color);
     font-size: 100px;
     transition: all 0.3s ease-in;
 }
 
 a.categories-item:hover iconify-icon.category-icon {
-    color: #80CCFF;
+    color: var(--primary-color);
     font-size: 110px;
 }
 
@@ -405,7 +421,7 @@ a.categories-item:hover iconify-icon.category-icon {
 /* banner style */
 #banner {
     height: 100vh;
-    background-color: #FFFFFF;
+    background-color: var(--white-color);
 }
 
     #banner .main-swiper {
@@ -419,13 +435,13 @@ a.categories-item:hover iconify-icon.category-icon {
 .swiper-pagination-bullet {
     width: 14px;
     height: 14px;
-    border: 1px solid #DEAD6F;
+    border: 1px solid var(--secondary-color);
     background: transparent;
     opacity: 1;
 }
 
 .swiper-pagination-bullet-active {
-    background: #DEAD6F;
+    background: var(--secondary-color);
 }
 
 
@@ -434,9 +450,8 @@ a.categories-item:hover iconify-icon.category-icon {
     height: auto;
 }
 
-
 .swiper-pagination-bullet {
-    border: 1px solid #DEAD6F;
+    border: 1px solid var(--secondary-color);
     background-color: transparent;
     opacity: 1;
     width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 15px));
@@ -444,16 +459,14 @@ a.categories-item:hover iconify-icon.category-icon {
 }
 
     .swiper-pagination-bullet.swiper-pagination-bullet-active {
-        background-color: #DEAD6F;
-        background: #DEAD6F;
+        background-color: var(--secondary-color);
+        background: var(--secondary-color);
     }
 
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
     margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 8px);
 }
-
-
 
 /* pet clothing */
 .card {
@@ -478,7 +491,7 @@ a.btn-wishlist {
 button.filter-button {
     letter-spacing: 0.02125rem;
     border: none;
-    border-bottom: 2px solid #D9D9D8;
+    border-bottom: 2px solid var(--grey-border-color);
     background: transparent;
     text-transform: uppercase;
     font-size: 1.0625rem;
@@ -487,31 +500,28 @@ button.filter-button {
 
     button.filter-button.active,
     button.filter-button:hover {
-        border-bottom: 2px solid #DEAD6F;
+        border-bottom: 2px solid var(--secondary-color);
     }
 
 /* testimonial style  */
 .testimonial-content {
-    color: #908F8D;
+    color: var(--grey-mid-color);
 }
 
 iconify-icon.quote-icon {
-    color: #F6EDE3;
+    color: var(--light-grey-color);
     font-size: 14rem;
 }
 
-
-
-
 /* register form  */
 .form-control {
-    color: #908F8D;
+    color: var(--grey-mid-color);
     line-height: normal;
     letter-spacing: 0.02125rem;
     text-transform: capitalize;
     border-radius: 0.25rem;
     border: 1px solid rgba(65, 64, 62, 0.20);
-    background: #FFF;
+    background: var(--light-color);
     display: flex;
     padding: 1.25rem 0rem 1.25rem 1.25rem;
     align-items: center;
@@ -520,13 +530,13 @@ iconify-icon.quote-icon {
 }
 
     .form-control:focus {
-        border-color: #80CCFF;
+        border-color: var(--primary-color);
     }
 
 
 /* blog style */
 .blog-paragraph {
-    color: #908F8D;
+    color: var(--grey-mid-color);
     font-size: 1rem;
     font-weight: 400;
     line-height: normal;
@@ -534,19 +544,19 @@ iconify-icon.quote-icon {
 }
 
 .blog-read {
-    color: #908F8D;
+    color: var(--grey-mid-color);
     font-size: 1rem;
     letter-spacing: 0.02rem;
     text-transform: uppercase;
 }
 
 a.blog-read {
-    border-bottom: 3px solid #D9D9D8;
+    border-bottom: 3px solid var(--grey-border-color);
     transition: all 0.3s ease-in;
 }
 
     a.blog-read:hover {
-        border-bottom: 3px solid #80CCFF;
+        border-bottom: 3px solid var(--primary-color);
     }
 
 
@@ -554,7 +564,7 @@ a.blog-read {
 .service-icon {
     font-size: 30px;
     border-radius: 3.125rem;
-    border: 1px solid #D9D9D8;
+    border: 1px solid var(--grey-border-color);
     padding: 1.25rem;
 }
 
@@ -585,12 +595,12 @@ a.blog-read {
 
 /* footer style */
 .footer {
-    background-color: #F0F9FF;
-    color: #41403E;
+    background-color: var(--header-footer-color);
+    color: var(--text-body-color);
 }
 
 .footer-heading {
-    color: #DEAD6F;
+    color: var(--secondary-color);
     font-weight: 600;
     margin-bottom: 1.5rem;
 }
@@ -605,12 +615,12 @@ a.blog-read {
     }
 
     .footer-links a {
-        color: #41403E;
+        color: var(--text-body-color);
         transition: all 0.3s ease;
     }
 
         .footer-links a:hover {
-            color: #80CCFF;
+            color: var(--primary-color);
             padding-left: 5px;
         }
 
@@ -627,7 +637,7 @@ a.blog-read {
     }
 
     .footer-contact iconify-icon {
-        color: #DEAD6F;
+        color: var(--secondary-color);
         font-size: 1.25rem;
     }
 
@@ -643,14 +653,14 @@ a.blog-read {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #fff;
-    color: #DEAD6F;
+    background-color: var(--light-color);
+    color: var(--secondary-color);
     transition: all 0.3s ease;
 }
 
     .social-icon:hover {
-        background-color: #80CCFF;
-        color: #fff;
+        background-color: var(--primary-color);
+        color: var(--light-color);
         transform: translateY(-3px);
     }
 
@@ -660,28 +670,28 @@ a.blog-read {
 }
 
 .footer-link-bottom {
-    color: #41403E;
+    color: var(--text-body-color);
     transition: all 0.3s ease;
 }
 
     .footer-link-bottom:hover {
-        color: #80CCFF;
+        color: var(--primary-color);
     }
 
 iconify-icon.social-icon {
-    color: #CACACA;
+    color: var(--grey-light2-color);
     font-size: 1.125rem;
     padding: 0.75rem;
     border-radius: 4.375rem;
-    border: 1px solid #D9D9D8;
+    border: 1px solid var(--grey-border-color);
     box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.03);
     transition: all 0.5s ease;
 }
 
 li.social:hover iconify-icon.social-icon {
-    color: #FFFF;
-    border: 1px solid #80CCFF;
-    background: #80CCFF;
+    color: var(--light-color);
+    border: 1px solid var(--primary-color);
+    background: var(--primary-color);
 }
 
 iconify-icon.send-icon {
@@ -689,9 +699,9 @@ iconify-icon.send-icon {
     font-size: 1.125rem;
     padding: 0.75rem;
     border-radius: 4.375rem;
-    color: #FFF;
-    border: 1px solid #DEAD6F;
-    background: #DEAD6F;
+    color: var(--light-color);
+    border: 1px solid var(--secondary-color);
+    background: var(--secondary-color);
 }
 
 
@@ -704,13 +714,13 @@ iconify-icon.send-icon {
     /* offcanvas menu */
     .offcanvas-body .nav-item {
         font-weight: 700;
-        border-bottom: 1px solid #d1d1d1;
+        border-bottom: 1px solid var(--grey-light3-color);
     }
 
     .offcanvas-body .filter-categories {
         width: 100%;
         margin-bottom: 20px !important;
-        border: 1px solid #d1d1d1 !important;
+        border: 1px solid var(--grey-light3-color) !important;
         padding: 14px;
         border-radius: 8px;
     }
@@ -769,7 +779,7 @@ Account section style start
 --------------------------------------------------------------*/
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-    color: #80CCFF;
+    color: var(--primary-color);
 }
 
 
@@ -791,7 +801,7 @@ Blog section style start
 
     .pagination .page-numbers:hover,
     .pagination .page-numbers.current {
-        color: #80CCFF;
+        color: var(--primary-color);
     }
 
 iconify-icon.pagination-arrow {
@@ -800,7 +810,7 @@ iconify-icon.pagination-arrow {
 }
 
     iconify-icon.pagination-arrow:hover {
-        color: #80CCFF;
+        color: var(--primary-color);
     }
 
 
@@ -810,21 +820,21 @@ Single Product section style start
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: var(--light-color);
-    background-color: #80CCFF;
+    background-color: var(--primary-color);
 }
 
-/* Fondo de la sección de categorías */
+/* Fondo de la secciÃ³n de categorÃ­as */
 #categories {
-    background-color: #FFF8F0;
+    background-color: var(--body-bg-color);
 }
 
 /* Tarjeta del login */
 .card.bg-body-tertiary {
-    background-color: #FFFCF7 !important;
+    background-color: var(--login-card-color) !important;
 }
 
 /*--------------------------------------------------------------
-Fundraiser / Publicación de Donación section styles
+Fundraiser / PublicaciÃ³n de DonaciÃ³n section styles
 --------------------------------------------------------------*/
 .fundraiser-section {
     min-height: calc(100vh - 200px);
@@ -929,12 +939,12 @@ Fundraiser / Publicación de Donación section styles
     line-height: 1.65;
 }
 
-/* Títulos de campaña en tabla */
+/* Tï¿½tulos de campaï¿½a en tabla */
 .fila-historial td .fw-bold {
     color: var(--table-head-text);
 }
 
-/* Texto pequeño bajo el título en la tabla */
+/* Texto pequeï¿½o bajo el tï¿½tulo en la tabla */
 .fila-historial td small.text-muted {
     color: var(--muted-text2-color) !important;
 }
@@ -967,7 +977,7 @@ Fundraiser / Publicación de Donación section styles
     font-size: 1rem;
 }
 
-/* Botones pequeños en la tabla de acciones */
+/* Botones pequeï¿½os en la tabla de acciones */
 .fundraiser-section .btn-sm {
     min-height: 2.2rem;
     min-width: 2.2rem;
@@ -975,7 +985,7 @@ Fundraiser / Publicación de Donación section styles
     font-size: 0.85rem;
 }
     /*--------------------------------------------------------------
-Modal Inactivar Publicación
+Modal Inactivar Publicaciï¿½n
 --------------------------------------------------------------*/
     .modal-inactivar-content {
         border: none;
@@ -1094,7 +1104,7 @@ Estilos de login y registro
     /*--------------------------------------------------------------
 Botones de Filtro
 --------------------------------------------------------------*/
-    /* Botón "Todas"*/
+    /* Botï¿½n "Todas"*/
     .btn-outline-primary.active-filter,
     .btn-outline-primary[data-filtro="todas"] {
         --bs-btn-color: #DEAD6F;
@@ -1104,7 +1114,7 @@ Botones de Filtro
         --bs-btn-hover-border-color: #DEAD6F;
         font-weight: 600;
     }
-    /* Botón "Activas"*/
+    /* Botï¿½n "Activas"*/
     .btn-outline-success,
     button[data-filtro="activa"] {
         --bs-btn-color: var(--green-color);
@@ -1118,7 +1128,7 @@ Botones de Filtro
         --bs-btn-focus-shadow-rgb: 46, 158, 107;
         font-weight: 600;
     }
-    /* Botón "Inactivas" */
+    /* Botï¿½n "Inactivas" */
     .btn-outline-secondary,
     button[data-filtro="inactiva"] {
         --bs-btn-color: #6B6460;
@@ -1129,7 +1139,7 @@ Botones de Filtro
         font-weight: 600;
     }
     /*--------------------------------------------------------------
-Botones de monto rápido en modal
+Botones de monto rï¿½pido en modal
 --------------------------------------------------------------*/
     .btn-monto-rapido {
         --bs-btn-color: var(--green-color) !important;
@@ -1228,7 +1238,7 @@ Botones de monto rápido en modal
             border-color: var(--muted-color);
             color: var(--light-color);
         }
-    /* Ícono patita en tabla de historial */
+    /* ï¿½cono patita en tabla de historial */
     .fila-historial iconify-icon.text-warning {
         color: var(--orange-color) !important;
     }
