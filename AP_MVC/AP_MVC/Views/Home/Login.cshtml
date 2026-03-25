@@ -36,13 +36,15 @@
                                 <div class="form-floating mb-4">
                                     <input type="email" id="CorreoElectronico" name="CorreoElectronico" class="form-control" asp-for="CorreoElectronico"
                                     placeholder="Correo Electrónico" required />
-                                    <label for="Contrasenna">CorreoElectronico</label>
+                                    <label>CorreoElectronico</label>
+                                    <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
                                 </div>
 
                                 <!-- Contraseña input -->
                                 <div class="form-floating mb-4">
                                     <input type="password" id="Contrasenna" name="Contrasenna" class="form-control" asp-for="Contrasenna" placeholder="Contraseña" required />
-                                    <label for="Contrasenna">Contraseña</label>
+                                    <label>Contraseña</label>
+                                    <span asp-validation-for="Contrasenna" class="text-danger"></span>
                                 </div>
 
                                 <!-- Checkbox y enlace -->
@@ -79,4 +81,5 @@
 
 @section Scripts{
     <script src="~/js/login.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

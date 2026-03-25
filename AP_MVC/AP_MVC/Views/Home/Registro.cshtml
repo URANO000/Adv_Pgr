@@ -28,54 +28,55 @@
                             }
 
                             <div class="formRegistro">
-                                <form id="formRegistro" asp-controller="Home" asp-action="Registro" method="post">
+                                <form id="formRegistro" asp-controller="Home" asp-action="Registro" method="post" >
 
                                     <div class="form-floating mb-4">
-                                        <input type="text" id="Cedula" name="Cedula"
+                                        <input type="text"
                                                class="form-control" asp-for="Cedula"
-                                               placeholder="Identificación" onkeyup="ConsultarNombre();" required="" />
-                                        <label for="Cedula">Cédula</label>
+                                               placeholder="Identificación" onkeyup="ConsultarNombre();" />
+                                        <label>Cédula</label>
                                     </div>
+                                    <span asp-validation-for="Cedula" class="text-danger"></span>
 
                                    <div class="row">
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <input type="text" id="PrimerNombre" name="PrimerNombre"
+                                            <input type="text"
                                                    class="form-control ReadOnly" readonly="readonly" asp-for="PrimerNombre"
-                                                   placeholder="Primer Nombre" required="" />
-                                            <label for="PrimerNombre">Primer Nombre</label>
+                                                   placeholder="Primer Nombre" />
+                                            <label>Primer Nombre</label>
                                         </div>
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <input type="text" id="SegundoNombre" name="SegundoNombre"
+                                            <input type="text" name="SegundoNombre"
                                                    class="form-control ReadOnly" readonly="readonly" asp-for="SegundoNombre"
                                                    placeholder="Segundo Nombre" />
-                                            <label for="SegundoNombre">Segundo Nombre</label>
+                                            <label>Segundo Nombre</label>
                                         </div>
                                    </div>
                                     <div class="row">
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <input type="text" id="PrimerApellido" name="PrimerApellido"
+                                            <input type="text"
                                                    class="form-control ReadOnly" readonly="readonly" asp-for="PrimerApellido"
-                                                   placeholder="Primer Apellido" required="" />
-                                            <label for="PrimerApellido">Primer Apellido</label>
+                                                   placeholder="Primer Apellido"/>
+                                            <label>Primer Apellido</label>
                                         </div>
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <input type="text" id="SegundoApellido" name="SegundoApellido"
+                                            <input type="text" name="SegundoApellido"
                                                    class="form-control ReadOnly" readonly="readonly" asp-for="SegundoApellido"
                                                    placeholder="Segundo Apellido" />
-                                            <label for="SegundoApellido">Segundo Apellido</label>
+                                            <label>Segundo Apellido</label>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <input type="tel" id="Telefono" name="Telefono"
+                                            <input type="tel" name="Telefono"
                                                    class="form-control" asp-for="Telefono"
                                                    placeholder="Teléfono" />
-                                            <label for="Telefono">Teléfono</label>
+                                            <label>Teléfono</label>
                                         </div>
 
                                         <div class="form-floating mb-4 col-md-6 ">
-                                            <select id="Provincia" name="Provincia" class="form-select" asp-for="Provincia">
+                                            <select name="Provincia" class="form-select" asp-for="Provincia">
                                                 <option value="">Seleccione...</option>
                                                 <option value="San José">San José</option>
                                                 <option value="Alajuela">Alajuela</option>
@@ -85,22 +86,24 @@
                                                 <option value="Puntarenas">Puntarenas</option>
                                                 <option value="Limón">Limón</option>
                                             </select>
-                                            <label for="Provincia">Provincia</label>
+                                            <label>Provincia</label>
                                         </div>
                                     </div>
 
                                     <div class="form-floating mb-4">
-                                        <input type="email" id="CorreoElectronico" name="CorreoElectronico"
+                                        <input type="email"
                                                class="form-control" asp-for="CorreoElectronico"
-                                               placeholder="Correo Electrónico" required="" />
-                                        <label for="CorreoElectronico">Correo Electrónico</label>
+                                               placeholder="Correo Electrónico"  />
+                                        <label>Correo Electrónico</label>
+                                        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
                                     </div>
 
                                     <div class="form-floating mb-4">
-                                        <input type="password" id="Contrasenna" name="Contrasenna"
+                                        <input type="password"
                                                class="form-control" asp-for="Contrasenna"
-                                               placeholder="Contraseña" required="" />
-                                        <label for="Contrasenna">Contraseña</label>
+                                               placeholder="Contraseña" />
+                                        <label>Contraseña</label>
+                                        <span asp-validation-for="Contrasenna" class="text-danger"></span>
                                     </div>
 
                                     <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
@@ -135,5 +138,5 @@
 
 @section Scripts{
     <script src="~/js/utilities.js" asp-append-version="true"></script>
-    <script src="~/js/registro.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

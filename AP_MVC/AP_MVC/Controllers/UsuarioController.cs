@@ -1,6 +1,7 @@
 ﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Http.Headers;
@@ -220,10 +221,14 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region ListaUsuarios
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult ListarUsuarios()
         {
             var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
