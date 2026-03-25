@@ -20,6 +20,7 @@ namespace AP_WEB.Controllers
             _helper = helper;
         }
 
+        #region cambiarAcceso
         [HttpPut("CambiarAcceso")]
         public IActionResult CambiarAcceso(SeguridadRequest model)
         {
@@ -39,7 +40,9 @@ namespace AP_WEB.Controllers
 
             return Ok("Su información se actualizó correctamente");
         }
+        #endregion
 
+        #region detalles/verPerfil
         [HttpGet("VerPerfil")]
         public IActionResult VerPerfil()
         {
@@ -65,7 +68,9 @@ namespace AP_WEB.Controllers
 
             return Ok(model);
         }
+#endregion
 
+        #region ListadoUsuarios
         [HttpGet("ListaUsuarios")]
         public IActionResult ListaUsuarios()
         {
@@ -79,7 +84,9 @@ namespace AP_WEB.Controllers
 
             return Ok(model);
         }
+        #endregion
 
+        #region EditarPerfil
         [Authorize]
         [HttpPut("EditarPerfil")]
         public async Task<IActionResult> EditarPerfil(EditarPerfilRequest model)
@@ -110,6 +117,26 @@ namespace AP_WEB.Controllers
 
             return Ok("El perfil fue editado exitosamente.");
         }
+        #endregion
+
+        #region DesactivarUsuario
+        [HttpPut("DesactivarUsuario/{usuarioId}")]
+        public IActionResult DesactivarUsuario(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_DesactivarUsuario", parametros);
+            if(result <= 0)
+            {
+                return BadRequest("No se pudo desactivar este usuario.");
+            }
+
+            return Ok("El usuario fue desactivado exitosamente.");
+        }
+
+        #endregion
 
         #region Helper
         private UsuarioResponse? ObtenerUsuarioPorId(string usuarioId)
@@ -121,5 +148,6 @@ namespace AP_WEB.Controllers
             return context.QueryFirstOrDefault<UsuarioResponse>("sp_ObtenerUsuario", parametros);
         }
         #endregion
+
     }
 }
