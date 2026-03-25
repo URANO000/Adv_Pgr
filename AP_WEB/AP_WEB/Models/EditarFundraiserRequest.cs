@@ -15,9 +15,5 @@ namespace AP_WEB.Models
 
         [Required]
         public string Descripcion { get; set; } = string.Empty;
-
-        [Required]
-        [Range(1, double.MaxValue)]
-        public decimal MetaTotal { get; set; }
     }
 }

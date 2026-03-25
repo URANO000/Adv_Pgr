@@ -338,8 +338,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_EditarFundraiser]
     @FundraiserId INT,
     @AnimalId INT,
     @Titulo NVARCHAR(200),
-    @Descripcion NVARCHAR(MAX),
-    @MetaTotal DECIMAL(10,2)
+    @Descripcion NVARCHAR(MAX)
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
@@ -347,8 +346,7 @@ BEGIN
         UPDATE Fundraiser
         SET AnimalId    = @AnimalId,
             Titulo      = @Titulo,
-            Descripcion = @Descripcion,
-            MetaTotal   = @MetaTotal
+            Descripcion = @Descripcion
         WHERE FundraiserId = @FundraiserId;
     END
 END
