@@ -2,9 +2,6 @@
 
 @{
     ViewData["Title"] = "Detalle de publicación";
-    var imagenPrincipal = Model.Imagenes != null && Model.Imagenes.Any()
-        ? Model.Imagenes.First().ArchivoUrl
-        : Url.Content("~/img/no-image.png");
 }
 
 <div class="container mt-4 mb-5">
@@ -24,9 +21,60 @@
 
     <div class="detalle-publicacion-card">
 
-        <div class="detalle-imagen-principal">
-            <img src="@imagenPrincipal" alt="Imagen de la mascota" />
-        </div>
+        @if (Model.Imagenes != null && Model.Imagenes.Any())
+        {
+            <div id="detalleCarousel" class="carousel slide detalle-carousel" data-bs-ride="false">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Imagenes.Count; i++)
+                    {
+                        var imagen = Model.Imagenes[i];
+
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@imagen.ArchivoUrl"
+                                 class="d-block w-100 detalle-carousel-img"
+                                 alt="Imagen @(i + 1) de la mascota" />
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Imagenes.Count > 1)
+                {
+                    <button class="carousel-control-prev" type="button" data-bs-target="#detalleCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#detalleCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                }
+            </div>
+
+            @if (Model.Imagenes.Count > 1)
+            {
+                <div class="detalle-thumbnails">
+                    @for (int i = 0; i < Model.Imagenes.Count; i++)
+                    {
+                        var imagen = Model.Imagenes[i];
+
+                        <button type="button"
+                                class="detalle-thumbnail-btn @(i == 0 ? "active-thumbnail" : "")"
+                                data-bs-target="#detalleCarousel"
+                                data-bs-slide-to="@i"
+                                aria-label="Ir a imagen @(i + 1)">
+                            <img src="@imagen.ArchivoUrl" alt="Miniatura @(i + 1)" class="detalle-thumbnail-img" />
+                        </button>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="detalle-imagen-principal">
+                <img src="~/img/no-image.png" alt="Imagen de la mascota" />
+            </div>
+        }
 
         <div class="detalle-contenido">
             <div class="detalle-encabezado">
@@ -50,8 +98,6 @@
                 <div><strong>Peso:</strong> @(Model.Peso.HasValue? Model.Peso.Value.ToString("0.##") + " kg" : "No registrado")</div>
             </div>
 
-            <hr />
-
             <div class="detalle-info-extra">
                 <p><strong>Enfermedades:</strong> @(string.IsNullOrWhiteSpace(Model.Enfermedades) ? "No registradas" : Model.Enfermedades)</p>
                 <p><strong>Historial médico:</strong> @(string.IsNullOrWhiteSpace(Model.HistorialMedico) ? "No registrado" : Model.HistorialMedico)</p>
@@ -59,16 +105,6 @@
                 <p><strong>Notas:</strong> @(string.IsNullOrWhiteSpace(Model.Notas) ? "Sin notas" : Model.Notas)</p>
                 <p><strong>Fecha de publicación:</strong> @Model.PublishedAt.ToString("dd/MM/yyyy HH:mm")</p>
             </div>
-
-            @if (Model.Imagenes != null && Model.Imagenes.Count > 1)
-            {
-                <div class="detalle-galeria">
-                    @foreach (var imagen in Model.Imagenes.Skip(1))
-                    {
-                        <img src="@imagen.ArchivoUrl" alt="Imagen secundaria" />
-                    }
-                </div>
-            }
 
             <div class="detalle-acciones">
                 <a asp-controller="Mascota"
