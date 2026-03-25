@@ -82,7 +82,9 @@ DocumentLayout.backup.json
 *.pem
 
 # Uploads locales
-**/wwwroot/uploads/
+**/wwwroot/uploads/*
+!**/wwwroot/uploads/mascotas/
+!**/wwwroot/uploads/mascotas/.gitkeep
 
 # Variables de entorno locales
 .env

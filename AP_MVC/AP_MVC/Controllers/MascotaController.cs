@@ -82,6 +82,11 @@ namespace AP_MVC.Controllers
                         "mascotas"
                     );
 
+                    if (!Directory.Exists(carpetaDestino))
+                    {
+                        Directory.CreateDirectory(carpetaDestino);
+                    }
+
                     var rutaFisica = Path.Combine(carpetaDestino, nombreArchivo);
 
                     using (var stream = new FileStream(rutaFisica, FileMode.Create))
