@@ -287,6 +287,79 @@ namespace AP_MVC.Controllers
         }
         #endregion
 
+        #region ActivarUsuario
+        [HttpPost]
+        public async Task<IActionResult> Activar(string usuarioId)
+        {
+            var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+                TempData["Error"] = "UsuarioId es requerido.";
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var url = _config.GetValue<string>("Valores:UrlAPI") +
+                      $"Usuario/ActivarUsuario/{usuarioId}";
+
+            var response = await client.PutAsync(url, null);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            var message = await response.Content.ReadAsStringAsync();
+
+            TempData["Success"] = message;
+
+            return RedirectToAction("ListarUsuarios", "Usuario");
+        }
+        #endregion
+
+        #region DesactivarUsuario
+        [HttpPost]
+        public async Task<IActionResult> Desactivar(string usuarioId)
+        {
+            var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+            {
+                TempData["Error"] = "UsuarioId es requerido.";
+                return RedirectToAction("ListarUsuarios", "Usuario");
+            }
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var url = _config.GetValue<string>("Valores:UrlAPI") +
+                      $"Usuario/DesactivarUsuario/{usuarioId}";
+
+            var response = await client.PutAsync(url, null);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            var message = await response.Content.ReadAsStringAsync();
+
+            TempData["Success"] = message;
+
+            return RedirectToAction("ListarUsuarios", "Usuario");
+        }
+        #endregion
+
 
     }
 }

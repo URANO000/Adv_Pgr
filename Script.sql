@@ -233,6 +233,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerUsuario]
 AS
 BEGIN
 	SELECT 
+		u.UsuarioId,
 		u.CorreoElectronico,
 		u.PrimerNombre,
 		u.SegundoNombre,
@@ -297,6 +298,16 @@ AS
 BEGIN
 	UPDATE [dbo].[Usuario]
 	SET IsActive = 0
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ActivarUsuario]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET IsActive = 1
 	WHERE UsuarioId = @UsuarioId
 END
 GO
@@ -490,6 +501,10 @@ GO
 -- Usuario de prueba (pass: 12345678)
 INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
+
+--Usuario admin de prueba(pass: 12345678)
+INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
+VALUES('admin@patitas.com','DkF5eJ1UhQwmEXbYNJDqmQ==','Dean','Winchester', 1, 1);
 
 -- Animales de prueba
 INSERT INTO Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy)
@@ -741,6 +756,7 @@ BEGIN
     ELSE
         SELECT 0 AS Resultado;
 END
+GO
 
 CREATE PROCEDURE [dbo].[sp_RegistrarAnimalMedia]
     @AnimalId INT,

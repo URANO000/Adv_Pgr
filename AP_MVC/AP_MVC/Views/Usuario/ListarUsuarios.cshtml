@@ -7,7 +7,22 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
-            <div class="card bg-body-tertiary shadow-sm">
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            <div class="card shadow-sm">
                 <div class="card-body p-3">
 
                     <!-- Header -->
@@ -38,7 +53,7 @@
                                 @foreach (var u in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td class="px-4">
                                             <a asp-action="Detalle" asp-controller="Usuario" asp-route-usuarioId="@u.UsuarioId">
                                                 <iconify-icon icon="mdi:eye-outline" class="text-center" style="color:green">
                                                 </iconify-icon>

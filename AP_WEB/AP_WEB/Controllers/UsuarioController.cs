@@ -138,6 +138,25 @@ namespace AP_WEB.Controllers
 
         #endregion
 
+        #region ActivarUsuario
+        [HttpPut("ActivarUsuario/{usuarioId}")]
+        public IActionResult ActivarUsuario(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_ActivarUsuario", parametros);
+            if(result <= 0)
+            {
+                return BadRequest("No se pudo activar este usuario.");
+            }
+
+            return Ok("El usuario fue activado exitosamente.");
+        }
+
+        #endregion
+
         #region Helper
         private UsuarioResponse? ObtenerUsuarioPorId(string usuarioId)
         {

@@ -9,6 +9,14 @@
         : Model.ImagenPerfil;
 }
 
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <section class="container-fluid mt-4 mb-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -85,17 +93,31 @@
 
                     <!-- ADMIN ACTIONS -->
                     <div class="d-flex justify-content-end gap-2">
-                        <a asp-action="Eliminar"
-                               asp-route-usuarioId="@Model.UsuarioId"
-                               class="btn btn-danger">
-                            Desactivar
-                        </a>
+                        @if (Model.IsActive)
+                        {
+                            <form asp-action="Desactivar" method="post" class="d-inline">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-danger btn-confirm mascota-secondary-btn">
+                                    Desactivar
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
 
-                        <a
+                            <form asp-action="Activar" method="post" class="d-inline">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-success btn-confirm mascota-secondary-btn">
+                                    Activar
+                                </button>
+                            </form>
+                        }
+
+                        <button type="button"
                                onclick="window.history.back()"
-                               class="btn btn-primary">
+                                class="btn btn-secondary mascota-secondary-btn">
                             Regresar
-                        </a>
+                        </button>
 
                     </div>
 
@@ -105,3 +127,30 @@
         </div>
     </div>
 </section>
+
+
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de realizar esta acción?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">
+                    Sí, continuar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/detalleUsuarios.js" asp-append-version="true"></script>
+}
