@@ -1,0 +1,156 @@
+﻿@model Usuario
+
+@{
+    ViewData["Title"] = "Detalle de Usuario";
+    Layout = "_Layout";
+
+    var imagenPerfil = string.IsNullOrEmpty(Model.ImagenPerfil)
+        ? "/uploads/default.jpg"
+        : Model.ImagenPerfil;
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<section class="container-fluid mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <!-- HEADER -->
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="@imagenPerfil"
+                                 class="rounded-circle"
+                                 width="70" height="70"
+                                 style="object-fit: cover;" />
+
+                            <div>
+                                <h5 class="mb-0 fw-bold">
+                                    @Model.nombreCompleto
+                                </h5>
+                                <small class="text-muted">@Model.CorreoElectronico</small>
+                            </div>
+                        </div>
+
+                        <!-- Rol-->
+                        <div>
+                            <span class="badge bg-dark">
+                                @Model.RolId
+                            </span>
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success text-black">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- INFO GRID -->
+                    <div class="row g-4">
+
+                        <!-- Identity -->
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Información Personal</small>
+
+                            <p><strong>Cédula:</strong> @Model.Cedula</p>
+                            <p>
+                                <strong>Nombre completo:</strong>
+                                @Model.PrimerNombre @Model.SegundoNombre
+                                @Model.PrimerApellido @Model.SegundoApellido
+                            </p>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Contacto</small>
+
+                            <p><strong>Teléfono:</strong> @Model.Telefono</p>
+                            <p><strong>Provincia:</strong> @Model.Provincia</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="fw-bold mb-3 text-muted">Sistema</small>
+
+                            <p><strong>Fecha de registro:</strong> @Model.CreatedAt</p>
+                        </div>
+
+                    </div>
+
+                    <hr />
+
+                    <!-- ADMIN ACTIONS -->
+                    <div class="d-flex justify-content-end gap-2">
+                        @if (Model.IsActive)
+                        {
+                            <form asp-action="Desactivar" method="post" class="d-inline">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-danger btn-confirm mascota-secondary-btn">
+                                    Desactivar
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+
+                            <form asp-action="Activar" method="post" class="d-inline">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-success btn-confirm mascota-secondary-btn">
+                                    Activar
+                                </button>
+                            </form>
+                        }
+
+                        <button type="button"
+                               onclick="window.history.back()"
+                                class="btn btn-secondary mascota-secondary-btn">
+                            Regresar
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de realizar esta acción?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">
+                    Sí, continuar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/detalleUsuarios.js" asp-append-version="true"></script>
+}

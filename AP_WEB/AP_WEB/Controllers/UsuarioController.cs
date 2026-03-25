@@ -20,6 +20,7 @@ namespace AP_WEB.Controllers
             _helper = helper;
         }
 
+        #region cambiarAcceso
         [HttpPut("CambiarAcceso")]
         public IActionResult CambiarAcceso(SeguridadRequest model)
         {
@@ -39,17 +40,15 @@ namespace AP_WEB.Controllers
 
             return Ok("Su información se actualizó correctamente");
         }
+        #endregion
 
+        #region detalles/verPerfil
         [HttpGet("VerPerfil")]
         public IActionResult VerPerfil()
         {
             var UsuarioId = User.FindFirst("UsuarioId")?.Value;
 
-            using var context = _helper.CreateConnection();
-            var parametros = new DynamicParameters();
-            parametros.Add("@UsuarioId", UsuarioId);
-
-            var model = context.QueryFirstOrDefault<PerfilResponse>("sp_ObtenerUsuario", parametros);
+            var model = ObtenerUsuarioPorId(UsuarioId);
             if(model == null)
             {
                 return NotFound("No se encontró el perfil de usuario.");
@@ -58,6 +57,20 @@ namespace AP_WEB.Controllers
             return Ok(model);
         }
 
+        [HttpGet("VerDetalle/{UsuarioId}")]
+        public IActionResult VerDetalle(string UsuarioId)
+        {
+            var model = ObtenerUsuarioPorId(UsuarioId);
+            if (model == null)
+            {
+                return NotFound("No se encontró el perfil de usuario.");
+            }
+
+            return Ok(model);
+        }
+#endregion
+
+        #region ListadoUsuarios
         [HttpGet("ListaUsuarios")]
         public IActionResult ListaUsuarios()
         {
@@ -71,7 +84,9 @@ namespace AP_WEB.Controllers
 
             return Ok(model);
         }
+        #endregion
 
+        #region EditarPerfil
         [Authorize]
         [HttpPut("EditarPerfil")]
         public async Task<IActionResult> EditarPerfil(EditarPerfilRequest model)
@@ -102,5 +117,56 @@ namespace AP_WEB.Controllers
 
             return Ok("El perfil fue editado exitosamente.");
         }
+        #endregion
+
+        #region DesactivarUsuario
+        [HttpPut("DesactivarUsuario/{usuarioId}")]
+        public IActionResult DesactivarUsuario(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_DesactivarUsuario", parametros);
+            if(result <= 0)
+            {
+                return BadRequest("No se pudo desactivar este usuario.");
+            }
+
+            return Ok("El usuario fue desactivado exitosamente.");
+        }
+
+        #endregion
+
+        #region ActivarUsuario
+        [HttpPut("ActivarUsuario/{usuarioId}")]
+        public IActionResult ActivarUsuario(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_ActivarUsuario", parametros);
+            if(result <= 0)
+            {
+                return BadRequest("No se pudo activar este usuario.");
+            }
+
+            return Ok("El usuario fue activado exitosamente.");
+        }
+
+        #endregion
+
+        #region Helper
+        private UsuarioResponse? ObtenerUsuarioPorId(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            return context.QueryFirstOrDefault<UsuarioResponse>("sp_ObtenerUsuario", parametros);
+        }
+        #endregion
+
     }
 }
