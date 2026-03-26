@@ -271,13 +271,13 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + $"Usuario/VerDetalle/{usuarioId}";
             var result = await client.GetAsync(url);
 
-            if(result.StatusCode == HttpStatusCode.Unauthorized)
+            if (result.StatusCode == HttpStatusCode.Unauthorized)
             {
                 HttpContext.Session.Clear();
                 return RedirectToAction("Login", "Home");
             }
 
-            if(result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
                 var objeto = await result.Content.ReadFromJsonAsync<Usuario>();
                 return View(objeto);
