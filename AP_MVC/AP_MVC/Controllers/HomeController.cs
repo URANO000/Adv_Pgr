@@ -1,11 +1,11 @@
-﻿using System.Net;
-using AP_MVC.Filters;
+﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 
 namespace AP_MVC.Controllers
@@ -59,7 +59,7 @@ namespace AP_MVC.Controllers
         }
         #endregion
 
-        #region Inicio de sesi�n
+        #region Inicio de sesión
 
         [HttpGet]
         public IActionResult Login()
@@ -105,7 +105,7 @@ namespace AP_MVC.Controllers
                     principal
                 );
 
-                //Lo dem�s de la UI
+                //Lo demás de la UI
                 HttpContext.Session.SetString("NombreUsuario", objeto!.nombreCompleto);
                 HttpContext.Session.SetString("UsuarioId", objeto!.UsuarioId);
                 HttpContext.Session.SetString("Token", objeto!.Token);
@@ -129,7 +129,7 @@ namespace AP_MVC.Controllers
 
         #endregion
 
-        #region Cerrar Sesi�n
+        #region Cerrar Sesión
 
         [SesionActiva]
         [HttpGet]
