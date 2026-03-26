@@ -1051,35 +1051,36 @@ Modal Inactivar Publicación
 Estilos de login y registro
 --------------------------------------------------------------*/
 
-    .cascading-left {
-        margin-left: -50px;
-    }
-
-    @media (max-width: 991.98px) {
-        .cascading-left {
-            margin-left: 0;
-        }
-    }
-
-    .login-icon {
-        color: var(--bs-primary);
-        font-size: 2.5rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .login-section {
-        min-height: calc(100vh - 200px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        background-color: #FFFFFF;
-    }
-
-
-.formRegistro{
-    display:grid;
+.cascading-left {
+    margin-left: -50px;
 }
+
+@media (max-width: 991.98px) {
+    .cascading-left {
+        margin-left: 0;
+    }
+}
+
+.login-icon {
+    color: var(--bs-primary);
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.login-section {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #F6EDE3;
+}
+
+
+.formRegistro {
+    display: grid;
+}
+
 
 /*--------------------------------------------------------------
 Módulo Mascotas
