@@ -155,6 +155,10 @@ namespace AP_MVC.Controllers
                 throw new Exception();
 
             ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
+
+            ViewBag.EsDuenno = !string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId"))
+                && EsFundraiserDelUsuario(id);
+
             return View("EditarPublicacion");
         }
 
@@ -259,6 +263,7 @@ namespace AP_MVC.Controllers
                     : new List<Donacion>();
 
                 ViewBag.EstaLogueado = !string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId"));
+                ViewBag.EsDuenno = EsFundraiserDelUsuario(id);
                 return View("DetalleFundraiser", model);
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
