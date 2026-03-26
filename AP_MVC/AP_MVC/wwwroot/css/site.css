@@ -2241,25 +2241,51 @@ Modal eliminar / inactivar (custom-delete-modal)
 
 .custom-delete-modal {
     border: none;
-    border-radius: 1rem;
-    background-color: #ffffff;
+    border-radius: 1.25rem;
+    background-color: #fffdf9;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
 }
 
 .custom-delete-title {
     font-family: var(--heading-font);
-    font-size: 1.2rem;
-    color: var(--dark-color);
+    font-size: 1.45rem;
+    color: #3e2f25;
+    margin-bottom: 0.35rem;
+    line-height: 1.25;
 }
 
 .custom-delete-text {
-    color: var(--light-dark-color);
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin-bottom: 1rem;
+    color: #74685d;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
 }
 
 .custom-delete-check {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    background-color: #fcf7f1;
+    border: 1px solid #efe2d2;
+    border-radius: 0.9rem;
+}
+.custom-delete-check .form-check-label {
+    color: #5e5349;
+    line-height: 1.65;
+}
+
+.custom-delete-check .form-check-input {
+    margin-top: 0.2rem;
+    border-color: #d6c2ad;
+}
+
+.custom-delete-check .form-check-input:checked {
+    background-color: #c79a5f;
+    border-color: #c79a5f;
+}
+
+.custom-delete-check .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(199, 154, 95, 0.18);
 }
 
 .custom-cancel-btn {
@@ -2280,7 +2306,33 @@ Modal eliminar / inactivar (custom-delete-modal)
     --bs-btn-disabled-bg: #d3d7dd;
     --bs-btn-disabled-border-color: transparent;
 }
+.custom-delete-modal .modal-body {
+    padding: 1.6rem 1.6rem 1.4rem 1.6rem;
+}
 
+.custom-delete-modal .modal-header {
+    padding: 1.3rem 1.6rem 0.4rem 1.6rem;
+    border-bottom: none;
+}
+
+.custom-delete-modal .modal-footer {
+    padding: 0 1.6rem 1.5rem 1.6rem;
+    border-top: none;
+    gap: 0.75rem;
+}
+.custom-delete-modal .form-select {
+    min-height: 48px;
+    border-radius: 0.85rem;
+    border: 1px solid #e7ddd2;
+    background-color: #fff;
+    color: #5f5348;
+    box-shadow: none;
+}
+
+    .custom-delete-modal .form-select:focus {
+        border-color: #d8a866;
+        box-shadow: 0 0 0 0.2rem rgba(216, 168, 102, 0.18);
+    }
 /*--------------------------------------------------------------
 Mis Publicaciones — cards y grid
 --------------------------------------------------------------*/
