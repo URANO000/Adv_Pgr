@@ -5,119 +5,120 @@
     Layout = "_Layout";
 }
 
-<section class="fundraiser-section">
-    <div class="container fundraiser-container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-md-11">
-                <div class="card fundraiser-card shadow-sm">
-                    <div class="card-body p-5">
+<section class="mascota-page-section">
+    <div class="container py-5">
+        <div class="row align-items-start g-4">
+
+            <div class="col-lg-5">
+                <div class="mascota-side-panel">
+                    <span class="mascota-badge">Nueva publicación</span>
+                    <h1 class="mascota-title">Registrar campaña de donación</h1>
+                    <p class="mascota-subtitle">
+                        Crea una campaña para recibir donaciones y ayudar a tu mascota.
+                        Comparte su historia para que más personas puedan colaborar.
+                    </p>
+
+                    <div class="mascota-side-card">
+                        <h5>¿Qué puedes registrar aquí?</h5>
+                        <ul class="mascota-checklist">
+                            <li>El animal al que va dirigida la campaña</li>
+                            <li>Título y descripción de la situación</li>
+                            <li>Meta de recaudación en colones</li>
+                            <li>Estado inicial de la publicación</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card mascota-form-card shadow-sm border-0">
+                    <div class="card-body p-4 p-md-5">
 
                         <div class="text-center mb-4">
-                            <iconify-icon icon="mdi:hand-heart" class="fundraiser-icon"></iconify-icon>
-                            <h2 class="fw-bold mb-2">Nueva publicación de donación</h2>
-                            <p class="text-muted">Completa los datos para crear una campaña de donación para tu mascota</p>
+                            <h2 class="fw-bold mb-2">Formulario de campaña</h2>
+                            <p class="text-muted mb-0">
+                                Completa los datos para crear tu publicación de donación.
+                            </p>
                         </div>
 
                         <form asp-controller="Fundraiser" asp-action="Registrar" method="post">
-
                             @Html.AntiForgeryToken()
 
-                            @if (ViewBag.Animales != null)
-                            {
-                                <div class="form-floating mb-4">
-                                    <select id="AnimalId" name="AnimalId" class="form-select" asp-for="AnimalId"
-                                            asp-items="ViewBag.Animales" required>
-                                        <option value="">Seleccione un animal...</option>
-                                    </select>
-                                    <label for="AnimalId">
-                                        <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>Animal
-                                    </label>
-                                    <span asp-validation-for="AnimalId" class="text-danger small"></span>
+                            <div class="mascota-form-section">
+                                <div class="section-header">
+                                    <h4>Datos de la campaña</h4>
+                                    <p>Información principal de tu publicación de donación.</p>
                                 </div>
-                            }
 
-                            <div class="form-floating mb-4">
-                                <input type="text" id="Titulo" name="Titulo"
-                                       class="form-control" asp-for="Titulo"
-                                       placeholder="Título de la publicación" maxlength="200" required />
-                                <label for="Titulo">
-                                    <iconify-icon icon="mdi:format-title" class="me-1"></iconify-icon>Título
-                                </label>
-                                <span asp-validation-for="Titulo" class="text-danger small"></span>
-                            </div>
+                                <div class="row g-3">
 
-                            <div class="mb-4">
-                                <label for="Descripcion" class="fundraiser-label">
-                                    <iconify-icon icon="mdi:text-box-outline" class="me-1"></iconify-icon>Descripción
-                                </label>
-                                <textarea id="Descripcion" name="Descripcion"
-                                          class="form-control fundraiser-textarea" asp-for="Descripcion"
-                                          placeholder="Describe la situación del animal y el motivo de la campaña..."
-                                          rows="5" required></textarea>
-                                <span asp-validation-for="Descripcion" class="text-danger small"></span>
-                            </div>
+                                    @if (ViewBag.Animales != null)
+                                    {
+                                        <div class="col-12">
+                                            <div class="form-floating">
+                                                <select id="AnimalId" name="AnimalId" class="form-select" asp-for="AnimalId"
+                                                        asp-items="ViewBag.Animales" required>
+                                                    <option value="">Seleccione un animal...</option>
+                                                </select>
+                                                <label for="AnimalId">Animal</label>
+                                            </div>
+                                            <span asp-validation-for="AnimalId" class="text-danger small"></span>
+                                        </div>
+                                    }
 
-                            <div class="form-floating mb-4">
-                                <input type="number" id="MetaTotal" name="MetaTotal"
-                                       class="form-control" asp-for="MetaTotal"
-                                       placeholder="Meta de recaudación (₡)" min="1" step="0.01" required />
-                                <label for="MetaTotal">
-                                    <iconify-icon icon="mdi:cash-multiple" class="me-1"></iconify-icon>Meta de recaudación (₡)
-                                </label>
-                                <span asp-validation-for="MetaTotal" class="text-danger small"></span>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="fundraiser-label mb-2">
-                                    <iconify-icon icon="mdi:toggle-switch-outline" class="me-1"></iconify-icon>Estado de la publicación
-                                </label>
-                                <div class="fundraiser-toggle-wrap d-flex align-items-center gap-3">
-                                    <div class="form-check form-switch mb-0">
-                                        <input class="form-check-input fundraiser-switch" type="checkbox"
-                                               id="IsActive" name="IsActive" asp-for="IsActive" role="switch" />
-                                        <label class="form-check-label" for="IsActive" id="isActiveLabel">Activa</label>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" id="Titulo" name="Titulo"
+                                                   class="form-control" asp-for="Titulo"
+                                                   placeholder="Título de la publicación" maxlength="200" required />
+                                            <label for="Titulo">Título</label>
+                                        </div>
+                                        <span asp-validation-for="Titulo" class="text-danger small"></span>
                                     </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea id="Descripcion" name="Descripcion"
+                                                      class="form-control mascota-textarea-lg" asp-for="Descripcion"
+                                                      placeholder="Descripción" required></textarea>
+                                            <label for="Descripcion">Descripción</label>
+                                        </div>
+                                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="number" id="MetaTotal" name="MetaTotal"
+                                                   class="form-control" asp-for="MetaTotal"
+                                                   placeholder="Meta de recaudación (₡)" min="1" step="0.01" required />
+                                            <label for="MetaTotal">Meta de recaudación (₡)</label>
+                                        </div>
+                                        <span asp-validation-for="MetaTotal" class="text-danger small"></span>
+                                    </div>
+
                                 </div>
-                                <span asp-validation-for="IsActive" class="text-danger small"></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
-                                <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
-                                Publicar campaña
-                            </button>
+                            <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary mascota-submit-btn">
+                                    Publicar campaña
+                                </button>
 
-                            <div class="text-center">
-                                <a asp-controller="Fundraiser" asp-action="Catalogo" class="fundraiser-back-link">
-                                    <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Volver al catálogo
+                                <a asp-controller="Fundraiser" asp-action="Catalogo" class="btn btn-outline-primary mascota-secondary-btn">
+                                    Volver al catálogo
                                 </a>
                             </div>
 
                         </form>
 
-                        @* --- BOTÓN DE PRUEBA: quitar cuando no sea necesario --- *@
-                        <hr class="my-4" />
-                        <div class="text-center">
-                            <p class="text-muted small mb-2">Prueba del modal de inactivar</p>
-                            <button type="button"
-                                    class="btn btn-modal-inactivar"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalInactivar"
-                                    data-fundraiser-id="99">
-                                <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>
-                                Inactivar publicación
-                            </button>
-                        </div>
-                        @* --- FIN BOTÓN DE PRUEBA --- *@
-
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
 
-@* Partial del modal *@
-@await Html.PartialAsync("_ModalCambiarEstado")
 @await Html.PartialAsync("_ModalInactivo")
 
 @section Scripts {

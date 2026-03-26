@@ -1,35 +1,25 @@
 ﻿$(function () {
 
-    // ================================================
-    // Toggle label Activa / Inactiva (RegistrarPublicacion)
-    // ================================================
-    var toggle = document.getElementById('IsActive');
-    var label = document.getElementById('isActiveLabel');
-    if (toggle && label) {
-        var updateLabel = function () {
-            label.textContent = toggle.checked ? 'Activa' : 'Inactiva';
-        };
-        toggle.addEventListener('change', updateLabel);
-        updateLabel();
-    }
-
-    // ================================================
-    // Modal inactivar: pasar FundraiserId al form
-    // ================================================
-    var modalInactivar = document.getElementById('modalInactivar');
-    if (modalInactivar) {
-        modalInactivar.addEventListener('show.bs.modal', function (event) {
-            var trigger = event.relatedTarget;
-            var fundraiserId = trigger ? trigger.getAttribute('data-fundraiser-id') : '';
-            var inputHidden = document.getElementById('modalFundraiserId');
-            if (inputHidden) inputHidden.value = fundraiserId;
+    // Habilitar botón confirmar al marcar el checkbox
+    var chk = document.getElementById('confirmacionInactivar');
+    var btn = document.getElementById('btnConfirmarInactivar');
+    if (chk && btn) {
+        chk.addEventListener('change', function () {
+            btn.disabled = !this.checked;
         });
     }
 
-    // Modal publicación inactiva (redirect desde Editar)
-    if (typeof mostrarModalInactivo !== 'undefined' && mostrarModalInactivo) {
-        var modalInactivo = new bootstrap.Modal(document.getElementById('modalInactivo'));
-        modalInactivo.show();
+    // Mostrar/ocultar campo "otro motivo"
+    var selectMotivo = document.getElementById('motivoInactivacion');
+    var contenedorOtro = document.getElementById('contenedorOtroMotivo');
+    if (selectMotivo && contenedorOtro) {
+        selectMotivo.addEventListener('change', function () {
+            if (this.value === 'otro') {
+                contenedorOtro.classList.remove('d-none');
+            } else {
+                contenedorOtro.classList.add('d-none');
+            }
+        });
     }
 
     // ================================================
