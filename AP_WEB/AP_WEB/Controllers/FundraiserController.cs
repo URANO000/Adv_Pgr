@@ -259,7 +259,6 @@ namespace AP_WEB.Controllers
                 parametros.Add("@AnimalId", model.AnimalId);
                 parametros.Add("@Titulo", model.Titulo);
                 parametros.Add("@Descripcion", model.Descripcion);
-                parametros.Add("@MetaTotal", model.MetaTotal);
 
                 var result = db.Execute(
                     "sp_EditarFundraiser",
