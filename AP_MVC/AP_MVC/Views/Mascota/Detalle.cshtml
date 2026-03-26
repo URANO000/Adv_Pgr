@@ -31,9 +31,8 @@
 
                         <div class="carousel-item @(i == 0 ? "active" : "")">
                             <img src="@imagen.ArchivoUrl"
-                                 class="d-block w-100 detalle-carousel-img detalle-lightbox-trigger"
-                                 alt="Imagen @(i + 1) de la mascota"
-                                 data-index="@i" />
+                                 class="d-block w-100 detalle-carousel-img"
+                                 alt="Imagen @(i + 1) de la mascota" />
                         </div>
                     }
                 </div>
@@ -64,10 +63,7 @@
                                 data-bs-target="#detalleCarousel"
                                 data-bs-slide-to="@i"
                                 aria-label="Ir a imagen @(i + 1)">
-                            <img src="@imagen.ArchivoUrl"
-                                 alt="Miniatura @(i + 1)"
-                                 class="detalle-thumbnail-img detalle-lightbox-trigger"
-                                 data-index="@i" />
+                            <img src="@imagen.ArchivoUrl" alt="Miniatura @(i + 1)" class="detalle-thumbnail-img" />
                         </button>
                     }
                 </div>
@@ -159,8 +155,8 @@
 
                     <div class="modal-body pt-2">
                         <p class="custom-delete-text">
-                            Tu publicación dejará de mostrarse en el catálogo y en tus publicaciones.
-                            Quedará archivada en historial del sistema y no podrá reactivarse.
+                            Tu publicación dejará de mostrarse en el catálogo y en tus publicaciones activas.
+                            Quedará archivada en historial y no podrá reactivarse.
                         </p>
 
                         <div class="mb-3">
@@ -209,38 +205,6 @@
         </div>
     </div>
 }
-
-@if (Model.Imagenes != null && Model.Imagenes.Any())
-{
-    <div id="detalleLightbox" class="detalle-lightbox d-none">
-        <button type="button" id="detalleLightboxCerrar" class="detalle-lightbox-close" aria-label="Cerrar imagen">
-            <span class="detalle-lightbox-icon detalle-lightbox-icon-close">&times;</span>
-        </button>
-
-        <button type="button" id="detalleLightboxPrev" class="detalle-lightbox-nav detalle-lightbox-prev" aria-label="Imagen anterior">
-            <span class="detalle-lightbox-icon detalle-lightbox-icon-prev">&#8249;</span>
-        </button>
-
-        <div class="detalle-lightbox-content">
-            <img id="detalleLightboxImg"
-                 src=""
-                 alt="Vista completa de imagen"
-                 class="detalle-lightbox-image" />
-        </div>
-
-        <button type="button" id="detalleLightboxNext" class="detalle-lightbox-nav detalle-lightbox-next" aria-label="Imagen siguiente">
-            <span class="detalle-lightbox-icon detalle-lightbox-icon-next">&#8250;</span>
-        </button>
-    </div>
-
-    <script>
-        window.detalleImagenes = [
-            @Html.Raw(string.Join(",", Model.Imagenes.Select(i => $"'{i.ArchivoUrl}'")))
-        ];
-    </script>
-} 
-
 @section Scripts {
     <script src="~/js/detalle-publicacion.js"></script>
-    <script src="~/js/detalle-lightbox.js"></script>
 }
