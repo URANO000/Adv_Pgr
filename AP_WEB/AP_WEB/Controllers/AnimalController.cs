@@ -1,7 +1,8 @@
-﻿using Dapper;
-using AP_WEB.Models;
+﻿using AP_WEB.Models;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace AP_WEB.Controllers
 {
@@ -25,6 +26,22 @@ namespace AP_WEB.Controllers
 
             if (result == null || !result.Any())
                 return NotFound("No hay animales registrados");
+
+            return Ok(result);
+        }
+
+        [HttpGet("ListarTiposAnimal")]
+        public IActionResult ListarTiposAnimal()
+        {
+            using var context = new SqlConnection(
+                _config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+            var result = context.Query<AnimalTipoResponse>(
+                "sp_ListarTiposAnimal",
+                commandType: CommandType.StoredProcedure);
+
+            if (result == null || !result.Any())
+                return NotFound("No hay tipos");
 
             return Ok(result);
         }

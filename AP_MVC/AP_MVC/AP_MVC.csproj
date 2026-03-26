@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>4f9de061-8a90-4e2b-93dd-14eab0e01afe</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,10 +12,6 @@
     <PackageReference Include="jQuery" Version="3.7.1" />
     <PackageReference Include="jQuery.Validation" Version="1.21.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>
