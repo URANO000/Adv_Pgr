@@ -7,15 +7,17 @@
 <div class="container mt-4 mb-5">
     @if (TempData["Exito"] != null)
     {
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             @TempData["Exito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
@@ -79,10 +81,6 @@
         <div class="detalle-contenido">
             <div class="detalle-encabezado">
                 <h1 class="detalle-titulo">@Model.Titulo</h1>
-
-                <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
-                    @(Model.IsActive ? "Activa" : "Inactiva")
-                </span>
             </div>
 
             <p class="detalle-descripcion">

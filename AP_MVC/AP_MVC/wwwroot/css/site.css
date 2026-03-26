@@ -813,7 +813,7 @@ Single Product section style start
     background-color: #80CCFF;
 }
 
-/* Fondo de la secciÛn de categorÌas */
+/* Fondo de la secci√≥n de categor√≠as */
 #categories {
     background-color: #FFF8F0;
 }
@@ -824,7 +824,7 @@ Single Product section style start
 }
 
 /*--------------------------------------------------------------
-Fundraiser / PublicaciÛn de DonaciÛn section styles
+Fundraiser / Publicaci√≥n de Donaci√≥n section styles
 --------------------------------------------------------------*/
 .fundraiser-section {
     min-height: calc(100vh - 200px);
@@ -929,12 +929,12 @@ Fundraiser / PublicaciÛn de DonaciÛn section styles
     line-height: 1.65;
 }
 
-/* TÌtulos de campaÒa en tabla */
+/* T√≠tulos de campa√±a en tabla */
 .fila-historial td .fw-bold {
     color: var(--table-head-text);
 }
 
-/* Texto pequeÒo bajo el tÌtulo en la tabla */
+/* Texto peque√±o bajo el t√≠tulo en la tabla */
 .fila-historial td small.text-muted {
     color: var(--muted-text2-color) !important;
 }
@@ -967,7 +967,7 @@ Fundraiser / PublicaciÛn de DonaciÛn section styles
     font-size: 1rem;
 }
 
-/* Botones pequeÒos en la tabla de acciones */
+/* Botones peque√±os en la tabla de acciones */
 .fundraiser-section .btn-sm {
     min-height: 2.2rem;
     min-width: 2.2rem;
@@ -975,7 +975,7 @@ Fundraiser / PublicaciÛn de DonaciÛn section styles
     font-size: 0.85rem;
 }
     /*--------------------------------------------------------------
-Modal Inactivar PublicaciÛn
+Modal Inactivar Publicaci√≥n
 --------------------------------------------------------------*/
     .modal-inactivar-content {
         border: none;
@@ -1049,7 +1049,7 @@ Modal Inactivar PublicaciÛn
     }
     /*--------------------------------------------------------------
 Estilos de login y registro
---------------------------------------------------------------*/
+--------------------------------------------------------------*/ 
 .cascading-left {
     margin-left: -50px;
 }
@@ -1075,13 +1075,14 @@ Estilos de login y registro
     background-color: #F6EDE3;
 }
 
-
 .formRegistro {
     display: grid;
 }
+ 
+ 
 
 /*--------------------------------------------------------------
-MÛdulo Mascotas
+M√≥dulo Mascotas
 --------------------------------------------------------------*/
 
 .mascota-page-section {
@@ -1659,7 +1660,7 @@ MÛdulo Mascotas
     /*--------------------------------------------------------------
 Botones de Filtro
 --------------------------------------------------------------*/
-    /* BotÛn "Todas"*/
+    /* Bot√≥n "Todas"*/
     .btn-outline-primary.active-filter,
     .btn-outline-primary[data-filtro="todas"] {
         --bs-btn-color: #DEAD6F;
@@ -1669,7 +1670,7 @@ Botones de Filtro
         --bs-btn-hover-border-color: #DEAD6F;
         font-weight: 600;
     }
-    /* BotÛn "Activas"*/
+    /* Bot√≥n "Activas"*/
     .btn-outline-success,
     button[data-filtro="activa"] {
         --bs-btn-color: var(--green-color);
@@ -1683,7 +1684,7 @@ Botones de Filtro
         --bs-btn-focus-shadow-rgb: 46, 158, 107;
         font-weight: 600;
     }
-    /* BotÛn "Inactivas" */
+    /* Bot√≥n "Inactivas" */
     .btn-outline-secondary,
     button[data-filtro="inactiva"] {
         --bs-btn-color: #6B6460;
@@ -1694,7 +1695,7 @@ Botones de Filtro
         font-weight: 600;
     }
     /*--------------------------------------------------------------
-Botones de monto r·pido en modal
+Botones de monto r√°pido en modal
 --------------------------------------------------------------*/
     .btn-monto-rapido {
         --bs-btn-color: var(--green-color) !important;
@@ -1793,7 +1794,7 @@ Botones de monto r·pido en modal
             border-color: var(--muted-color);
             color: var(--light-color);
         }
-    /* Õcono patita en tabla de historial */
+    /* √çcono patita en tabla de historial */
     .fila-historial iconify-icon.text-warning {
         color: var(--orange-color) !important;
     }
@@ -1813,7 +1814,7 @@ Botones de monto r·pido en modal
     }
 
 /*--------------------------------------------------------------
-MÛdulo Mascotas
+M√≥dulo Mascotas
 --------------------------------------------------------------*/
 
 .mascota-page-section {
@@ -1948,7 +1949,7 @@ MÛdulo Mascotas
 }
 
 /*--------------------------------------------------------------
-MÛdulo Mascotas ó Preview de im·genes
+M√≥dulo Mascotas ¬ó Preview de im√°genes
 --------------------------------------------------------------*/
 
 .mascota-preview-empty {
@@ -2035,7 +2036,7 @@ MÛdulo Mascotas ó Preview de im·genes
 }
 
 /*--------------------------------------------------------------
-MÛdulo Mascotas ó Editar publicaciÛn (editpub)
+M√≥dulo Mascotas ¬ó Editar publicaci√≥n (editpub)
 --------------------------------------------------------------*/
 
 .editpub-card {
@@ -2065,18 +2066,23 @@ MÛdulo Mascotas ó Editar publicaciÛn (editpub)
 .editpub-actions {
     display: flex;
     gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 20px;
+    align-items: center;
+    margin-top: 24px;
 }
 
 .editpub-btn {
-    min-width: 140px;
+    min-width: 160px;
+    height: 46px;
+    padding: 0 18px;
     border-radius: 10px;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /*--------------------------------------------------------------
-MÛdulo Mascotas ó Detalle de publicaciÛn
+M√≥dulo Mascotas ¬ó Detalle de publicaci√≥n
 --------------------------------------------------------------*/
 
 .detalle-publicacion-card {
@@ -2229,25 +2235,51 @@ Modal eliminar / inactivar (custom-delete-modal)
 
 .custom-delete-modal {
     border: none;
-    border-radius: 1rem;
-    background-color: #ffffff;
+    border-radius: 1.25rem;
+    background-color: #fffdf9;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
 }
 
 .custom-delete-title {
     font-family: var(--heading-font);
-    font-size: 1.2rem;
-    color: var(--dark-color);
+    font-size: 1.45rem;
+    color: #3e2f25;
+    margin-bottom: 0.35rem;
+    line-height: 1.25;
 }
 
 .custom-delete-text {
-    color: var(--light-dark-color);
-    font-size: 0.95rem;
-    line-height: 1.65;
-    margin-bottom: 1rem;
+    color: #74685d;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
 }
 
 .custom-delete-check {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    background-color: #fcf7f1;
+    border: 1px solid #efe2d2;
+    border-radius: 0.9rem;
+}
+.custom-delete-check .form-check-label {
+    color: #5e5349;
+    line-height: 1.65;
+}
+
+.custom-delete-check .form-check-input {
+    margin-top: 0.2rem;
+    border-color: #d6c2ad;
+}
+
+.custom-delete-check .form-check-input:checked {
+    background-color: #c79a5f;
+    border-color: #c79a5f;
+}
+
+.custom-delete-check .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(199, 154, 95, 0.18);
 }
 
 .custom-cancel-btn {
@@ -2268,9 +2300,35 @@ Modal eliminar / inactivar (custom-delete-modal)
     --bs-btn-disabled-bg: #d3d7dd;
     --bs-btn-disabled-border-color: transparent;
 }
+.custom-delete-modal .modal-body {
+    padding: 1.6rem 1.6rem 1.4rem 1.6rem;
+}
 
+.custom-delete-modal .modal-header {
+    padding: 1.3rem 1.6rem 0.4rem 1.6rem;
+    border-bottom: none;
+}
+
+.custom-delete-modal .modal-footer {
+    padding: 0 1.6rem 1.5rem 1.6rem;
+    border-top: none;
+    gap: 0.75rem;
+}
+.custom-delete-modal .form-select {
+    min-height: 48px;
+    border-radius: 0.85rem;
+    border: 1px solid #e7ddd2;
+    background-color: #fff;
+    color: #5f5348;
+    box-shadow: none;
+}
+
+    .custom-delete-modal .form-select:focus {
+        border-color: #d8a866;
+        box-shadow: 0 0 0 0.2rem rgba(216, 168, 102, 0.18);
+    }
 /*--------------------------------------------------------------
-Mis Publicaciones ó cards y grid
+Mis Publicaciones ¬ó cards y grid
 --------------------------------------------------------------*/
 
 .mispub-header {
@@ -2323,19 +2381,25 @@ Mis Publicaciones ó cards y grid
 
 .mispub-card {
     background: #fff;
-    border-radius: 18px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
     min-height: 420px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+    .mispub-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    }
 
 .mispub-card-image {
     width: 100%;
     height: 230px;
     background: #f3f3f3;
     overflow: hidden;
+    border-bottom: 1px solid #f0ece6;
 }
 
     .mispub-card-image img {
@@ -2346,7 +2410,7 @@ Mis Publicaciones ó cards y grid
     }
 
 .mispub-card-content {
-    padding: 18px;
+    padding: 22px 22px 26px 22px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -2357,23 +2421,27 @@ Mis Publicaciones ó cards y grid
 }
 
 .mispub-card-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
+    margin: 8px 0 12px 0;
+    font-size: 1.3rem;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1.4;
     min-height: 52px;
+    color: #3e2f25;
 }
 
 .mispub-card-description {
-    margin: 0;
-    color: #555;
+    margin: 4px 0 0 0;
+    color: #6b5a4d;
     line-height: 1.6;
     min-height: 76px;
     flex-grow: 1;
+    font-size: 0.95rem;
 }
 
 .mispub-card-actions {
-    margin-top: 18px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
 }
 
 .mispub-btn-info {
