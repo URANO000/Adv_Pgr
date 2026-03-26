@@ -115,6 +115,8 @@ namespace AP_MVC.Controllers
                 return View(model);
             }
 
+            model.Edad = $"{model.EdadValor} {model.EdadUnidad.ToLower()}";
+
             using var client = _http.CreateClient();
 
             var urlRegistrar = UrlAPI + "Mascota/RegistrarPublicacionMascota";

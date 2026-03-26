@@ -1914,3 +1914,16 @@ Botones de monto rápido en modal
     font-size: 2rem;
     transform: translateY(-1px);
 }
+
+/*Para los errores de validación*/
+.field-validation-error,
+.text-danger {
+    color: #c0392b !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+span.field-validation-error {
+    display: block;
+    margin-top: 6px;
+}
