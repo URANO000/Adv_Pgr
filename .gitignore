@@ -89,3 +89,4 @@ DocumentLayout.backup.json
 # Variables de entorno locales
 .env
 .env.*
+/AP_MVC/AP_MVC/wwwroot/uploads/mascotas
