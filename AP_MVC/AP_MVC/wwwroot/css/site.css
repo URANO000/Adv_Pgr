@@ -1424,28 +1424,32 @@ Módulo Mascotas
 }
 
 .mispub-card-actions {
-    margin-top: 18px;
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
 }
 
-.mispub-btn-info {
+.mispub-btn-info,
+.mispub-btn-info:hover,
+.mispub-btn-info:focus,
+.mispub-btn-info:active,
+.mispub-btn-info:visited {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 120px;
-    height: 42px;
-    border: 1px solid #d8a866;
-    color: #d8a866;
+    min-width: 140px;
+    height: 44px;
+    padding: 0 22px;
+    border: none;
+    background-color: #c79a5f;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 10px;
     font-weight: 600;
-    transition: 0.2s ease-in-out;
+    box-shadow: none;
+    outline: none;
+    transition: none;
 }
-
-    .mispub-btn-info:hover {
-        background-color: #d8a866;
-        color: #fff;
-        text-decoration: none;
-    }
 
 @media (max-width: 1100px) {
     .mispub-grid {
