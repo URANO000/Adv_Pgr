@@ -115,8 +115,6 @@ namespace AP_MVC.Controllers
                 return View(model);
             }
 
-            model.Edad = $"{model.EdadValor} {model.EdadUnidad.ToLower()}";
-
             using var client = _http.CreateClient();
 
             var urlRegistrar = UrlAPI + "Mascota/RegistrarPublicacionMascota";
@@ -188,10 +186,6 @@ namespace AP_MVC.Controllers
                 var model = result.Content.ReadFromJsonAsync<List<MascotaPublicacionViewModel>>().Result
                             ?? new List<MascotaPublicacionViewModel>();
 
-                model = model
-                    .Where(p => p.IsActive)
-                    .ToList();
-
                 foreach (var item in model)
                 {
                     var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{item.AnimalId}";
@@ -213,14 +207,8 @@ namespace AP_MVC.Controllers
                     }
                 }
 
-                if (!model.Any())
-                {
-                    ViewBag.Mensaje = "No tienes publicaciones activas registradas.";
-                }
-
                 return View(model);
             }
-
             else if (result.StatusCode == HttpStatusCode.NotFound)
             {
                 ViewBag.Mensaje = "No tienes publicaciones registradas.";
@@ -423,8 +411,8 @@ namespace AP_MVC.Controllers
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                TempData["Exito"] = "La publicación se eliminó correctamente.";
-                return RedirectToAction("MisPublicaciones");
+                TempData["Exito"] = "La publicación se inactivó correctamente.";
+                return RedirectToAction("Detalle", new { id });
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
@@ -432,7 +420,7 @@ namespace AP_MVC.Controllers
             }
 
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
-            return RedirectToAction("MisPublicaciones");
+            return RedirectToAction("Detalle", new { id });
         }
 
         [HttpGet]

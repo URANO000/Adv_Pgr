@@ -89,6 +89,3 @@ DocumentLayout.backup.json
 # Variables de entorno locales
 .env
 .env.*
-/AP_MVC/AP_MVC/wwwroot/uploads/mascotas/a15ccca8-1b9f-410b-a616-65998fd548a5.jpg
-/AP_MVC/AP_MVC/wwwroot/uploads/mascotas/c2f6620a-ca48-4bbf-9206-49936f930dd8.jpg
-/AP_MVC/AP_MVC/wwwroot/uploads/mascotas/c396bbd1-ecb6-4db2-b483-1aa816df0815.jpg

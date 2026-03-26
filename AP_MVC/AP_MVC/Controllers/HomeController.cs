@@ -1,4 +1,4 @@
-using System.Net;
+ï»¿using System.Net;
 using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
@@ -45,7 +45,7 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Home/RegistrarUsuario";
             var result = client.PostAsJsonAsync(url, model).Result;
 
-            if(result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -59,7 +59,7 @@ namespace AP_MVC.Controllers
         }
         #endregion
 
-        #region Inicio de sesión
+        #region Inicio de sesiï¿½n
 
         [HttpGet]
         public IActionResult Login()
@@ -76,7 +76,7 @@ namespace AP_MVC.Controllers
             var url = _config.GetValue<string>("Valores:UrlAPI") + "Home/IniciarSesion";
             var result = client.PostAsJsonAsync(url, model).Result;
 
-            if(result.StatusCode == HttpStatusCode.OK)
+            if (result.StatusCode == HttpStatusCode.OK)
             {
                 var objeto = result.Content.ReadFromJsonAsync<Usuario>().Result;
 
@@ -105,7 +105,7 @@ namespace AP_MVC.Controllers
                     principal
                 );
 
-                //Lo demás de la UI
+                //Lo demï¿½s de la UI
                 HttpContext.Session.SetString("NombreUsuario", objeto!.nombreCompleto);
                 HttpContext.Session.SetString("UsuarioId", objeto!.UsuarioId);
                 HttpContext.Session.SetString("Token", objeto!.Token);
@@ -118,7 +118,7 @@ namespace AP_MVC.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            else if(result.StatusCode == HttpStatusCode.InternalServerError)
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
                 throw new Exception();
             }
@@ -129,7 +129,7 @@ namespace AP_MVC.Controllers
 
         #endregion
 
-        #region Cerrar Sesión
+        #region Cerrar Sesiï¿½n
 
         [SesionActiva]
         [HttpGet]

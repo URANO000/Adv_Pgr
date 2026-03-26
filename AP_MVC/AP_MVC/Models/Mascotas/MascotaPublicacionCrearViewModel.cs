@@ -18,13 +18,8 @@ namespace AP_MVC.Models.Mascotas
         [Range(0.1, 9999, ErrorMessage = "El peso debe ser mayor a 0")]
         public decimal? Peso { get; set; }
 
-        [Required(ErrorMessage = "La edad es obligatoria.")]
-        [Range(0, 30, ErrorMessage = "Ingresa una edad válida.")]
-        public int? EdadValor { get; set; }
-
-        [Required(ErrorMessage = "Selecciona la unidad de edad.")]
-        public string EdadUnidad { get; set; } = string.Empty;
-
+        [Required(ErrorMessage = "La edad es obligatoria")]
+        [Display(Name = "Edad")]
         public string Edad { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El sexo es obligatorio")]
