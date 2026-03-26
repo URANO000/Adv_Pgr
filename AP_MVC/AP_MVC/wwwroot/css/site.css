@@ -1812,3 +1812,104 @@ Botones de monto rápido en modal
         --bs-card-bg: #ffffff;
         background-color: #ffffff;
     }
+
+    /*Detalle light-box*/
+.detalle-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 10, 14, 0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.detalle-lightbox-content {
+    max-width: 92vw;
+    max-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detalle-lightbox-image {
+    max-width: 100%;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+}
+
+.detalle-lightbox-close,
+.detalle-lightbox-nav {
+    position: absolute;
+    z-index: 2002;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+    .detalle-lightbox-close:hover,
+    .detalle-lightbox-nav:hover {
+        background: rgba(222, 173, 111, 0.95);
+        transform: scale(1.08);
+    }
+
+.detalle-lightbox-close {
+    top: 18px;
+    right: 18px;
+}
+
+.detalle-lightbox-nav {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.detalle-lightbox-prev {
+    left: 22px;
+}
+
+.detalle-lightbox-next {
+    right: 22px;
+}
+
+.detalle-carousel-img,
+.detalle-thumbnail-img {
+    cursor: zoom-in;
+}
+
+.detalle-lightbox-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+}
+
+.detalle-lightbox-icon-prev,
+.detalle-lightbox-icon-next {
+    font-size: 2.2rem;
+    transform: translateY(-1px);
+}
+
+.detalle-lightbox-icon-close {
+    font-size: 2rem;
+    transform: translateY(-1px);
+}
