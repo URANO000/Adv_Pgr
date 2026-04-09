@@ -1,6 +1,6 @@
-﻿﻿@{
-var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
-var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.jpg" : Context.Session.GetString("ImagenPerfil");
+﻿@{
+    var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
+    var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.jpg" : Context.Session.GetString("ImagenPerfil");
 }
 
 <!DOCTYPE html>
@@ -104,14 +104,8 @@ var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil"
                                     <a asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
                                 </li>
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categorías</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#" class="dropdown-item">Gatos</a></li>
-                                        <li><a href="#" class="dropdown-item">Perros</a></li>
-                                        <li><a href="#" class="dropdown-item">Roedores</a></li>
-                                        <li><a href="#" class="dropdown-item">Aves</a></li>
-                                    </ul>
+                                <li class="nav-item">
+                                    <a asp-controller="Mascota" asp-action="Catalogo" class="nav-link">Mascotas</a>
                                 </li>
 
                                 <li class="nav-item dropdown">

@@ -859,3 +859,168 @@ BEGIN
     ORDER BY NombreTipo ASC
 END
 GO
+
+--SP de Catalogo
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarCatalogoMascotas]
+    @Texto NVARCHAR(200) = NULL,
+    @TipoId INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.PublicacionId,
+        p.Titulo,
+        p.Descripcion,
+        p.IsActive,
+        p.PublishedAt,
+        p.UpdatedAt,
+        p.ClosedAt,
+
+        a.AnimalId,
+        a.Nombre AS NombreMascota,
+        a.Peso,
+        a.Edad,
+        a.Sexo,
+        a.Enfermedades,
+        a.HistorialMedico,
+        a.PreferenciasAlimenticias,
+        a.Notas,
+
+        t.TipoId,
+        t.NombreTipo AS TipoAnimal,
+        c.CategoriaId,
+        c.NombreTipo AS CategoriaAnimal
+
+    FROM dbo.Publicacion p
+    INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
+    INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
+    INNER JOIN dbo.AnimalCategoria c ON t.CategoriaId = c.CategoriaId
+    WHERE p.IsActive = 1
+      AND (
+            @Texto IS NULL
+            OR @Texto = ''
+            OR p.Titulo LIKE '%' + @Texto + '%'
+            OR p.Descripcion LIKE '%' + @Texto + '%'
+            OR a.Nombre LIKE '%' + @Texto + '%'
+          )
+      AND (
+            @TipoId IS NULL
+            OR @TipoId = 0
+            OR t.TipoId = @TipoId
+          )
+    ORDER BY p.PublishedAt DESC;
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerDetalleCatalogoMascota]
+    @PublicacionId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Publicacion
+        WHERE PublicacionId = @PublicacionId
+          AND IsActive = 1
+    )
+    BEGIN
+        RAISERROR('La publicación no existe o está inactiva.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        p.PublicacionId,
+        p.Titulo,
+        p.Descripcion,
+        p.IsActive,
+        p.PublishedAt,
+        p.UpdatedAt,
+        p.ClosedAt,
+
+        a.AnimalId,
+        a.UsuarioId,
+        a.TipoId,
+        a.Nombre AS NombreMascota,
+        a.Peso,
+        a.Edad,
+        a.Sexo,
+        a.Enfermedades,
+        a.HistorialMedico,
+        a.PreferenciasAlimenticias,
+        a.Notas,
+
+        t.NombreTipo AS TipoAnimal,
+        c.CategoriaId,
+        c.NombreTipo AS CategoriaAnimal
+
+    FROM dbo.Publicacion p
+    INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
+    INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
+    INNER JOIN dbo.AnimalCategoria c ON t.CategoriaId = c.CategoriaId
+    WHERE p.PublicacionId = @PublicacionId
+      AND p.IsActive = 1;
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarHistorialPublicacionesMascota]
+    @UsuarioId NVARCHAR(450),
+    @Estado NVARCHAR(20) = 'todas'
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Usuario
+        WHERE UsuarioId = @UsuarioId
+          AND IsActive = 1
+    )
+    BEGIN
+        RAISERROR('El usuario no existe o está inactivo.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        p.PublicacionId,
+        p.Titulo,
+        p.Descripcion,
+        p.IsActive,
+        p.PublishedAt,
+        p.UpdatedAt,
+        p.ClosedAt,
+
+        a.AnimalId,
+        a.Nombre AS NombreMascota,
+        a.Peso,
+        a.Edad,
+        a.Sexo,
+        a.Enfermedades,
+        a.HistorialMedico,
+        a.PreferenciasAlimenticias,
+        a.Notas,
+
+        t.TipoId,
+        t.NombreTipo AS TipoAnimal,
+        c.CategoriaId,
+        c.NombreTipo AS CategoriaAnimal
+
+    FROM dbo.Publicacion p
+    INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
+    INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
+    INNER JOIN dbo.AnimalCategoria c ON t.CategoriaId = c.CategoriaId
+    WHERE p.PublishedBy = @UsuarioId
+      AND (
+            @Estado = 'todas'
+            OR (@Estado = 'activas' AND p.IsActive = 1)
+            OR (@Estado = 'inactivas' AND p.IsActive = 0)
+          )
+    ORDER BY p.PublishedAt DESC;
+END
+GO
+
+SELECT UsuarioId, CorreoElectronico, IsActive
+FROM dbo.Usuario;

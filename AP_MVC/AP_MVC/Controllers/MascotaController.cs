@@ -115,8 +115,6 @@ namespace AP_MVC.Controllers
                 return View(model);
             }
 
-            model.Edad = $"{model.EdadValor} {model.EdadUnidad.ToLower()}";
-
             using var client = _http.CreateClient();
 
             var urlRegistrar = UrlAPI + "Mascota/RegistrarPublicacionMascota";
@@ -188,10 +186,6 @@ namespace AP_MVC.Controllers
                 var model = result.Content.ReadFromJsonAsync<List<MascotaPublicacionViewModel>>().Result
                             ?? new List<MascotaPublicacionViewModel>();
 
-                model = model
-                    .Where(p => p.IsActive)
-                    .ToList();
-
                 foreach (var item in model)
                 {
                     var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{item.AnimalId}";
@@ -213,14 +207,8 @@ namespace AP_MVC.Controllers
                     }
                 }
 
-                if (!model.Any())
-                {
-                    ViewBag.Mensaje = "No tienes publicaciones activas registradas.";
-                }
-
                 return View(model);
             }
-
             else if (result.StatusCode == HttpStatusCode.NotFound)
             {
                 ViewBag.Mensaje = "No tienes publicaciones registradas.";
@@ -423,8 +411,8 @@ namespace AP_MVC.Controllers
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                TempData["Exito"] = "La publicación se eliminó correctamente.";
-                return RedirectToAction("MisPublicaciones");
+                TempData["Exito"] = "La publicación se inactivó correctamente.";
+                return RedirectToAction("Detalle", new { id });
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
@@ -432,7 +420,7 @@ namespace AP_MVC.Controllers
             }
 
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
-            return RedirectToAction("MisPublicaciones");
+            return RedirectToAction("Detalle", new { id });
         }
 
         [HttpGet]
@@ -524,6 +512,241 @@ namespace AP_MVC.Controllers
 
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
             return RedirectToAction("Media", new { animalId });
+        }
+
+        private SelectList GetTiposAnimalConTodos(int? selectedId = null)
+        {
+            using var client = _http.CreateClient();
+
+            var url = UrlAPI + "Animal/ListarTiposAnimal";
+            var result = client.GetAsync(url).Result;
+
+            var lista = new List<AnimalTipoViewModel>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                lista = result.Content
+                    .ReadFromJsonAsync<List<AnimalTipoViewModel>>().Result
+                    ?? new List<AnimalTipoViewModel>();
+            }
+
+            lista.Insert(0, new AnimalTipoViewModel
+            {
+                TipoId = 0,
+                NombreTipo = "Todos"
+            });
+
+            return new SelectList(lista, "TipoId", "NombreTipo", selectedId);
+        }
+
+        private SelectList GetCategoriasCatalogo(int? selectedId = null)
+        {
+            using var client = _http.CreateClient();
+
+            var url = UrlAPI + "Mascota/ListarCategoriasCatalogo";
+            var result = client.GetAsync(url).Result;
+
+            var lista = new List<CategoriaCatalogoViewModel>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                lista = result.Content
+                    .ReadFromJsonAsync<List<CategoriaCatalogoViewModel>>().Result
+                    ?? new List<CategoriaCatalogoViewModel>();
+            }
+
+            lista.Insert(0, new CategoriaCatalogoViewModel
+            {
+                CategoriaId = 0,
+                CategoriaAnimal = "Todas"
+            });
+
+            return new SelectList(lista, "CategoriaId", "CategoriaAnimal", selectedId);
+        }
+
+        private List<MascotaPublicacionViewModel> CargarImagenPrincipalListado(List<MascotaPublicacionViewModel> model)
+        {
+            using var client = _http.CreateClient();
+
+            foreach (var item in model)
+            {
+                var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{item.AnimalId}";
+                var resultMedia = client.GetAsync(urlMedia).Result;
+
+                if (resultMedia.StatusCode == HttpStatusCode.OK)
+                {
+                    var imagenes = resultMedia.Content
+                        .ReadFromJsonAsync<List<AnimalMediaViewModel>>().Result
+                        ?? new List<AnimalMediaViewModel>();
+
+                    var primeraImagen = imagenes.FirstOrDefault();
+
+                    if (primeraImagen != null && !string.IsNullOrWhiteSpace(primeraImagen.ArchivoUrl))
+                    {
+                        item.ImagenUrl = primeraImagen.ArchivoUrl.StartsWith("/")
+                            ? primeraImagen.ArchivoUrl
+                            : "/" + primeraImagen.ArchivoUrl;
+                    }
+                }
+            }
+
+            return model;
+        }
+
+        [HttpGet]
+        public IActionResult Catalogo(string? texto = null, int? tipoId = null, int? categoriaId = null)
+        {
+            using var client = _http.CreateClient();
+
+            var query = $"?texto={Uri.EscapeDataString(texto ?? string.Empty)}";
+
+            if (tipoId.HasValue && tipoId.Value > 0)
+            {
+                query += $"&tipoId={tipoId.Value}";
+            }
+
+            if (categoriaId.HasValue && categoriaId.Value > 0)
+            {
+                query += $"&categoriaId={categoriaId.Value}";
+            }
+
+            var url = UrlAPI + "Mascota/ListarCatalogoMascotas" + query;
+            var result = client.GetAsync(url).Result;
+
+            ViewBag.TiposAnimal = GetTiposAnimalConTodos(tipoId);
+            ViewBag.Categorias = GetCategoriasCatalogo(categoriaId);
+            ViewBag.Texto = texto;
+            ViewBag.TipoSeleccionado = tipoId;
+            ViewBag.CategoriaSeleccionada = categoriaId;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var model = result.Content
+                    .ReadFromJsonAsync<List<MascotaPublicacionViewModel>>().Result
+                    ?? new List<MascotaPublicacionViewModel>();
+
+                model = CargarImagenPrincipalListado(model);
+
+                return View(model);
+            }
+            else if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                ViewBag.Mensaje = "No se encontraron mascotas disponibles.";
+                return View(new List<MascotaPublicacionViewModel>());
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+
+            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
+            return View(new List<MascotaPublicacionViewModel>());
+        }
+
+        [HttpGet]
+        public IActionResult BuscarFiltrar(string? texto = null, int? tipoId = null, int? categoriaId = null)
+        {
+            return RedirectToAction("Catalogo", new { texto, tipoId, categoriaId });
+        }
+
+        [HttpGet]
+        public IActionResult DetalleCatalogo(int id)
+        {
+            using var client = _http.CreateClient();
+
+            var urlPublicacion = UrlAPI + $"Mascota/ObtenerDetalleCatalogoMascota/{id}";
+            var resultPublicacion = client.GetAsync(urlPublicacion).Result;
+
+            if (resultPublicacion.StatusCode == HttpStatusCode.NotFound)
+            {
+                TempData["Error"] = "No se encontró la publicación.";
+                return RedirectToAction("Catalogo");
+            }
+            else if (resultPublicacion.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+            else if (resultPublicacion.StatusCode != HttpStatusCode.OK)
+            {
+                TempData["Error"] = resultPublicacion.Content.ReadAsStringAsync().Result;
+                return RedirectToAction("Catalogo");
+            }
+
+            var publicacion = resultPublicacion.Content
+                .ReadFromJsonAsync<MascotaDetalleViewModel>()
+                .Result;
+
+            if (publicacion == null)
+            {
+                TempData["Error"] = "No se pudo cargar el detalle de la publicación.";
+                return RedirectToAction("Catalogo");
+            }
+
+            var urlMedia = UrlAPI + $"Mascota/ListarAnimalMedia/{publicacion.AnimalId}";
+            var resultMedia = client.GetAsync(urlMedia).Result;
+
+            if (resultMedia.StatusCode == HttpStatusCode.OK)
+            {
+                publicacion.Imagenes = resultMedia.Content
+                    .ReadFromJsonAsync<List<AnimalMediaViewModel>>()
+                    .Result ?? new List<AnimalMediaViewModel>();
+            }
+            else if (resultMedia.StatusCode == HttpStatusCode.NotFound)
+            {
+                publicacion.Imagenes = new List<AnimalMediaViewModel>();
+            }
+            else if (resultMedia.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                publicacion.Imagenes = new List<AnimalMediaViewModel>();
+            }
+
+            return View("Detalle", publicacion);
+        }
+
+        [HttpGet]
+        public IActionResult Historial(string estado = "todas")
+        {
+            var usuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "La sesión expiró o no contiene un UsuarioId válido.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            using var client = _http.CreateClient();
+
+            var url = UrlAPI + $"Mascota/ListarHistorialPublicacionesMascota/{usuarioId}?estado={estado}";
+            var result = client.GetAsync(url).Result;
+
+            ViewBag.Estado = estado;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var model = result.Content
+                    .ReadFromJsonAsync<List<MascotaPublicacionViewModel>>().Result
+                    ?? new List<MascotaPublicacionViewModel>();
+
+                model = CargarImagenPrincipalListado(model);
+
+                return View("MisPublicaciones", model);
+            }
+            else if (result.StatusCode == HttpStatusCode.NotFound)
+            {
+                ViewBag.Mensaje = "No tienes publicaciones registradas.";
+                return View("MisPublicaciones", new List<MascotaPublicacionViewModel>());
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new Exception();
+            }
+
+            ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
+            return View("MisPublicaciones", new List<MascotaPublicacionViewModel>());
         }
     }
 }

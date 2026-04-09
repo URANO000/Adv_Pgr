@@ -194,5 +194,139 @@ namespace AP_WEB.Controllers
 
             return Ok("La imagen se eliminó correctamente");
         }
+
+        [HttpGet("ListarCatalogoMascotas")]
+        public IActionResult ListarCatalogoMascotas(string? texto = null, int? tipoId = null, int? categoriaId = null)
+        {
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@Texto", texto);
+                parametros.Add("@TipoId", tipoId);
+
+                var result = context.Query<PublicacionMascotaResponse>(
+                    "sp_ListarCatalogoMascotas",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                ).ToList();
+
+                if (result == null || !result.Any())
+                    return NotFound("No se encontraron mascotas disponibles.");
+
+                // filtro adicional por categoría con datos que ya vienen de BD
+                if (categoriaId.HasValue && categoriaId.Value > 0)
+                {
+                    result = result.Where(x => x.CategoriaId == categoriaId.Value).ToList();
+                }
+
+                if (!result.Any())
+                    return NotFound("No se encontraron mascotas con los filtros indicados.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("ObtenerDetalleCatalogoMascota/{publicacionId}")]
+        public IActionResult ObtenerDetalleCatalogoMascota(int publicacionId)
+        {
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@PublicacionId", publicacionId);
+
+                var result = context.QueryFirstOrDefault<PublicacionMascotaResponse>(
+                    "sp_ObtenerDetalleCatalogoMascota",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                );
+
+                if (result == null)
+                    return NotFound("La publicación no fue encontrada.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("ListarHistorialPublicacionesMascota/{usuarioId}")]
+        public IActionResult ListarHistorialPublicacionesMascota(string usuarioId, string estado = "todas")
+        {
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@UsuarioId", usuarioId);
+                parametros.Add("@Estado", estado);
+
+                var result = context.Query<PublicacionMascotaResponse>(
+                    "sp_ListarHistorialPublicacionesMascota",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                ).ToList();
+
+                if (result == null || !result.Any())
+                    return NotFound("No se encontraron publicaciones para el estado indicado.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("ListarCategoriasCatalogo")]
+        public IActionResult ListarCategoriasCatalogo()
+        {
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@Texto", null);
+                parametros.Add("@TipoId", null);
+
+                var result = context.Query<PublicacionMascotaResponse>(
+                    "sp_ListarCatalogoMascotas",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                ).ToList();
+
+                if (result == null || !result.Any())
+                    return NotFound("No se encontraron categorías.");
+
+                var categorias = result
+                    .Where(x => x.CategoriaId > 0)
+                    .Select(x => new
+                    {
+                        x.CategoriaId,
+                        x.CategoriaAnimal
+                    })
+                    .Distinct()
+                    .OrderBy(x => x.CategoriaAnimal)
+                    .ToList();
+
+                if (!categorias.Any())
+                    return NotFound("No se encontraron categorías.");
+
+                return Ok(categorias);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

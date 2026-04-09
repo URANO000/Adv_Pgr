@@ -1,0 +1,154 @@
+﻿@model List<AP_MVC.Models.Mascotas.MascotaPublicacionViewModel>
+
+@{
+    ViewData["Title"] = "Catálogo de Mascotas";
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold">Catálogo de Mascotas</h2>
+            <p class="text-muted mb-0">Explora mascotas disponibles para adopción y usa los filtros para encontrar la ideal.</p>
+        </div>
+    </div>
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Exito"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="row">
+        <!-- FILTROS -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Filtros</h5>
+
+                    <form asp-controller="Mascota" asp-action="BuscarFiltrar" method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Buscar</label>
+                            <input type="text"
+                                   name="texto"
+                                   value="@(ViewBag.Texto ?? "")"
+                                   class="form-control"
+                                   placeholder="Nombre, título o descripción" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo</label>
+                            <select name="tipoId" class="form-select" asp-items="ViewBag.TiposAnimal">
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <select name="categoriaId" class="form-select" asp-items="ViewBag.Categorias">
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Aplicar filtros
+                            </button>
+
+                            <a asp-controller="Mascota" asp-action="Catalogo" class="btn btn-outline-secondary">
+                                Limpiar filtros
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTADO -->
+        <div class="col-lg-9">
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Mensaje))
+            {
+                <div class="alert alert-info">
+                    @ViewBag.Mensaje
+                </div>
+            }
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-warning">
+                    No hay publicaciones disponibles para mostrar.
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 col-xl-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+
+                                @if (!string.IsNullOrWhiteSpace(item.ImagenUrl))
+                                {
+                                    <img src="@item.ImagenUrl"
+                                         class="card-img-top"
+                                         alt="Imagen de mascota"
+                                         style="height: 230px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/uploads/default.jpg"
+                                         class="card-img-top"
+                                         alt="Imagen por defecto"
+                                         style="height: 230px; object-fit: cover;" />
+                                }
+
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title fw-bold">@item.Titulo</h5>
+
+                                    <p class="mb-1"><strong>Nombre:</strong> @item.Nombre</p>
+                                    <p class="mb-1"><strong>Tipo:</strong> @item.Tipo</p>
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Sexo))
+                                    {
+                                        <p class="mb-1"><strong>Sexo:</strong> @item.Sexo</p>
+                                    }
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Edad))
+                                    {
+                                        <p class="mb-2"><strong>Edad:</strong> @item.Edad</p>
+                                    }
+
+                                    <p class="text-muted flex-grow-1">
+                                        @if (!string.IsNullOrWhiteSpace(item.Descripcion) && item.Descripcion.Length > 100)
+                                        {
+                                            @item.Descripcion.Substring(0, 100)
+                                
+                                            <text>...</text>
+                                        }
+                                        else
+                                        {
+                                            @item.Descripcion
+                                        }
+                                    </p>
+
+                                    <a asp-controller="Mascota"
+                                           asp-action="DetalleCatalogo"
+                                           asp-route-id="@item.PublicacionId"
+                                           class="btn btn-outline-primary mt-auto">
+                                        Ver detalle
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
