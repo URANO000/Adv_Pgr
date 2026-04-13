@@ -29,9 +29,9 @@
             </div>
 
             <div class="container">
-                <nav class="main-menu d-flex navbar navbar-expand-lg">
+                <nav class="main-menu d-flex navbar navbar-expand-lg p-3">
                 <a asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/img/pSocialLogo.png" alt="logo" class="logo-img">
+                    <img src="~/img/pSocialLogo.png" alt="logo" class="logo-img" style="width:150px;">
                     </a>
                     <!-- MOBILE AUTH -->
                     <div class="d-flex d-lg-none align-items-end mt-3">
@@ -98,11 +98,11 @@
 
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">Contacto</a>
+                                    <a asp-action="Contacto" asp-controller="Home" class="nav-link">Contacto</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">Nosotros</a>
+                                    <a asp-action="Nosotros" asp-controller="Home" class="nav-link">Nosotros</a>
                                 </li>
                             </ul>
 
@@ -170,7 +170,7 @@
                 <div class="row py-5">
                     <div class="col-lg-4 mb-4 mb-lg-0">
                         <div class="footer-brand mb-3">
-                            <img src="~/img/logo-footer.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
+                            <img src="~/img/pSocialLogo.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
                                 <h5 class="fw-bold">Patitas Social Adopciones</h5>
                             </div>
                             <p class="footer-description">Conectando corazones con patitas. Encuentra a tu compañero perfecto y dale un hogar lleno de amor.</p>

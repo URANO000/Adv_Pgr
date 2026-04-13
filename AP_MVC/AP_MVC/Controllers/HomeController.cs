@@ -171,5 +171,21 @@ namespace AP_MVC.Controllers
 
         #endregion
 
+        #region Misc
+        [HttpGet]
+        public IActionResult Contacto()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
+
+        #endregion
+
+
     }
 }
