@@ -500,6 +500,7 @@ GO
 INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
 
+
 --Usuario admin de prueba(pass: 12345678)
 INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES('admin@patitas.com','DkF5eJ1UhQwmEXbYNJDqmQ==','Dean','Winchester', 1, 1);

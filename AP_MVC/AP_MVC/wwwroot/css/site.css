@@ -122,8 +122,8 @@ CSS STRUCTURE:
 
 /* Fonts */
 :root {
-    --body-font: 'Chilanka', cursive;
-    --heading-font: 'Chilanka', cursive;
+    --body-font: "EB Garamond", serif;
+    --heading-font: "EB Garamond", serif;
     --secondary-font: 'Montserrat', sans-serif;
 }
 
@@ -134,7 +134,7 @@ body {
     --bs-link-color-rgb: 40, 40, 40;
     --bs-link-hover-color-rgb: 128, 204, 255;
     --bs-light-rgb: 248, 248, 248;
-    --bs-font-sans-serif: 'Chilanka', cursive;
+    --bs-font-sans-serif: "EB Garamond", serif;
     --bs-body-font-family: var(--bs-font-sans-serif);
     --bs-body-font-size: 1rem;
     --bs-body-font-weight: 400;
@@ -277,6 +277,14 @@ a {
     font-weight: 300;
 }
 
+.nav-link.show{
+    color: white !important;
+}
+
+.text-custom-green {
+    color: #065143;
+}
+
 /*----------------------------------------------*/
 /* 6. SITE STRUCTURE */
 /*----------------------------------------------*/
@@ -350,7 +358,7 @@ a {
 }
 /* search bar style  */
 .header-color {
-    background-color: #F0F9FF;
+    background-color: #065143;
 }
 
 .search-bar {
@@ -370,7 +378,7 @@ a {
 }
 
 header .nav-link {
-    color: #000;
+    color: white;
     transition: all 0.3s ease-in;
 }
 
@@ -391,15 +399,24 @@ header iconify-icon {
 
 /* category style */
 iconify-icon.category-icon {
-    color: #DEAD6F;
+    color: #065143;
     font-size: 100px;
     transition: all 0.3s ease-in;
 }
 
 a.categories-item:hover iconify-icon.category-icon {
-    color: #80CCFF;
-    font-size: 110px;
+    color: #DEAD6F;
+    font-size: 105px;
 }
+
+#login-ico {
+    color: #F0EDCC;
+    transition: all 0.3s ease-in;
+}
+
+    #login-ico:hover {
+        color: #DEAD6F;
+    }
 
 
 /* banner style */
@@ -585,9 +602,13 @@ a.blog-read {
 
 /* footer style */
 .footer {
-    background-color: #F0F9FF;
-    color: #41403E;
+    background-color: #065143;
+    color: white;
 }
+
+    .footer .fw-bold {
+        color: #DEAD6F;
+    }
 
 .footer-heading {
     color: #DEAD6F;
@@ -597,6 +618,7 @@ a.blog-read {
 
 .footer-links {
     list-style: none;
+    color: white;
     padding: 0;
 }
 
@@ -605,12 +627,12 @@ a.blog-read {
     }
 
     .footer-links a {
-        color: #41403E;
+        color: white;
         transition: all 0.3s ease;
     }
 
         .footer-links a:hover {
-            color: #80CCFF;
+            color: #DEAD6F;
             padding-left: 5px;
         }
 
@@ -660,12 +682,12 @@ a.blog-read {
 }
 
 .footer-link-bottom {
-    color: #41403E;
+    color: white;
     transition: all 0.3s ease;
 }
 
     .footer-link-bottom:hover {
-        color: #80CCFF;
+        color: #DEAD6F;
     }
 
 iconify-icon.social-icon {
@@ -815,7 +837,7 @@ Single Product section style start
 
 /* Fondo de la sección de categorías */
 #categories {
-    background-color: #FFF8F0;
+    background-color: #F7EEE4;
 }
 
 /* Tarjeta del login */
