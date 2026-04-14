@@ -201,6 +201,12 @@ namespace AP_MVC.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
         #endregion
 
 
