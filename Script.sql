@@ -312,6 +312,26 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE [dbo].[sp_AuthorizeUN]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET RolId = 2
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_AuthorizeAD]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET RolId = 1
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
 -- =============================================
 -- 5. SPs â Animales
 -- =============================================

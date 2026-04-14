@@ -1,4 +1,5 @@
-﻿@model Usuario
+﻿@using AP_MVC.Models.Enum
+@model Usuario
 
 @{
     ViewData["Title"] = "Detalle de Usuario";
@@ -93,6 +94,24 @@
 
                     <!-- ADMIN ACTIONS -->
                     <div class="d-flex justify-content-end gap-2">
+                        @if(Model.RolId == Rol.Administrador)
+                        {
+                            <form asp-action="AuthorizeUN">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-warning btn-confirm mascota-secondary-btn">
+                                    Autorizar como Usuario Normal
+                                </button>
+                            </form>
+                            
+                        }else
+                        {
+                            <form asp-action="AuthorizeAD">
+                                <input type="hidden" name="usuarioId" asp-for="UsuarioId" value="@Model.UsuarioId" />
+                                <button type="button" class="btn btn-success btn-confirm mascota-secondary-btn">
+                                    Autorizar como Administrador
+                                </button>
+                            </form>
+                        }
                         @if (Model.IsActive)
                         {
                             <form asp-action="Desactivar" method="post" class="d-inline">
