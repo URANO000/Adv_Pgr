@@ -1,1 +1,55 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Contacto";
+}
+
+<section class="m-lg-5">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm p-4 bg-body-tertiary">
+                    <div class="row align-items-center">
+
+                        <!-- Image side -->
+                        <div class="col-lg-6 text-center mb-4 mb-lg-0">
+                            <img src="~/img/blaca.png"
+                                 class="img-fluid rounded"
+                                 style="max-width: 300px;" />
+                        </div>
+
+                        <!-- Contact info side -->
+                        <div class="col-lg-6">
+                            <h2 class="fw-bold mb-4 text-primary">Contáctanos</h2>
+                            <p>Para más información sobre nuestra causa y ayuda general.</p>
+
+                            <ul class="list-unstyled text-custom-green">
+                                <li class="mb-3 d-flex align-items-center">
+                                    <iconify-icon icon="mdi:email-outline" class="me-2"></iconify-icon>
+                                    <span>socialpatitas@gmail.com</span>
+                                </li>
+
+                                <li class="mb-3 d-flex align-items-center">
+                                    <iconify-icon icon="mdi:phone-outline" class="me-2"></iconify-icon>
+                                    <span>+506 8888-8888</span>
+                                </li>
+
+                                <li class="d-flex align-items-center">
+                                    <iconify-icon icon="mdi:map-marker-outline" class="me-2"></iconify-icon>
+                                    <span>San José, Costa Rica</span>
+                                </li>
+                            </ul>
+                            
+                            <a asp-action="Catalogo" asp-controller="Mascota"
+                                   class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+                                Ver adopciones
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="ms-2">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

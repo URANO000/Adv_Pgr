@@ -1,1 +1,99 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Nosotros";
+}
+
+<section class="m-lg-5">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm p-4 bg-body-tertiary">
+                    <div class="row align-items-center">
+
+                        <!-- Image -->
+                        <div class="col-lg-6 text-center mb-4 mb-lg-0">
+                            <img src="~/img/parr.png"
+                                 class="img-fluid rounded"
+                                 style="max-width: 400px;" />
+                        </div>
+
+                        <!-- Text -->
+                        <div class="col-lg-6">
+                            <h2 class="fw-bold mb-3 text-primary">¿Quiénes somos?</h2>
+
+                            <p class="mb-3">
+                                Somos una organización sin fines de lucro enfocada en facilitar el proceso de adopción responsable de mascotas.
+                                Nuestro objetivo es conectar a personas que desean dar en adopción con quienes buscan brindar un hogar lleno de cuidado y compromiso.
+                            </p>
+
+                            <p class="mb-3">
+                                Creemos en una comunidad donde cada mascota tenga una segunda oportunidad, promoviendo la empatía, la responsabilidad y el bienestar animal.
+                            </p>
+
+                            <a asp-controller="Mascota"
+                                   asp-action="Registrar"
+                                   class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-2">
+                                Publicar una mascota
+                                <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="m-lg-5">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm p-4 bg-body-tertiary">
+                    <div class="row align-items-center">
+
+                        <!-- Text FIRST -->
+                        <div class="col-lg-6 order-lg-1 order-2">
+                            <h2 class="fw-bold mb-3 text-primary">¿Cómo funciona?</h2>
+
+                            <p class="mb-3">
+                                Nuestra plataforma funciona como una red social de adopción.
+                                Los usuarios pueden publicar mascotas que necesitan un nuevo hogar, incluyendo información relevante, fotos y detalles importantes.
+                            </p>
+
+                            <p class="mb-3">
+                                Las personas interesadas pueden enviar solicitudes de adopción, las cuales serán revisadas por el dueño actual de la mascota, quien decide si aceptar o rechazar cada solicitud.
+                            </p>
+
+                            <p class="mb-3">
+                                Además, contamos con un catálogo completo donde puedes explorar todas las publicaciones disponibles y encontrar a tu próxima mascota.
+                            </p>
+
+                            <p class="mb-3">
+                                También ofrecemos una sección de donaciones para apoyar el mantenimiento de la plataforma y contribuir al bienestar de más animales.
+                            </p>
+
+                            <a asp-action="Catalogo" asp-controller="Mascota"
+                                   class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
+                                Ver publicaciones
+                                <svg width="20" height="20" viewBox="0 0 24 24" class="ms-2">
+                                    <use xlink:href="#arrow-right"></use>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <!-- Image SECOND -->
+                        <div class="col-lg-6 text-center order-lg-2 order-1 mb-4 mb-lg-0">
+                            <img src="~/img/8370243.png"
+                                 class="img-fluid rounded"
+                                 style="max-width: 400px;" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

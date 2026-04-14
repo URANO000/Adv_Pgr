@@ -1,6 +1,7 @@
 ﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
+using Iconify;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -100,9 +101,19 @@ namespace AP_MVC.Controllers
 
                 var principal = new ClaimsPrincipal(identity);
 
+                //Para el remember me
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = model.RememberMe,
+                    ExpiresUtc = model.RememberMe
+                    ? DateTime.UtcNow.AddDays(7)
+                    : DateTime.UtcNow.AddMinutes(30)
+                };
+
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal
+                    principal,
+                    authProperties
                 );
 
                 //Lo demás de la UI
@@ -180,6 +191,12 @@ namespace AP_MVC.Controllers
 
         [HttpGet]
         public IActionResult Nosotros()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult TerminosCon()
         {
             return View();
         }
