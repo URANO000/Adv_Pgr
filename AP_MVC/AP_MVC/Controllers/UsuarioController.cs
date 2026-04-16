@@ -251,6 +251,7 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region VerPerfil
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult> Detalle(string usuarioId)
         {
@@ -288,6 +289,7 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region ActivarUsuario
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> Activar(string usuarioId)
         {
@@ -324,6 +326,7 @@ namespace AP_MVC.Controllers
 
         #region DesactivarUsuario
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Desactivar(string usuarioId)
         {
             var token = ValidarToken(out IActionResult redirect);
@@ -358,6 +361,89 @@ namespace AP_MVC.Controllers
 
             return RedirectToAction("ListarUsuarios", "Usuario");
         }
+        #endregion
+
+        #region Autorizacion
+        [Authorize(Roles = "Administrador")]
+        [HttpPost]
+        public async Task<IActionResult> AuthorizeUN(string usuarioId)
+        {
+            var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+            {
+                TempData["Error"] = "UsuarioId es requerido.";
+                return RedirectToAction("ListarUsuarios", "Usuario");
+            }
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            //API CALL
+            var url = _config.GetValue<string>("Valores:UrlAPI") +
+                      $"Usuario/AuthorizeUN/{usuarioId}";
+
+            var response = await client.PutAsync(url, null);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            var message = await response.Content.ReadAsStringAsync();
+
+            TempData["Success"] = message;
+
+
+            return RedirectToAction("ListarUsuarios", "Usuario");
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> AuthorizeAD(string usuarioId)
+        {
+            var token = ValidarToken(out IActionResult redirect);
+
+            if (redirect != null)
+                return redirect;
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+            {
+                TempData["Error"] = "UsuarioId es requerido.";
+                return RedirectToAction("ListarUsuarios", "Usuario");
+            }
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            //API CALL
+            var url = _config.GetValue<string>("Valores:UrlAPI") +
+                      $"Usuario/AuthorizeAD/{usuarioId}";
+
+            var response = await client.PutAsync(url, null);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Home");
+            }
+
+            var message = await response.Content.ReadAsStringAsync();
+
+            TempData["Success"] = message;
+
+
+            return RedirectToAction("ListarUsuarios", "Usuario");
+
+        }
+
         #endregion
 
 

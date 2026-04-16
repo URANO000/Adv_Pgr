@@ -18,5 +18,10 @@
         public string ImagenPerfil { get; set; } = string.Empty;
 
         public string Token { get; set; } = string.Empty;
+
+        public string nombreCompleto =>
+            string.Join(" ", new[] { PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido }
+            .Where(x => !string.IsNullOrWhiteSpace(x)));
+
     }
 }

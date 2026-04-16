@@ -157,6 +157,41 @@ namespace AP_WEB.Controllers
 
         #endregion
 
+        #region Autorizar
+        [HttpPut("AuthorizeUN/{usuarioId}")]
+        public IActionResult AuthorizeUN(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_AuthorizeUN", parametros);
+            if (result <= 0)
+            {
+                return BadRequest("No se pudo cambiar el rol de este usuario.");
+            }
+
+            return Ok("El usuario tiene rol de usuario normal ahora.");
+        }
+
+        [HttpPut("AuthorizeAD/{usuarioId}")]
+        public IActionResult AuthorizeAD(string usuarioId)
+        {
+            using var context = _helper.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@UsuarioId", usuarioId);
+
+            var result = context.Execute("sp_AuthorizeAD", parametros);
+            if (result <= 0)
+            {
+                return BadRequest("No se pudo cambiar el rol de este usuario.");
+            }
+
+            return Ok("El usuario tiene rol de administrador ahora.");
+        }
+
+        #endregion
+
         #region Helper
         private UsuarioResponse? ObtenerUsuarioPorId(string usuarioId)
         {

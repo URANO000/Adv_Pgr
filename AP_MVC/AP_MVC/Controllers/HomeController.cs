@@ -1,8 +1,10 @@
 ﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
+using Iconify;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -21,6 +23,13 @@ namespace AP_MVC.Controllers
             _http = http;
             _config = config;
             _password = password;
+        }
+
+        //Test de remember me
+        [Authorize]
+        public IActionResult Test()
+        {
+            return Content("Todavía sigues con la sesión iniciada!");
         }
 
         [HttpGet]
@@ -85,6 +94,7 @@ namespace AP_MVC.Controllers
                 var jwt = handler.ReadJwtToken(objeto!.Token);
 
                 var claims = jwt.Claims.ToList();
+                claims.Add(new Claim("Token", objeto!.Token));
 
                 //Verificar que el rol sirve
                 var roleClaim = claims.FirstOrDefault(c => c.Type.Contains("role"));
@@ -95,14 +105,26 @@ namespace AP_MVC.Controllers
 
                 var identity = new ClaimsIdentity(
                     claims,
-                    CookieAuthenticationDefaults.AuthenticationScheme
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    ClaimTypes.Name,
+                    ClaimTypes.Role
                 );
 
                 var principal = new ClaimsPrincipal(identity);
 
+                //Para el remember me
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = model.RememberMe,
+                    ExpiresUtc = model.RememberMe
+                    ? DateTime.UtcNow.AddDays(7)
+                    : DateTime.UtcNow.AddMinutes(30)
+                };
+
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal
+                    principal,
+                    authProperties
                 );
 
                 //Lo demás de la UI
@@ -133,9 +155,10 @@ namespace AP_MVC.Controllers
 
         [SesionActiva]
         [HttpGet]
-        public IActionResult CerrarSesion()
+        public async Task<IActionResult> CerrarSesion()
         {
             HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Home");
         }
 
@@ -170,6 +193,34 @@ namespace AP_MVC.Controllers
         }
 
         #endregion
+
+        #region Misc
+        [HttpGet]
+        public IActionResult Contacto()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Nosotros()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult TerminosCon()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        #endregion
+
 
     }
 }

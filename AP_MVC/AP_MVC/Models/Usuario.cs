@@ -37,5 +37,8 @@ namespace AP_MVC.Models
         public string nombreCompleto =>
             string.Join(" ", new[] { PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido }
             .Where(x => !string.IsNullOrWhiteSpace(x)));
+
+        //Para recordar
+        public bool RememberMe { get; set; }
     }
 }

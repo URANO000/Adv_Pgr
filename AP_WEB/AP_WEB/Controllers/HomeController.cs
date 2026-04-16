@@ -44,7 +44,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@CreatedAt", DateTime.Now);
 
             var result = context.Execute("sp_RegistrarCuenta", parametros);
-            if(result <= 0)
+            if (result <= 0)
             {
                 return BadRequest("Su información no se registró correctamente");
             }
@@ -67,7 +67,7 @@ namespace AP_WEB.Controllers
                 return NotFound("Su información no se autenticó correctamente");
             }
 
-            result.Token = GenerarToken(result.UsuarioId, result.NombreRol);
+            result.Token = GenerarToken(result.UsuarioId, result.NombreRol, result.nombreCompleto, result.ImagenPerfil);
 
             return Ok(result);
         }
@@ -82,7 +82,7 @@ namespace AP_WEB.Controllers
             parametros.Add("@CorreoElectronico", model.CorreoElectronico);
             var result = context.QueryFirstOrDefault<UsuarioResponse>("sp_ValidarCorreo", parametros);
 
-            if(result == null)
+            if (result == null)
             {
                 return NotFound("Su información no se validó correctamente");
             }
@@ -115,7 +115,7 @@ namespace AP_WEB.Controllers
             return new string(buffer);
         }
 
-        private  string ObtenerPlantillaCorreo(string nombre, string contrasenna)
+        private string ObtenerPlantillaCorreo(string nombre, string contrasenna)
         {
             var ruta = Path.Combine(_env.ContentRootPath, "Templates", "RecuperarAcceso.html");
             var plantilla = System.IO.File.ReadAllText(ruta);
@@ -124,20 +124,26 @@ namespace AP_WEB.Controllers
                 .Replace("{{Contrasenna}}", contrasenna);
         }
 
-        private string GenerarToken(string usuarioId, string rol)
+        private string GenerarToken(string usuarioId, string rol, string nombre, string imagenPerfil)
         {
             var key = Encoding.UTF8.GetBytes(_config.GetValue<string>("Jwt:Key")!);
 
             var claims = new[]
             {
                 new Claim("UsuarioId", usuarioId.ToString()),
-                new Claim(ClaimTypes.Role, rol)
+                new Claim(ClaimTypes.Role, rol),
+                new Claim(ClaimTypes.Name, nombre),
+                new Claim("ImagenPerfil", string.IsNullOrEmpty(imagenPerfil)
+                    ? "/uploads/default.jpg"
+                    : imagenPerfil)
             };
 
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256
             );
+
+
 
             var tokenDescriptor = new JwtSecurityToken(
                 claims: claims,

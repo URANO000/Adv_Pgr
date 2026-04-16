@@ -1,6 +1,11 @@
 ﻿@{
-    var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
-    var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.jpg" : Context.Session.GetString("ImagenPerfil");
+    var nombreUsuario = User.Identity.IsAuthenticated
+        ? User.Identity.Name
+        : string.Empty;
+
+    var imagenPerfil = User.Identity.IsAuthenticated
+        ? User.FindFirst("ImagenPerfil")?.Value ?? "/uploads/default.jpg"
+        : "/uploads/default.jpg";
 }
 
 <!DOCTYPE html>
@@ -18,48 +23,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 </head>
 <body>
     <header class="header-color">
-        <div class="container py-2">
-            <div class="row py-4 pb-0 pb-sm-4 align-items-center">
-
-                <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-                    <div class="main-logo">
-                        <a asp-area="" asp-controller="Home" asp-action="Index">
-                            <img src="~/img/logo-footer.png" alt="logo" class="logo-img">
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-                        <div class="search-bar border rounded-2 px-4 py-2 d-flex align-items-center gap-3 shadow-sm">
-                            <iconify-icon icon="mdi:paw" class="fs-5 text-accent"></iconify-icon>
-
-                            <form id="search-form" class="d-flex align-items-center flex-grow-1 m-0">
-                                <input type="text"
-                                       class="form-control border-0 bg-transparent shadow-none"
-                                       placeholder="Busca a tu próxima mascota" />
-                            </form>
-
-                            <iconify-icon icon="tabler:search" class="fs-5"></iconify-icon>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
             <div class="container-fluid">
                 <hr class="m-0">
             </div>
 
             <div class="container">
-                <nav class="main-menu d-flex navbar navbar-expand-lg">
-
+                <nav class="main-menu d-flex navbar navbar-expand-lg p-3">
+                <a asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/pSocialLogo.png" alt="logo" class="logo-img" style="width:150px;">
+                    </a>
                     <!-- MOBILE AUTH -->
                     <div class="d-flex d-lg-none align-items-end mt-3">
                         <ul class="d-flex justify-content-end list-unstyled m-0">
@@ -101,7 +79,7 @@
                             <!-- MENU -->
                             <ul class="navbar-nav menu-list list-unstyled d-flex justify-content-center align-items-center gap-4 mx-auto mb-0">
                                 <li class="nav-item">
-                                    <a asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
+                                    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -112,11 +90,11 @@
                                     <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
                                        aria-expanded="false">Fundraisers</a>
                                     <ul class="dropdown-menu" aria-labelledby="pages">
-                                        <li><a asp-controller="Fundraiser" asp-action="Catalogo" class="dropdown-item">Catalogo</a></li>
+                                        <li><a asp-controller="Fundraiser" asp-action="Catalogo" class="dropdown-item">Catálogo</a></li>
                                         <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
                                     </ul>
                                 </li>
-                                @if (User.IsInRole("Administrador"))
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
                                 {
                                     <li class="nav-item">
                                         <a asp-controller="Usuario" asp-action="ListarUsuarios" class="nav-link">Gestión Administrativa</a>
@@ -125,18 +103,18 @@
 
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">Contacto</a>
+                                    <a asp-action="Contacto" asp-controller="Home" class="nav-link">Contacto</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">Nosotros</a>
+                                    <a asp-action="Nosotros" asp-controller="Home" class="nav-link">Nosotros</a>
                                 </li>
                             </ul>
 
                             <!-- DESKTOP AUTH -->
                             <div class="d-none d-lg-flex align-items-end">
                                 <ul class="d-flex justify-content-end list-unstyled m-0 gap-3">
-                                    @if (!string.IsNullOrEmpty(nombreUsuario))
+                                @if (User.Identity.IsAuthenticated)
                                     {
                                         <li>
                                             <li class="nav-item dropdown">
@@ -173,7 +151,7 @@
                                     {
                                         <li>
                                             <a asp-area="" asp-controller="Home" asp-action="Login" class="mx-3" title="Iniciar Sesión">
-                                                <iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon>
+                                                <iconify-icon icon="healthicons:person" id="login-ico" class="fs-4"></iconify-icon>
                                             </a>
                                         </li>
                                     }
@@ -197,7 +175,7 @@
                 <div class="row py-5">
                     <div class="col-lg-4 mb-4 mb-lg-0">
                         <div class="footer-brand mb-3">
-                            <img src="~/img/logo-footer.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
+                            <img src="~/img/pSocialLogo.png" alt="logo" class="footer-logo mb-3" style="width: 200px;">
                                 <h5 class="fw-bold">Patitas Social Adopciones</h5>
                             </div>
                             <p class="footer-description">Conectando corazones con patitas. Encuentra a tu compañero perfecto y dale un hogar lleno de amor.</p>
@@ -213,9 +191,8 @@
                             <h6 class="footer-heading">Explorar</h6>
                             <ul class="footer-links">
                                 <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                                <li><a href="#">Adoptar</a></li>
-                                <li><a href="#">Fundraisers</a></li>
-                                <li><a href="#">Blog</a></li>
+                                <li><a asp-action="Catalogo" asp-controller="Mascota">Adoptar</a></li>
+                                <li><a asp-action="Catalogo" asp-controller="Fundraiser">Fundraisers</a></li>
                             </ul>
                         </div>
 
@@ -234,7 +211,7 @@
                             <ul class="footer-contact">
                                 <li>
                                     <iconify-icon icon="mdi:email-outline"></iconify-icon>
-                                    <span>contacto@patitassocial.com</span>
+                                    <span>socialpatitas@gmail.com</span>
                                 </li>
                                 <li>
                                     <iconify-icon icon="mdi:phone-outline"></iconify-icon>
@@ -257,7 +234,7 @@
                             <div class="col-md-6 text-center text-md-end">
                                 <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-link-bottom">Política de Privacidad</a>
                                 <span class="mx-2">|</span>
-                                <a href="#" class="footer-link-bottom">Términos de Servicio</a>
+                                <a asp-controller="Home" asp-action="TerminosCon" class="footer-link-bottom">Términos de Servicio</a>
                             </div>
                         </div>
                     </div>

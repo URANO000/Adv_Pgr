@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<section id="banner">
+<section id="banner" class="mt-lg-5">
     <div class="swiper main-swiper">
         <div class="swiper-wrapper">
 
@@ -17,11 +17,11 @@
                                 <div class="secondary-font text-primary text-uppercase">
                                     Adopta, no compres
                                 </div>
-                                <h2 class="banner-title display-1 fw-normal mb-5">
+                                <h2 class="banner-title display-1 fw-normal mb-5 text-custom-green">
                                     Un hogar cambia
                                     <span class="text-primary">una vida</span>
                                 </h2>
-                                <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-3">
+                                <a asp-action="Catalogo" asp-controller="Mascota" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 mt-3">
                                     ver mascotas en adopción
                                     <svg width="24" height="24" viewBox="0 0 24 24" class="mb-1">
                                         <use xlink:href="#arrow-right"></use>
@@ -43,7 +43,7 @@
                                     <div class="secondary-font text-primary text-uppercase mb-4">
                                         Dale una segunda oportunidad
                                     </div>
-                                    <h2 class="banner-title display-1 fw-normal">
+                                    <h2 class="banner-title display-1 fw-normal text-custom-green">
                                         Ellos esperan
                                         <span class="text-primary">por ti</span>
                                     </h2>
@@ -69,7 +69,7 @@
                                         <div class="secondary-font text-primary text-uppercase mb-4">
                                             Publica mascotas en adopción
                                         </div>
-                                        <h2 class="banner-title display-1 fw-normal">
+                                        <h2 class="banner-title display-1 fw-normal text-custom-green">
                                             Ayuda a encontrar
                                             <span class="text-primary">un hogar responsable</span>
                                         </h2>
@@ -163,7 +163,7 @@
                                     rescatistas y adoptantes.
                                 </p>
 
-                                <a href="#adopciones"
+                                <a asp-action="Catalogo" asp-controller="Mascota"
                                        class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">
                                     Ver adopciones
                                     <svg width="20" height="20" viewBox="0 0 24 24" class="ms-2">

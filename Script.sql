@@ -312,6 +312,26 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE [dbo].[sp_AuthorizeUN]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET RolId = 2
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_AuthorizeAD]
+	@UsuarioId NVARCHAR(450)
+AS
+BEGIN
+	UPDATE [dbo].[Usuario]
+	SET RolId = 1
+	WHERE UsuarioId = @UsuarioId
+END
+GO
+
 -- =============================================
 -- 5. SPs â Animales
 -- =============================================
@@ -499,6 +519,7 @@ GO
 -- Usuario de prueba (pass: 12345678)
 INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
+
 
 --Usuario admin de prueba(pass: 12345678)
 INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)

@@ -6,7 +6,6 @@ using System.Net;
 
 namespace AP_MVC.Controllers
 {
-    [SesionActiva]
     public class MascotaController : Controller
     {
         private readonly IHttpClientFactory _http;
@@ -45,14 +44,14 @@ namespace AP_MVC.Controllers
 
             return new SelectList(new List<AnimalTipoViewModel>(), "TipoId", "NombreTipo");
         }
-
+        [SesionActiva]
         [HttpGet]
         public IActionResult Registrar()
         {
             ViewBag.TiposAnimal = GetTiposAnimal();
             return View();
         }
-
+        [SesionActiva]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(MascotaPublicacionCrearViewModel model, List<IFormFile> ImagenesArchivos)
@@ -173,6 +172,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpGet]
+        [SesionActiva]
         public IActionResult MisPublicaciones()
         {
             var usuarioId = ObtenerUsuarioIdSesion();
@@ -224,6 +224,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpGet]
+        [SesionActiva]
         public IActionResult Detalle(int id)
         {
             var usuarioId = ObtenerUsuarioIdSesion();
@@ -290,6 +291,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpGet]
+        [SesionActiva]
         public IActionResult Editar(int id)
         {
             var usuarioId = ObtenerUsuarioIdSesion();
@@ -347,6 +349,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
+        [SesionActiva]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(EditarPublicacionMascotaViewModel model)
         {
@@ -394,6 +397,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
+        [SesionActiva]
         [ValidateAntiForgeryToken]
         public IActionResult Inactivar(int id)
         {
@@ -424,6 +428,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpGet]
+        [SesionActiva]
         public IActionResult Media(int animalId)
         {
             using var client = _http.CreateClient();
@@ -455,6 +460,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
+        [SesionActiva]
         [ValidateAntiForgeryToken]
         public IActionResult RegistrarMedia(RegistrarAnimalMediaViewModel model)
         {
@@ -482,6 +488,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
+        [SesionActiva]
         [ValidateAntiForgeryToken]
         public IActionResult EliminarMedia(int mediaId, int animalId)
         {
