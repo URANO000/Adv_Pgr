@@ -251,6 +251,7 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region VerPerfil
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult> Detalle(string usuarioId)
         {
@@ -288,6 +289,7 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region ActivarUsuario
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> Activar(string usuarioId)
         {
@@ -324,6 +326,7 @@ namespace AP_MVC.Controllers
 
         #region DesactivarUsuario
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Desactivar(string usuarioId)
         {
             var token = ValidarToken(out IActionResult redirect);
@@ -361,6 +364,7 @@ namespace AP_MVC.Controllers
         #endregion
 
         #region Autorizacion
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> AuthorizeUN(string usuarioId)
         {
@@ -401,6 +405,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> AuthorizeAD(string usuarioId)
         {
             var token = ValidarToken(out IActionResult redirect);

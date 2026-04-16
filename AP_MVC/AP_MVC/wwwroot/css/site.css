@@ -122,8 +122,8 @@ CSS STRUCTURE:
 
 /* Fonts */
 :root {
-    --body-font: "EB Garamond", serif;
-    --heading-font: "EB Garamond", serif;
+    --body-font: "Chewy", system-ui;
+    --heading-font: "Chewy", system-ui;
     --secondary-font: 'Montserrat', sans-serif;
 }
 
@@ -134,7 +134,7 @@ body {
     --bs-link-color-rgb: 40, 40, 40;
     --bs-link-hover-color-rgb: 128, 204, 255;
     --bs-light-rgb: 248, 248, 248;
-    --bs-font-sans-serif: "EB Garamond", serif;
+    --bs-font-sans-serif: "Roboto", sans-serif;
     --bs-body-font-family: var(--bs-font-sans-serif);
     --bs-body-font-size: 1rem;
     --bs-body-font-weight: 400;

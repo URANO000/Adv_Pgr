@@ -1,6 +1,11 @@
 ﻿@{
-    var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? string.Empty;
-    var imagenPerfil = string.IsNullOrEmpty(Context.Session.GetString("ImagenPerfil")) ? "/uploads/default.jpg" : Context.Session.GetString("ImagenPerfil");
+    var nombreUsuario = User.Identity.IsAuthenticated
+        ? User.Identity.Name
+        : string.Empty;
+
+    var imagenPerfil = User.Identity.IsAuthenticated
+        ? User.FindFirst("ImagenPerfil")?.Value ?? "/uploads/default.jpg"
+        : "/uploads/default.jpg";
 }
 
 <!DOCTYPE html>
@@ -18,7 +23,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Fuzzy+Bubbles:wght@400;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 </head>
@@ -89,7 +94,7 @@
                                         <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
                                     </ul>
                                 </li>
-                                @if (User.IsInRole("Administrador"))
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
                                 {
                                     <li class="nav-item">
                                         <a asp-controller="Usuario" asp-action="ListarUsuarios" class="nav-link">Gestión Administrativa</a>
@@ -109,7 +114,7 @@
                             <!-- DESKTOP AUTH -->
                             <div class="d-none d-lg-flex align-items-end">
                                 <ul class="d-flex justify-content-end list-unstyled m-0 gap-3">
-                                    @if (!string.IsNullOrEmpty(nombreUsuario))
+                                @if (User.Identity.IsAuthenticated)
                                     {
                                         <li>
                                             <li class="nav-item dropdown">

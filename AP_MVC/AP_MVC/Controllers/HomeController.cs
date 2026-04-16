@@ -4,6 +4,7 @@ using AP_MVC.Services;
 using Iconify;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -22,6 +23,13 @@ namespace AP_MVC.Controllers
             _http = http;
             _config = config;
             _password = password;
+        }
+
+        //Test de remember me
+        [Authorize]
+        public IActionResult Test()
+        {
+            return Content("Todavía sigues con la sesión iniciada!");
         }
 
         [HttpGet]
@@ -86,6 +94,7 @@ namespace AP_MVC.Controllers
                 var jwt = handler.ReadJwtToken(objeto!.Token);
 
                 var claims = jwt.Claims.ToList();
+                claims.Add(new Claim("Token", objeto!.Token));
 
                 //Verificar que el rol sirve
                 var roleClaim = claims.FirstOrDefault(c => c.Type.Contains("role"));
@@ -96,7 +105,9 @@ namespace AP_MVC.Controllers
 
                 var identity = new ClaimsIdentity(
                     claims,
-                    CookieAuthenticationDefaults.AuthenticationScheme
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    ClaimTypes.Name,
+                    ClaimTypes.Role
                 );
 
                 var principal = new ClaimsPrincipal(identity);
@@ -144,9 +155,10 @@ namespace AP_MVC.Controllers
 
         [SesionActiva]
         [HttpGet]
-        public IActionResult CerrarSesion()
+        public async Task<IActionResult> CerrarSesion()
         {
             HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Home");
         }
 

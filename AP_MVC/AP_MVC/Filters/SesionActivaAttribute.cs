@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AP_MVC.Filters
 {
-    public class SesionActivaAttribute :ActionFilterAttribute
+    public class SesionActivaAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var sesion = context.HttpContext.Session.GetString("NombreUsuario");
+            var user = context.HttpContext.User;
 
-            if (string.IsNullOrEmpty(sesion))
+            if (user == null || !user.Identity!.IsAuthenticated)
             {
                 context.Result = new RedirectToActionResult("Login", "Home", null);
                 return;
