@@ -1043,5 +1043,89 @@ BEGIN
 END
 GO
 
+-- SP para gestionar adopción (19-04-2026)
+CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarSolicitudAdopcion]
+    @PublicacionId INT,
+    @UsuarioInteresadoId NVARCHAR(450),
+    @Mensaje NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @PropietarioId NVARCHAR(450);
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Usuario
+        WHERE UsuarioId = @UsuarioInteresadoId
+          AND IsActive = 1
+    )
+    BEGIN
+        RAISERROR('El usuario interesado no existe o está inactivo.', 16, 1);
+        RETURN;
+    END
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Publicacion
+        WHERE PublicacionId = @PublicacionId
+          AND IsActive = 1
+    )
+    BEGIN
+        RAISERROR('La publicación no existe o está inactiva.', 16, 1);
+        RETURN;
+    END
+
+    SELECT @PropietarioId = p.PublishedBy
+    FROM dbo.Publicacion p
+    WHERE p.PublicacionId = @PublicacionId;
+
+    IF @PropietarioId = @UsuarioInteresadoId
+    BEGIN
+        RAISERROR('No puedes enviar una solicitud a tu propia publicación.', 16, 1);
+        RETURN;
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM dbo.Solicitud
+        WHERE PublicacionId = @PublicacionId
+          AND UsuarioInteresadoId = @UsuarioInteresadoId
+    )
+    BEGIN
+        RAISERROR('Ya enviaste una solicitud para esta publicación.', 16, 1);
+        RETURN;
+    END
+
+    INSERT INTO dbo.Solicitud
+    (
+        PublicacionId,
+        UsuarioInteresadoId,
+        Mensaje
+    )
+    VALUES
+    (
+        @PublicacionId,
+        @UsuarioInteresadoId,
+        @Mensaje
+    );
+
+    SELECT
+        u.CorreoElectronico,
+        u.PrimerNombre,
+        p.Titulo,
+        a.Nombre AS NombreMascota,
+        ui.PrimerNombre AS NombreInteresado
+    FROM dbo.Publicacion p
+    INNER JOIN dbo.Animal a
+        ON p.AnimalId = a.AnimalId
+    INNER JOIN dbo.Usuario u
+        ON p.PublishedBy = u.UsuarioId
+    INNER JOIN dbo.Usuario ui
+        ON ui.UsuarioId = @UsuarioInteresadoId
+    WHERE p.PublicacionId = @PublicacionId;
+END
+GO
+
 SELECT UsuarioId, CorreoElectronico, IsActive
 FROM dbo.Usuario;
