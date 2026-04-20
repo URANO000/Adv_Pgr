@@ -11,6 +11,9 @@
         public DateTime? ClosedAt { get; set; }
 
         public int AnimalId { get; set; }
+        public string NombreUsuarioSesion { get; set; } = string.Empty;
+        public string CorreoUsuarioSesion { get; set; } = string.Empty;
+        public string UsuarioId { get; set; } = string.Empty;
         public string NombreMascota { get; set; } = string.Empty;
         public decimal? Peso { get; set; }
         public string? Edad { get; set; }

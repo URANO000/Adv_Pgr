@@ -1,4 +1,6 @@
 ﻿using AP_MVC.Filters;
+using AP_MVC.Models;
+using AP_MVC.Models.Adopciones;
 using AP_MVC.Models.Mascotas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -711,7 +713,93 @@ namespace AP_MVC.Controllers
                 publicacion.Imagenes = new List<AnimalMediaViewModel>();
             }
 
+            var usuarioIdSesion = HttpContext.Session.GetString("UsuarioId");
+            var nombreSesion = HttpContext.Session.GetString("NombreUsuario");
+            var tokenSesion = HttpContext.Session.GetString("Token");
+
+            if (!string.IsNullOrWhiteSpace(usuarioIdSesion))
+            {
+                publicacion.NombreUsuarioSesion = nombreSesion ?? string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(tokenSesion))
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenSesion);
+                }
+
+                var urlUsuario = UrlAPI + $"Usuario/VerDetalle/{usuarioIdSesion}";
+                var resultUsuario = client.GetAsync(urlUsuario).Result;
+
+                if (resultUsuario.StatusCode == HttpStatusCode.OK)
+                {
+                    var usuario = resultUsuario.Content.ReadFromJsonAsync<Usuario>().Result;
+
+                    if (usuario != null)
+                    {
+                        publicacion.CorreoUsuarioSesion = usuario.CorreoElectronico ?? string.Empty;
+
+                        if (string.IsNullOrWhiteSpace(publicacion.NombreUsuarioSesion))
+                        {
+                            publicacion.NombreUsuarioSesion =
+                                $"{usuario.PrimerNombre} {usuario.PrimerApellido}".Trim();
+                        }
+                    }
+                }
+                else
+                {
+                    publicacion.CorreoUsuarioSesion = string.Empty;
+                }
+            }
+
             return View("Detalle", publicacion);
+        }
+
+        [HttpPost]
+        [SesionActiva]
+        [ValidateAntiForgeryToken]
+        public IActionResult EnviarSolicitudAdopcion(CrearSolicitudAdopcionViewModel model)
+        {
+            var usuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "Debes iniciar sesión para enviar una solicitud.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            model.UsuarioInteresadoId = usuarioId;
+
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Debes escribir un mensaje válido para enviar la solicitud.";
+                return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
+            }
+
+            using var client = _http.CreateClient();
+            var url = UrlAPI + "Mascota/RegistrarSolicitudAdopcion";
+
+            var request = new
+            {
+                PublicacionId = model.PublicacionId,
+                UsuarioInteresadoId = model.UsuarioInteresadoId,
+                Mensaje = model.Mensaje
+            };
+
+            var result = client.PostAsJsonAsync(url, request).Result;
+
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                TempData["Exito"] = "Tu solicitud fue enviada correctamente al propietario.";
+                return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
+            }
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                TempData["Error"] = result.Content.ReadAsStringAsync().Result;
+                return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
+            }
+
+            TempData["Error"] = result.Content.ReadAsStringAsync().Result;
+            return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
         }
 
         [HttpGet]

@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = "Detalle de publicación";
+    var usuarioSesionId = Context.Session.GetString("UsuarioId");
+    var estaLogueado = !string.IsNullOrWhiteSpace(usuarioSesionId);
+    var esPropietario = estaLogueado && usuarioSesionId == Model.UsuarioId;
+    var esVistaPublica = ViewContext.RouteData.Values["action"]?.ToString() == "DetalleCatalogo";
 }
 
 <div class="container mt-4 mb-5">
@@ -108,85 +112,142 @@
                 <p><strong>Fecha de publicación:</strong> @Model.PublishedAt.ToString("dd/MM/yyyy HH:mm")</p>
             </div>
 
-            <div class="detalle-acciones">
-                <a asp-controller="Mascota"
-                       asp-action="MisPublicaciones"
-                       class="btn btn-secondary detalle-btn">
-                    Volver
-                </a>
-
-                @if (Model.IsActive)
+            @if (Model.IsActive && esVistaPublica)
+            {
+                @if (!estaLogueado)
                 {
+                    <div class="card border-0 shadow-sm mt-4">
+                        <div class="card-body">
+                            <h5 class="mb-2">¿Te interesa adoptar a @Model.NombreMascota?</h5>
+                            <p class="text-muted mb-3">
+                                Inicia sesión para enviar una solicitud de adopción al propietario.
+                            </p>
+                            <a asp-controller="Home"
+                                   asp-action="Login"
+                                   class="btn btn-primary">
+                                Iniciar sesión
+                            </a>
+                        </div>
+                    </div>
+                }
+                else if (!esPropietario)
+                {
+                    <div class="solicitud-adopcion-cta mt-4">
+                        <div>
+                            <h5 class="mb-1">¿Te interesa adoptar a @Model.NombreMascota?</h5>
+                            <p class="text-muted mb-0">
+                                Contacta al propietario para iniciar el proceso de adopción.
+                            </p>
+                        </div>
+
+                        <button type="button"
+                                class="btn btn-success"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalSolicitudAdopcion">
+                            Contactar
+                        </button>
+                    </div>
+                }
+            }
+
+            @if (!esVistaPublica)
+            {
+                <div class="detalle-acciones">
                     <a asp-controller="Mascota"
-                           asp-action="Editar"
-                           asp-route-id="@Model.PublicacionId"
-                           class="btn btn-primary detalle-btn">
-                        Editar
+                           asp-action="MisPublicaciones"
+                           class="btn btn-secondary detalle-btn">
+                        Volver
                     </a>
 
-                    <button type="button"
-                            class="btn btn-danger detalle-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalEliminarPublicacion">
-                        Eliminar publicación
-                    </button>
-                }
-            </div>
+                    @if (Model.IsActive)
+                    {
+                        <a asp-controller="Mascota"
+                               asp-action="Editar"
+                               asp-route-id="@Model.PublicacionId"
+                               class="btn btn-primary detalle-btn">
+                            Editar
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-danger detalle-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEliminarPublicacion">
+                            Eliminar publicación
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="detalle-acciones">
+                    <a asp-controller="Mascota"
+                           asp-action="Catalogo"
+                           class="btn btn-secondary detalle-btn">
+                        Volver al catálogo
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
 
-@if (Model.IsActive)
+@if (Model.IsActive && esVistaPublica && estaLogueado && !esPropietario)
 {
-    <div class="modal fade" id="modalEliminarPublicacion" tabindex="-1" aria-labelledby="modalEliminarPublicacionLabel" aria-hidden="true">
+    var mensajeDefault = $"Estoy interesado en tu anuncio de adopción de PatitasSocial web, de {Model.NombreMascota}.";
+
+    <div class="modal fade" id="modalSolicitudAdopcion" tabindex="-1" aria-labelledby="modalSolicitudAdopcionLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content custom-delete-modal">
+            <div class="modal-content custom-solicitud-modal">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title custom-delete-title" id="modalEliminarPublicacionLabel">
-                        Eliminar publicación
-                    </h5>
+                    <div>
+                        <h5 class="modal-title custom-solicitud-title" id="modalSolicitudAdopcionLabel">
+                            Solicitar adopción
+                        </h5>
+                        <p class="text-muted mb-0 small">
+                            Estás contactando al propietario de <strong>@Model.NombreMascota</strong>
+                        </p>
+                    </div>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
                 <form asp-controller="Mascota"
-                      asp-action="Inactivar"
-                      asp-route-id="@Model.PublicacionId"
-                      method="post"
-                      class="m-0">
-                    @Html.AntiForgeryToken()
+                      asp-action="EnviarSolicitudAdopcion"
+                      method="post">
+                    <div class="modal-body pt-3">
+                        @Html.AntiForgeryToken()
 
-                    <div class="modal-body pt-2">
-                        <p class="custom-delete-text">
-                            Tu publicación dejará de mostrarse en el catálogo y en tus publicaciones.
-                            Quedará archivada en historial del sistema y no podrá reactivarse.
-                        </p>
+                        <input type="hidden" name="PublicacionId" value="@Model.PublicacionId" />
 
-                        <div class="mb-3">
-                            <label for="motivoEliminacion" class="form-label fw-semibold">
-                                ¿Por qué deseas eliminarla?
-                            </label>
-                            <select id="motivoEliminacion" name="motivoEliminacion" class="form-select">
-                                <option value="">Selecciona una opción</option>
-                                <option value="hogar">Ya encontré hogar para mi mascota</option>
-                                <option value="incorrecta">La información ya no es correcta</option>
-                                <option value="error">Publiqué por error</option>
-                                <option value="continuar">Ya no deseo continuar con esta publicación</option>
-                                <option value="otro">Otro</option>
-                            </select>
+                        <div class="solicitud-contacto-box mb-3">
+                            <div class="solicitud-contacto-item">
+                                <label class="form-label mb-1">Nombre</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@Model.NombreUsuarioSesion"
+                                       readonly />
+                            </div>
+
+                            <div class="solicitud-contacto-item">
+                                <label class="form-label mb-1">Correo</label>
+                                <input type="email"
+                                       class="form-control"
+                                       value="@Model.CorreoUsuarioSesion"
+                                       readonly />
+                            </div>
                         </div>
 
-                        <div class="mb-3 d-none" id="contenedorOtroMotivo">
-                            <label for="otroMotivo" class="form-label fw-semibold">
-                                Escribe tu razón
+                        <div class="mb-2">
+                            <label for="Mensaje" class="form-label fw-semibold">
+                                Mensaje
                             </label>
-                            <textarea id="otroMotivo" name="otroMotivo" class="form-control" rows="3" maxlength="250"></textarea>
-                        </div>
-
-                        <div class="form-check custom-delete-check">
-                            <input class="form-check-input" type="checkbox" id="confirmacionEliminar">
-                            <label class="form-check-label" for="confirmacionEliminar">
-                                Entiendo que esta acción archivará la publicación y no podré recuperarla.
-                            </label>
+                            <textarea id="Mensaje"
+                                      name="Mensaje"
+                                      class="form-control"
+                                      rows="5"
+                                      maxlength="500"
+                                      required>@mensajeDefault</textarea>
+                            <div class="form-text">Puedes editar este mensaje antes de enviarlo.</div>
                         </div>
                     </div>
 
@@ -194,12 +255,8 @@
                         <button type="button" class="btn btn-light custom-cancel-btn" data-bs-dismiss="modal">
                             Cancelar
                         </button>
-
-                        <button type="submit"
-                                id="btnConfirmarEliminar"
-                                class="btn custom-delete-btn"
-                                disabled>
-                            Eliminar publicación
+                        <button type="submit" class="btn btn-success">
+                            Enviar solicitud
                         </button>
                     </div>
                 </form>

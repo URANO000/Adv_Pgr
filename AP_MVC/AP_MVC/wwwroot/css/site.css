@@ -2977,3 +2977,110 @@ span.field-validation-error {
     display: block;
     margin-top: 6px;
 }
+
+.solicitud-adopcion-cta {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    background-color: #fffaf5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+    .solicitud-adopcion-cta h5 {
+        margin-bottom: .25rem;
+        font-weight: 700;
+    }
+
+.custom-solicitud-modal {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.custom-solicitud-title {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+#Mensaje.form-control {
+    resize: none;
+    min-height: 140px;
+    border-radius: 12px;
+}
+
+.modal-content .form-text {
+    font-size: 0.85rem;
+}
+
+@@media (max-width: 768px) {
+    .solicitud-adopcion-cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .solicitud-adopcion-cta .btn {
+            width: 100%;
+        }
+}
+.solicitud-adopcion-cta {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    background-color: #fffaf5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+    .solicitud-adopcion-cta h5 {
+        margin-bottom: .25rem;
+        font-weight: 700;
+    }
+
+.custom-solicitud-modal {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.custom-solicitud-title {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.solicitud-contacto-box {
+    display: grid;
+    gap: 1rem;
+}
+
+.solicitud-contacto-item input.form-control {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+}
+
+#Mensaje.form-control {
+    resize: none;
+    min-height: 140px;
+    border-radius: 12px;
+}
+
+.modal-content .form-text {
+    font-size: 0.85rem;
+}
+
+@@media (max-width: 768px) {
+    .solicitud-adopcion-cta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .solicitud-adopcion-cta .btn {
+            width: 100%;
+        }
+}

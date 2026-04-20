@@ -1,4 +1,6 @@
-﻿using AP_WEB.Models.Mascotas;
+﻿using AP_WEB.Models.Adopciones;
+using AP_WEB.Models.Mascotas;
+using AP_WEB.Services;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -11,10 +13,12 @@ namespace AP_WEB.Controllers
     public class MascotaController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly IPasswordHelper _password;
 
-        public MascotaController(IConfiguration config)
+        public MascotaController(IConfiguration config, IPasswordHelper password)
         {
             _config = config;
+            _password = password;
         }
 
         [HttpPost("RegistrarPublicacionMascota")]
@@ -259,6 +263,48 @@ namespace AP_WEB.Controllers
             }
         }
 
+        [HttpPost("RegistrarSolicitudAdopcion")]
+        public IActionResult RegistrarSolicitudAdopcion(RegistrarSolicitudAdopcionRequest model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Datos inválidos para la solicitud de adopción.");
+
+            try
+            {
+                using var context = new SqlConnection(_config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@PublicacionId", model.PublicacionId);
+                parametros.Add("@UsuarioInteresadoId", model.UsuarioInteresadoId);
+                parametros.Add("@Mensaje", model.Mensaje);
+
+                var notif = context.QueryFirstOrDefault<NotificacionSolicitudAdopcionResponse>(
+                    "sp_RegistrarSolicitudAdopcion",
+                    parametros,
+                    commandType: CommandType.StoredProcedure
+                );
+
+                if (notif == null)
+                    return BadRequest("No se pudo registrar la solicitud de adopción.");
+
+                if (!string.IsNullOrWhiteSpace(notif.CorreoElectronico))
+                {
+                    var contenido = ConstruirCorreoSolicitudAdopcion(notif);
+                    _password.EnviarCorreo(
+                        notif.CorreoElectronico,
+                        "Nueva solicitud de adopción en Patitas Social",
+                        contenido
+                    );
+                }
+
+                return Ok("Solicitud de adopción enviada correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("ListarHistorialPublicacionesMascota/{usuarioId}")]
         public IActionResult ListarHistorialPublicacionesMascota(string usuarioId, string estado = "todas")
         {
@@ -327,6 +373,39 @@ namespace AP_WEB.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        private static string ConstruirCorreoSolicitudAdopcion(NotificacionSolicitudAdopcionResponse datos)
+        {
+            return $@"
+        <!DOCTYPE html>
+        <html lang='es'>
+        <head>
+            <meta charset='UTF-8'>
+        </head>
+        <body style='font-family:Arial,sans-serif;background:#f4f4f4;padding:20px;'>
+            <div style='max-width:600px;margin:0 auto;background:#fff;border-radius:10px;padding:30px;'>
+                <h2 style='color:#e67e22;'>🐾 ¡Tienes una nueva solicitud de adopción!</h2>
+
+                <p>Hola <strong>{datos.PrimerNombre}</strong>,</p>
+
+                <p>
+                    <strong>{datos.NombreInteresado}</strong> ha enviado una solicitud para adoptar a
+                    <strong>{datos.NombreMascota}</strong>.
+                </p>
+
+                <div style='background:#fef9f0;border-left:4px solid #e67e22;padding:15px;margin:20px 0;border-radius:5px;'>
+                    <p style='margin:0;'><strong>Publicación:</strong> {datos.Titulo}</p>
+                    <p style='margin:8px 0 0;'><strong>Mascota:</strong> {datos.NombreMascota}</p>
+                </div>
+
+                <p>Ingresá a <strong>Patitas Social</strong> para revisar tu publicación y dar seguimiento.</p>
+
+                <hr style='border:none;border-top:1px solid #eee;margin:20px 0;' />
+                <p style='color:#999;font-size:12px;'>Patitas Social — Conectando corazones con patitas 🐾</p>
+            </div>
+        </body>
+        </html>";
         }
     }
 }
