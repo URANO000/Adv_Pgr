@@ -3084,3 +3084,146 @@ span.field-validation-error {
             width: 100%;
         }
 }
+
+/* ==========================================================
+   Mejoras UI - Registrar mascota
+   Agregar al final de site.css
+========================================================== */
+
+.mascota-form-shell {
+    overflow: hidden;
+}
+
+.mascota-form-topbar {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.mascota-section-kicker {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5d87a1;
+    background: rgba(128, 204, 255, 0.16);
+    border: 1px solid rgba(128, 204, 255, 0.28);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.mascota-section-compact {
+    padding: 1.2rem;
+    border-radius: 1.1rem;
+}
+
+.section-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.mascota-section-pill {
+    flex-shrink: 0;
+    background: #f4f8fb;
+    color: #607789;
+    border: 1px solid #e4edf4;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.mascota-mini-panel {
+    background: #fbfcfe;
+    border: 1px solid #edf2f6;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.mascota-mini-title {
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+    color: #3f5566;
+}
+
+.mascota-textarea-md {
+    min-height: 120px !important;
+}
+
+.compact-description {
+    min-height: 180px !important;
+}
+
+.mascota-aside-tip {
+    background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+    border: 1px solid #e7eef5;
+    border-radius: 1rem;
+    padding: 1rem;
+    color: #61707d;
+    height: 100%;
+    font-family: var(--secondary-font);
+    line-height: 1.7;
+}
+
+.mascota-upload-panel {
+    background: #fcfdfd;
+    border: 1px dashed #dce7ef;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.mascota-upload-hint {
+    background: #f6fafc;
+    border: 1px solid #e5edf3;
+    border-radius: 0.95rem;
+    padding: 0.95rem 1rem;
+    color: #60707e;
+    font-family: var(--secondary-font);
+    line-height: 1.6;
+}
+
+.mascota-form-actions {
+    border-top: 1px solid #eef2f6;
+    padding-top: 1.25rem;
+}
+
+.mascota-form-card .form-control,
+.mascota-form-card .form-select {
+    min-height: 56px;
+}
+
+.mascota-form-card textarea.form-control {
+    padding-top: 1.15rem;
+}
+
+.mascota-preview-grid {
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 991.98px) {
+    .section-header-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mascota-aside-tip {
+        height: auto;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mascota-form-card .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .mascota-section-compact {
+        padding: 1rem;
+    }
+
+    .compact-description {
+        min-height: 150px !important;
+    }
+}
