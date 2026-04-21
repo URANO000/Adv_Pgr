@@ -3086,144 +3086,235 @@ span.field-validation-error {
 }
 
 /* ==========================================================
-   Mejoras UI - Registrar mascota
-   Agregar al final de site.css
+   Registrar mascota - layout 2 paneles
 ========================================================== */
 
-.mascota-form-shell {
-    overflow: hidden;
+.mascota-register-container {
+    max-width: 1680px;
+    margin: 0 auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.mascota-form-card-wide {
+    border-radius: 1.5rem;
+    background: #fcfbf8;
 }
 
 .mascota-form-topbar {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eef2f6;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .mascota-section-kicker {
     display: inline-block;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #5d87a1;
-    background: rgba(128, 204, 255, 0.16);
-    border: 1px solid rgba(128, 204, 255, 0.28);
+    color: #5f7fa0;
+    background: #eaf4ff;
+    border: 1px solid #cfe3f8;
     border-radius: 999px;
-    padding: 0.35rem 0.8rem;
-    margin-bottom: 0.75rem;
+    padding: 0.45rem 0.9rem;
+    margin-bottom: 0.85rem;
 }
 
-.mascota-section-compact {
-    padding: 1.2rem;
-    border-radius: 1.1rem;
-}
-
-.section-header-inline {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
-
-.mascota-section-pill {
-    flex-shrink: 0;
-    background: #f4f8fb;
-    color: #607789;
-    border: 1px solid #e4edf4;
-    border-radius: 999px;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-}
-
-.mascota-mini-panel {
-    background: #fbfcfe;
-    border: 1px solid #edf2f6;
-    border-radius: 1rem;
-    padding: 1rem;
-}
-
-.mascota-mini-title {
-    font-weight: 700;
-    margin-bottom: 0.9rem;
-    color: #3f5566;
-}
-
-.mascota-textarea-md {
-    min-height: 120px !important;
-}
-
-.compact-description {
-    min-height: 180px !important;
-}
-
-.mascota-aside-tip {
-    background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
-    border: 1px solid #e7eef5;
-    border-radius: 1rem;
-    padding: 1rem;
-    color: #61707d;
+.mascota-main-panel {
+    background: #ffffff;
+    border: 1px solid #e8edf2;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
     height: 100%;
-    font-family: var(--secondary-font);
-    line-height: 1.7;
 }
 
-.mascota-upload-panel {
-    background: #fcfdfd;
-    border: 1px dashed #dce7ef;
-    border-radius: 1rem;
-    padding: 1rem;
+.mascota-panel-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
 }
 
-.mascota-upload-hint {
-    background: #f6fafc;
-    border: 1px solid #e5edf3;
-    border-radius: 0.95rem;
-    padding: 0.95rem 1rem;
-    color: #60707e;
-    font-family: var(--secondary-font);
-    line-height: 1.6;
+.mascota-panel-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #eaf4ff;
+    color: #4b84b6;
+    border: 1px solid #cfe3f8;
+    font-size: 1.1rem;
 }
 
-.mascota-form-actions {
-    border-top: 1px solid #eef2f6;
-    padding-top: 1.25rem;
+.mascota-panel-header h4 {
+    font-size: 1.45rem;
+    margin: 0;
+}
+
+.mascota-panel-divider {
+    margin: 1rem 0 1.1rem;
+    border-color: #edf1f4;
+    opacity: 1;
+}
+
+.mascota-subsection {
+    margin-bottom: 0.25rem;
+}
+
+.mascota-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #138a72;
+    margin-bottom: 0.9rem;
 }
 
 .mascota-form-card .form-control,
 .mascota-form-card .form-select {
-    min-height: 56px;
+    min-height: 58px;
+    border-radius: 0.9rem;
+    border-color: #d9e1e8;
+    box-shadow: none;
 }
 
+    .mascota-form-card .form-control:focus,
+    .mascota-form-card .form-select:focus {
+        border-color: #9bc7ea;
+        box-shadow: 0 0 0 0.2rem rgba(74, 132, 182, 0.10);
+    }
+
 .mascota-form-card textarea.form-control {
-    padding-top: 1.15rem;
+    padding-top: 1rem;
+}
+
+.mascota-textarea-md {
+    min-height: 118px !important;
+}
+
+.mascota-textarea-lg {
+    min-height: 170px !important;
+}
+
+.mascota-upload-text {
+    color: #7b8794;
+    font-size: 0.92rem;
+}
+
+.mascota-upload-box {
+    border-top: 1px solid #eef2f5;
+    padding-top: 0.9rem;
+}
+
+.compact-preview {
+    min-height: 140px;
+    border-radius: 1rem;
 }
 
 .mascota-preview-grid {
-    margin-top: 0.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.mascota-form-actions {
+    border-top: 1px solid #eceff3;
+    padding-top: 1.35rem;
+}
+
+.mascota-submit-btn {
+    min-width: 220px;
+    min-height: 56px;
+    border-radius: 0.95rem;
+    font-weight: 700;
+}
+
+.mascota-secondary-btn {
+    min-width: 220px;
+    min-height: 56px;
+    border-radius: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1399.98px) {
+    .mascota-register-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .mascota-main-panel {
+        padding: 1rem;
+    }
+
+    .mascota-textarea-lg {
+        min-height: 150px !important;
+    }
 }
 
 @media (max-width: 991.98px) {
-    .section-header-inline {
-        flex-direction: column;
-        align-items: flex-start;
+    .mascota-register-container {
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
     }
 
-    .mascota-aside-tip {
-        height: auto;
+    .mascota-panel-header h4 {
+        font-size: 1.2rem;
     }
 }
 
 @media (max-width: 767.98px) {
+    .mascota-register-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
     .mascota-form-card .card-body {
-        padding: 1.25rem !important;
+        padding: 1rem !important;
     }
 
-    .mascota-section-compact {
-        padding: 1rem;
+    .mascota-main-panel {
+        padding: 0.95rem;
     }
 
-    .compact-description {
-        min-height: 150px !important;
+    .mascota-textarea-md {
+        min-height: 100px !important;
+    }
+
+    .mascota-textarea-lg {
+        min-height: 135px !important;
+    }
+
+    .mascota-submit-btn,
+    .mascota-secondary-btn {
+        width: 100%;
+        min-width: unset;
+    }
+}
+.mascota-subcard {
+    border: 1px solid #edf1f4;
+    border-radius: 1rem;
+    padding: 1rem;
+    background: #fff;
+}
+
+.mascota-textarea-left {
+    min-height: 140px !important;
+}
+
+@media (max-width: 1199.98px) {
+    .mascota-textarea-left {
+        min-height: 125px !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mascota-subcard {
+        padding: 0.9rem;
+    }
+
+    .mascota-textarea-left {
+        min-height: 110px !important;
     }
 }
