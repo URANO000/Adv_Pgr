@@ -1,0 +1,191 @@
+﻿@model List<AP_MVC.Models.Adopciones.SolicitudAdopcionViewModel>
+
+@{
+    ViewData["Title"] = "Solicitudes recibidas";
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-0">
+                <iconify-icon icon="mdi:inbox-outline" class="me-2 text-warning"></iconify-icon>
+                Solicitudes recibidas
+            </h2>
+            <p class="text-muted mt-1 mb-0">
+                Personas interesadas en adoptar esta mascota
+            </p>
+        </div>
+        <a asp-controller="Mascota" asp-action="MisPublicaciones"
+           class="btn btn-outline-secondary">
+            <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Mis publicaciones
+        </a>
+    </div>
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Exito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5">
+            <iconify-icon icon="mdi:inbox-remove-outline"
+                          style="font-size:4rem;color:#ccc;"></iconify-icon>
+            <p class="text-muted mt-3">Todavía no hay solicitudes para esta publicación.</p>
+            <a asp-controller="Mascota" asp-action="MisPublicaciones"
+               class="btn btn-primary mt-2">
+                <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>
+                Volver a mis publicaciones
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Filtro rápido por estado -->
+        <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+            <span class="text-muted small me-1">Filtrar:</span>
+            <button class="btn btn-sm btn-outline-primary active-filter"
+                    data-filtro="todas">
+                Todas
+            </button>
+            <button class="btn btn-sm btn-outline-warning"
+                    data-filtro="Pendiente">
+                Pendientes
+            </button>
+            <button class="btn btn-sm btn-outline-success"
+                    data-filtro="Aprobada">
+                Aprobadas
+            </button>
+            <button class="btn btn-sm btn-outline-secondary"
+                    data-filtro="Rechazada">
+                Rechazadas
+            </button>
+            <span class="ms-auto text-muted small" id="contadorSolicitudes">
+                @Model.Count solicitud(es)
+            </span>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Interesado</th>
+                            <th>Contacto</th>
+                            <th>Mensaje</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <!-- Evelyn agrega columna Acciones aquí -->
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSolicitudes">
+                        @foreach (var s in Model)
+                        {
+                            var badgeClase = s.Estado switch
+                            {
+                                "Aprobada" => "bg-success-subtle text-success border-success-subtle",
+                                "Rechazada" => "bg-secondary-subtle text-secondary border-secondary-subtle",
+                                _ => "bg-warning-subtle text-warning border-warning-subtle"
+                            };
+                            var badgeIcon = s.Estado switch
+                            {
+                                "Aprobada" => "mdi:check-circle-outline",
+                                "Rechazada" => "mdi:close-circle-outline",
+                                _ => "mdi:clock-outline"
+                            };
+
+                            <tr class="fila-solicitud" data-estado="@s.Estado">
+                                <td>
+                                    <div class="fw-bold">
+                                        <iconify-icon icon="mdi:account-circle-outline"
+                                                      class="me-1 text-muted"></iconify-icon>
+                                        @s.NombreInteresado
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <iconify-icon icon="mdi:email-outline"
+                                                      class="me-1 text-muted"></iconify-icon>
+                                        @s.CorreoElectronico
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(s.Telefono))
+                                    {
+                                        <div class="small text-muted">
+                                            <iconify-icon icon="mdi:phone-outline"
+                                                          class="me-1"></iconify-icon>@s.Telefono
+                                        </div>
+                                    }
+                            </td>
+                            <td style="max-width:220px;">
+                                <span class="text-muted small">
+                                    @(s.Mensaje.Length > 80
+                                                                    ? s.Mensaje.Substring(0, 80) + "..."
+                                                                    : s.Mensaje)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge border @badgeClase">
+                                <iconify-icon icon="@badgeIcon"
+                                              class="me-1"></iconify-icon>@s.Estado
+                            </span>
+                        </td>
+                        <td class="text-muted small text-nowrap">
+                            @s.SentAt.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                        <!-- Evelyn: columna de botones Aprobar/Rechazar va aquí -->
+                    </tr>
+                                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="sinResultados" class="text-center py-4 d-none">
+            <iconify-icon icon="mdi:magnify-close" style="font-size:3rem;color:#ccc;"></iconify-icon>
+            <p class="text-muted mt-2">No hay solicitudes con ese estado.</p>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        const filas = document.querySelectorAll('.fila-solicitud');
+        const contador = document.getElementById('contadorSolicitudes');
+        const sinResultados = document.getElementById('sinResultados');
+
+        document.querySelectorAll('[data-filtro]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('[data-filtro]')
+                        .forEach(b => b.classList.remove('active-filter'));
+                this.classList.add('active-filter');
+                filtrar(this.dataset.filtro);
+            });
+        });
+
+        function filtrar(filtro) {
+            let visibles = 0;
+            filas.forEach(fila => {
+                const estado = fila.dataset.estado;
+                const mostrar = filtro === 'todas' || estado === filtro;
+                fila.style.display = mostrar ? '' : 'none';
+                if (mostrar) visibles++;
+            });
+            contador.textContent = visibles + ' solicitud(es)';
+            sinResultados?.classList.toggle('d-none', visibles > 0);
+        }
+    </script>
+}

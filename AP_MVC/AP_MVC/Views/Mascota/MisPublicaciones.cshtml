@@ -75,6 +75,14 @@
 
                     </div>
 
+                    <a asp-controller="Mascota"
+                       asp-action="SolicitudesRecibidas"
+                       asp-route-publicacionId="@item.PublicacionId"
+                       class="btn btn-sm btn-outline-warning"
+                       title="Ver solicitudes">
+                        <iconify-icon icon="mdi:inbox-outline"></iconify-icon>
+                    </a>
+
                 </div>
             }
 
