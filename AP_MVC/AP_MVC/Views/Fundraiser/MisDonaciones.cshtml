@@ -77,9 +77,11 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                var porcentaje = item.MetaTotal > 0
-                                    ? Math.Min((double)(item.TotalActual / item.MetaTotal) * 100, 100)
-                                    : 0;
+                                decimal porcentaje = item.MetaTotal > 0
+                                ? ((item.TotalActual / item.MetaTotal) * 100 > 100
+                                ? 100
+                                : (item.TotalActual / item.MetaTotal) * 100)
+                                : 0;
 
                                 var estadoClase = item.IsActive ? "activa" : "inactiva";
 
@@ -87,29 +89,31 @@
                                     <td>
                                         <div class="fw-bold">@item.Titulo</div>
                                         <small class="text-muted">
-                                            @(item.Descripcion.Length > 60
-                                                ? item.Descripcion.Substring(0, 60) + "..."
-                                                : item.Descripcion)
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <iconify-icon icon="mdi:paw" class="me-1 text-warning"></iconify-icon>
-                                        @item.NombreAnimal
-                                    </td>
-                                    <td class="text-nowrap">₡@item.MetaTotal.ToString("N2")</td>
-                                    <td style="min-width:140px;">
-                                        <div class="progress mb-1" style="height:7px;border-radius:5px;">
-                                            <div class="progress-bar @(item.IsActive ? "bg-success" : "bg-secondary")"
-                                                 role="progressbar"
-                                                 style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%">
-                                            </div>
-                                        </div>
-                                        <small class="text-muted">
-                                            ₡@item.TotalActual.ToString("N2") (@porcentaje.ToString("0")%)
-                                        </small>
-                                    </td>
-                                    <td>
-                                        @if (item.IsActive)
+                                            @(string.IsNullOrEmpty(item.Descripcion)
+                                                                                ? ""
+                                                                                : item.Descripcion.Length > 60
+                                                                                ? item.Descripcion.Substring(0, 60) + "..."
+                                                                                : item.Descripcion)
+                                </small>
+                            </td>
+                            <td>
+                                <iconify-icon icon="mdi:paw" class="me-1 text-warning"></iconify-icon>
+                                @item.NombreAnimal
+                            </td>
+                            <td class="text-nowrap">₡@item.MetaTotal.ToString("N2")</td>
+                            <td style="min-width:140px;">
+                                <div class="progress mb-1" style="height:7px;border-radius:5px;">
+                                    <div class="progress-bar @(item.IsActive ? "bg-success" : "bg-secondary")"
+                                         role="progressbar"
+                                         style="width:@(porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))%">
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    ₡@item.TotalActual.ToString("N2") (@porcentaje.ToString("0.0")%)
+                                </small>
+                            </td>
+                            <td>
+                                @if (item.IsActive)
                                         {
                                             <span class="badge bg-success-subtle text-success border border-success-subtle">
                                                 <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>Activa
@@ -127,17 +131,17 @@
                                     </td>
                                     <td class="text-center text-nowrap">
                                         <a asp-controller="Fundraiser" asp-action="Detalle"
-                                               asp-route-id="@item.FundraiserId"
-                                               class="btn btn-sm btn-outline-primary me-1"
-                                               title="Ver detalle">
+                                           asp-route-id="@item.FundraiserId"
+                                           class="btn btn-sm btn-outline-primary me-1"
+                                           title="Ver detalle">
                                             <iconify-icon icon="mdi:eye-outline"></iconify-icon>
                                         </a>
                                         @if (item.IsActive)
                                         {
                                             <a asp-controller="Fundraiser" asp-action="Editar"
-                                                   asp-route-id="@item.FundraiserId"
-                                                   class="btn btn-sm btn-outline-warning me-1"
-                                                   title="Editar">
+                                               asp-route-id="@item.FundraiserId"
+                                               class="btn btn-sm btn-outline-warning me-1"
+                                               title="Editar">
                                                 <iconify-icon icon="mdi:pencil-outline"></iconify-icon>
                                             </a>
                                             <button type="button"

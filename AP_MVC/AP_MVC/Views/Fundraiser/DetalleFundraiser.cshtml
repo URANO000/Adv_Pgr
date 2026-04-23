@@ -8,9 +8,11 @@
     var donaciones = ViewBag.Donaciones as List<AP_MVC.Models.Donacion> ?? new List<AP_MVC.Models.Donacion>();
     bool estaLogueado = ViewBag.EstaLogueado ?? false;
 
-    double porcentaje = Model.MetaTotal > 0
-        ? Math.Min((double)(Model.TotalActual / Model.MetaTotal) * 100, 100)
-        : 0;
+    decimal porcentaje = Model.MetaTotal > 0
+     ? ((Model.TotalActual / Model.MetaTotal) * 100 > 100
+         ? 100
+         : (Model.TotalActual / Model.MetaTotal) * 100)
+     : 0;
 }
 
 <section class="fundraiser-section">
@@ -71,7 +73,7 @@
                             <div class="progress mb-2" style="height:14px;border-radius:10px;">
                                 <div class="progress-bar bg-success"
                                      role="progressbar"
-                                     style="width:@porcentaje.ToString("0.0", CultureInfo.InvariantCulture)%"
+                                     style="width:@(porcentaje.ToString("0.0", CultureInfo.InvariantCulture))%"
                                      aria-valuenow="@porcentaje"
                                      aria-valuemin="0" aria-valuemax="100">
                                 </div>
