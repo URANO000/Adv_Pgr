@@ -13,26 +13,27 @@
          ? 100
          : (Model.TotalActual / Model.MetaTotal) * 100)
      : 0;
+
+    // Color barra
+    string colorClase = "";
+    if (porcentaje >= 75)
+    {
+        colorClase = "bg-info";
+    }
+    else if (porcentaje <= 75)
+    {
+        colorClase = "bg-danger";
+    }
 }
 
 <section class="fundraiser-section">
     <div class="container fundraiser-container py-4">
 
-        <!-- Alerta de donación exitosa (RF-020) -->
+        <!-- Alertas -->
         @if (TempData["DonacionExito"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
-                <strong>¡Donación registrada!</strong> Tu donación de <strong>₡@TempData["MontoDonado"]</strong>
-                vía <strong>@TempData["MetodoPago"]</strong> fue procesada exitosamente.<br />
-                <small class="text-muted">Nº de confirmación: <code>@TempData["DonacionExito"]</code></small>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>@TempData["Error"]
+            <div class="alert alert-success alert-dismissible fade show">
+                <strong>¡Donación registrada!</strong> ₡@TempData["MontoDonado"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         }
@@ -44,302 +45,107 @@
                 <div class="card shadow-sm border-0 fundraiser-card">
                     <div class="card-body p-4 p-md-5">
 
-                        <!-- Título y animal -->
-                        <div class="d-flex align-items-start mb-4">
-                            <div class="me-3">
-                                <iconify-icon icon="mdi:hand-heart" style="font-size:2.5rem;color:#e67e22;"></iconify-icon>
-                            </div>
-                            <div>
-                                <h2 class="fw-bold mb-1">@Model.Titulo</h2>
-                                <span class="badge bg-warning text-dark">
-                                    <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>@Model.NombreAnimal
-                                </span>
-                                @if (!Model.IsActive)
-                                {
-                                    <span class="badge bg-secondary ms-1">Inactiva</span>
-                                }
-                            </div>
-                        </div>
+                        <!-- Título -->
+                        <h2 class="fw-bold">@Model.Titulo</h2>
+                        <small class="text-muted">@Model.NombreAnimal</small>
 
                         <!-- Descripción -->
-                        <p class="text-muted mb-4" style="line-height:1.7;">@Model.Descripcion</p>
+                        <p class="text-muted mt-3">@Model.Descripcion</p>
 
-                        <!-- Barra de progreso -->
+                        <!-- BARRA DE PROGRESO -->
                         <div class="mb-4">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="fw-bold text-success fs-5">₡@Model.TotalActual.ToString("N2")</span>
-                                <span class="text-muted">de ₡@Model.MetaTotal.ToString("N2")</span>
+                                <span class="fw-bold text-success fs-5">
+                                    ₡@Model.TotalActual.ToString("N2")
+                                </span>
+                                <span class="text-muted">
+                                    de ₡@Model.MetaTotal.ToString("N2")
+                                </span>
                             </div>
+
                             <div class="progress mb-2" style="height:14px;border-radius:10px;">
-                                <div class="progress-bar bg-success"
+                                <div class="progress-bar @colorClase progress-bar-striped progress-bar-animated"
                                      role="progressbar"
                                      style="width:@(porcentaje.ToString("0.0", CultureInfo.InvariantCulture))%"
                                      aria-valuenow="@porcentaje"
                                      aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
+
                             <div class="text-end">
-                                <small class="text-muted fw-bold">@porcentaje.ToString("0.0")% alcanzado</small>
+                                <small class="text-muted fw-bold">
+                                    @porcentaje.ToString("0.0")% alcanzado
+                                </small>
                             </div>
                         </div>
 
-                        <hr class="my-4" />
+                        <hr />
 
-                        <!-- Donaciones recibidas -->
-                        <h5 class="fw-bold mb-3">
-                            <iconify-icon icon="mdi:heart-multiple-outline" class="me-2 text-danger"></iconify-icon>
-                            Donantes (@donaciones.Count)
-                        </h5>
+                        <!-- Donaciones -->
+                        <h5 class="fw-bold mb-3">Donantes (@donaciones.Count)</h5>
 
                         @if (!donaciones.Any())
                         {
-                            <p class="text-muted text-center py-3">
-                                <iconify-icon icon="mdi:heart-outline" style="font-size:2rem;"></iconify-icon><br />
-                                Sé el primero en donar a esta campaña.
-                            </p>
+                            <p class="text-muted">Sé el primero en donar.</p>
                         }
                         else
                         {
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Donante</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var d in donaciones)
+                                    {
                                         <tr>
-                                            <th><iconify-icon icon="mdi:account-outline" class="me-1"></iconify-icon>Donante</th>
-                                            <th><iconify-icon icon="mdi:cash-outline" class="me-1"></iconify-icon>Monto</th>
-                                            <th><iconify-icon icon="mdi:calendar-outline" class="me-1"></iconify-icon>Fecha</th>
+                                            <td>@d.NombreDonante</td>
+                                            <td class="text-success fw-bold">₡@d.Total.ToString("N2")</td>
+                                            <td>@d.DonatedAt.ToString("dd/MM/yyyy")</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var d in donaciones)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <iconify-icon icon="mdi:account-circle-outline" class="me-1 text-muted"></iconify-icon>
-                                                    @d.NombreDonante
-                                                </td>
-                                                <td class="text-success fw-bold">₡@d.Total.ToString("N2")</td>
-                                                <td class="text-muted small">@d.DonatedAt.ToString("dd/MM/yyyy HH:mm")</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                                    }
+                                </tbody>
+                            </table>
                         }
 
                     </div>
                 </div>
             </div>
 
-            <!-- Columna lateral: botón donar -->
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card shadow-sm border-0 fundraiser-card sticky-top" style="top:90px;">
-                    <div class="card-body p-4 text-center">
+                <div class="card shadow-sm border-0 p-4 text-center">
 
-                        <iconify-icon icon="mdi:gift-outline" style="font-size:3rem;color:#e67e22;"></iconify-icon>
-                        <h5 class="fw-bold mt-2 mb-1">¡Hacé tu donación!</h5>
-                        <p class="text-muted small mb-3">Cada colón cuenta para ayudar a @Model.NombreAnimal</p>
+                    <h5 class="fw-bold">Donar</h5>
 
-                        <div class="mb-3">
-                            <span class="fs-4 fw-bold text-success">₡@Model.TotalActual.ToString("N2")</span>
-                            <br /><small class="text-muted">recaudados de ₡@Model.MetaTotal.ToString("N2")</small>
-                        </div>
-
-                        @if (Model.IsActive)
-                        {
-                            <button type="button"
-                                    class="btn btn-primary btn-lg w-100 mb-3"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalDonar">
-                                <iconify-icon icon="mdi:heart-outline" class="me-2"></iconify-icon>Donar ahora
-                            </button>
-
-                            @if ((bool)(ViewBag.EsDuenno ?? false))
-                            {
-                                <button type="button"
-                                        class="btn btn-modal-inactivar w-100 mb-3"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalInactivarPublicacion">
-                                    <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>Inactivar publicación
-                                </button>
-                            }
-                        }
-                        else
-                        {
-                            <div class="alert alert-secondary small">
-                                <iconify-icon icon="mdi:lock-outline" class="me-1"></iconify-icon>
-                                Esta campaña está inactiva.
-                            </div>
-                        }
-
-                        <a asp-controller="Fundraiser" asp-action="Catalogo" class="btn btn-outline-secondary w-100">
-                            <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Volver al catálogo
-                        </a>
-
-                        <hr class="my-3" />
-                        <small class="text-muted">
-                            <iconify-icon icon="mdi:calendar-check-outline" class="me-1"></iconify-icon>
-                            Publicado: @Model.CreatedAt.ToString("dd/MM/yyyy")
-                        </small>
-
+                    <div class="mb-3">
+                        <span class="fs-4 fw-bold text-success">
+                            ₡@Model.TotalActual.ToString("N2")
+                        </span>
                     </div>
+
+                    @if (Model.IsActive)
+                    {
+                        <button class="btn btn-primary w-100">
+                            Donar ahora
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary small">
+                            Campaña inactiva
+                        </div>
+                    }
+
                 </div>
             </div>
 
         </div>
     </div>
 </section>
-
-<!-- RF-020: Modal de simulación de pago -->
-@if (Model.IsActive)
-{
-    <div class="modal fade" id="modalDonar" tabindex="-1" aria-labelledby="modalDonarLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="modalDonarLabel">
-                        <iconify-icon icon="mdi:hand-heart" class="me-2 text-warning"></iconify-icon>Realizar donación
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <form asp-controller="Fundraiser" asp-action="Donar" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="fundraiserId" value="@Model.FundraiserId" />
-
-                    <div class="modal-body px-4">
-
-                        <!-- Monto -->
-                        <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="monto" name="monto"
-                                   placeholder="Monto (₡)" min="1" step="0.01" required />
-                            <label for="monto">
-                                <iconify-icon icon="mdi:cash-outline" class="me-1"></iconify-icon>Monto (₡)
-                            </label>
-                        </div>
-
-                        <!-- Montos rápidos -->
-                        <div class="d-flex gap-2 flex-wrap mb-3">
-                            <small class="text-muted w-100">Montos rápidos:</small>
-                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="500">₡500</button>
-                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="1000">₡1.000</button>
-                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="2500">₡2.500</button>
-                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="5000">₡5.000</button>
-                        </div>
-
-                        <!-- Método de pago (RF-020: simulación) -->
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">
-                                <iconify-icon icon="mdi:credit-card-outline" class="me-1"></iconify-icon>Método de pago
-                            </label>
-                            <div class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="metodoPago"
-                                           id="metodoPayPal" value="PayPal" required />
-                                    <label class="form-check-label" for="metodoPayPal">
-                                        <iconify-icon icon="logos:paypal" class="me-1"></iconify-icon>PayPal
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="metodoPago"
-                                           id="metodoSINPE" value="SINPE" />
-                                    <label class="form-check-label" for="metodoSINPE">
-                                        <iconify-icon icon="mdi:cellphone" class="me-1"></iconify-icon>SINPE Móvil
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info small py-2">
-                            <iconify-icon icon="mdi:information-outline" class="me-1"></iconify-icon>
-                            <strong>Simulación:</strong> No se procesará ningún cargo real.
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer border-0 px-4 pb-4">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">
-                            <iconify-icon icon="mdi:check-circle-outline" class="me-1"></iconify-icon>Confirmar donación
-                        </button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-}
-
-@if (Model.IsActive && (bool)(ViewBag.EsDuenno ?? false))
-{
-    <div class="modal fade" id="modalInactivarPublicacion" tabindex="-1" aria-labelledby="modalInactivarPublicacionLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content custom-delete-modal">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title custom-delete-title" id="modalInactivarPublicacionLabel">
-                        Inactivar publicación
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-
-                <form asp-controller="Fundraiser"
-                      asp-action="Inactivar"
-                      asp-route-id="@Model.FundraiserId"
-                      method="post"
-                      class="m-0">
-                    @Html.AntiForgeryToken()
-
-                    <div class="modal-body pt-2">
-                        <p class="custom-delete-text">
-                            Tu publicación dejará de mostrarse en el catálogo y no podrá recibir nuevas donaciones.
-                            Quedará archivada en historial y no podrá reactivarse.
-                        </p>
-
-                        <div class="mb-3">
-                            <label for="motivoInactivacion" class="form-label fw-semibold">
-                                ¿Por qué deseas inactivarla?
-                            </label>
-                            <select id="motivoInactivacion" name="motivoInactivacion" class="form-select">
-                                <option value="">Selecciona una opción</option>
-                                <option value="meta">Ya alcancé la meta de recaudación</option>
-                                <option value="incorrecta">La información ya no es correcta</option>
-                                <option value="error">Publiqué por error</option>
-                                <option value="continuar">Ya no deseo continuar con esta campaña</option>
-                                <option value="otro">Otro</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3 d-none" id="contenedorOtroMotivo">
-                            <label for="otroMotivo" class="form-label fw-semibold">
-                                Escribe tu razón
-                            </label>
-                            <textarea id="otroMotivo" name="otroMotivo" class="form-control" rows="3" maxlength="250"></textarea>
-                        </div>
-
-                        <div class="form-check custom-delete-check">
-                            <input class="form-check-input" type="checkbox" id="confirmacionInactivar">
-                            <label class="form-check-label" for="confirmacionInactivar">
-                                Entiendo que esta acción archivará la publicación y no podré recuperarla.
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-light custom-cancel-btn" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                                id="btnConfirmarInactivar"
-                                class="btn custom-delete-btn"
-                                disabled>
-                            Inactivar publicación
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-}
 
 @section Scripts {
     <script src="~/js/Fundraiser.js"></script>
