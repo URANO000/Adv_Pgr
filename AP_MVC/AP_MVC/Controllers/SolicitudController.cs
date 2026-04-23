@@ -91,9 +91,17 @@ namespace AP_MVC.Controllers
 
             if (result.StatusCode == HttpStatusCode.OK)
             {
-                var accion = model.NuevoEstado == "Aprobada" ? "aprobada" : "rechazada";
-                TempData["Exito"] = $"La solicitud fue {accion} correctamente. " +
-                                    "El interesado recibirá una notificación por correo.";
+                var accion = model.NuevoEstado switch
+                {
+                    "Aprobada" => "aprobada",
+                    "Rechazada" => "rechazada",
+                    "Revisar" => "marcada como En revisión",
+                    _ => model.NuevoEstado.ToLower()
+                };
+
+                var notificaCorreo = model.NuevoEstado != "Revisar";
+                TempData["Exito"] = $"La solicitud fue {accion} correctamente." +
+                                    (notificaCorreo ? " El interesado recibirá una notificación por correo." : "");
             }
             else if (result.StatusCode == HttpStatusCode.InternalServerError)
             {
