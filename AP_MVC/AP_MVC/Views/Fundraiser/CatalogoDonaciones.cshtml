@@ -80,9 +80,11 @@
             <div class="row g-4" id="gridFundraisers">
                 @foreach (var item in Model)
                 {
-                    var porcentaje = item.MetaTotal > 0
-                        ? Math.Min((double)(item.TotalActual / item.MetaTotal) * 100, 100)
-                        : 0;
+                    decimal porcentaje = item.MetaTotal > 0
+                    ? ((item.TotalActual / item.MetaTotal) * 100 > 100
+                    ? 100
+                    : (item.TotalActual / item.MetaTotal) * 100)
+                    : 0;
 
                     <div class="col-lg-4 col-md-6 fundraiser-card-item"
                          data-titulo="@item.Titulo.ToLower()"
@@ -106,21 +108,23 @@
 
                                 <!-- Descripción -->
                                 <p class="text-muted small mb-3 flex-grow-1 fundraiser-descripcion">
-                                    @(item.Descripcion.Length > 120
-                                        ? item.Descripcion.Substring(0, 120) + "..."
-                                        : item.Descripcion)
-                                </p>
+                                    @(string.IsNullOrEmpty(item.Descripcion)
+                                                                ? ""
+                                                                : item.Descripcion.Length > 120
+                                                                ? item.Descripcion.Substring(0, 120) + "..."
+                                                                : item.Descripcion)
+                        </p>
 
                                 <!-- Barra de progreso -->
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between small mb-1">
                                         <span class="text-muted">Recaudado</span>
-                                        <span class="fw-bold text-success">@porcentaje.ToString("0")%</span>
+                                        <span class="fw-bold text-success">@porcentaje.ToString("0.0")%</span>
                                     </div>
                                     <div class="progress" style="height:8px;border-radius:10px;">
                                         <div class="progress-bar bg-success"
                                              role="progressbar"
-                                             style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%"
+                                             style="width:@(porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))%"
                                              aria-valuenow="@porcentaje"
                                              aria-valuemin="0" aria-valuemax="100">
                                         </div>
@@ -133,7 +137,7 @@
 
                                 <!-- Botón detalle -->
                                 <a asp-controller="Fundraiser" asp-action="Detalle" asp-route-id="@item.FundraiserId"
-                                       class="btn btn-primary w-100 mt-auto">
+                                   class="btn btn-primary w-100 mt-auto">
                                     <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>Ver campaña
                                 </a>
 
@@ -146,7 +150,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                        }
             </div>
 
             <!-- Mensaje sin resultados de filtro -->
