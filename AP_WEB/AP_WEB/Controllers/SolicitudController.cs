@@ -20,7 +20,7 @@ namespace AP_WEB.Controllers
             _password = password;
         }
 
-        // RF-022 (Isaac): Listar solicitudes recibidas por publicación
+        // RF-022: Listar solicitudes recibidas por publicación
         [HttpGet("ListarSolicitudesPorPublicacion/{publicacionId}/{propietarioId}")]
         public IActionResult ListarSolicitudesPorPublicacion(int publicacionId, string propietarioId)
         {
@@ -48,7 +48,33 @@ namespace AP_WEB.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        // RF-023: Lista solicitudes enviadas por el usuario interesado
+        [HttpGet("ListarSolicitudesEnviadasPorUsuario/{usuarioInteresadoId}")]
+        public IActionResult ListarSolicitudesEnviadasPorUsuario(string usuarioInteresadoId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(usuarioInteresadoId))
+                    return BadRequest("UsuarioInteresadoId requerido");
 
+                using var context = new SqlConnection(
+                    _config.GetValue<string>("ConnectionStrings:DefaultConnection"));
+
+                var parametros = new DynamicParameters();
+                parametros.Add("@UsuarioInteresadoId", usuarioInteresadoId);
+
+                var result = context.Query<SolicitudEnviadaResponse>(
+                    "sp_ListarSolicitudesEnviadasPorUsuario",
+                    parametros,
+                    commandType: CommandType.StoredProcedure);
+
+                return Ok(result ?? Enumerable.Empty<SolicitudEnviadaResponse>());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
         // RF-022 – Aprobar o rechazar una solicitud
         // RF-026 – Notifica al interesado sobre el cambio de estado
         [HttpPost("GestionarSolicitudAdopcion")]

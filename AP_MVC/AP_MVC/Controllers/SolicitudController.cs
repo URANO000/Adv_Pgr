@@ -53,7 +53,34 @@ namespace AP_MVC.Controllers
             ViewBag.PublicacionId = publicacionId;
             return View(solicitudes);
         }
+        // RF-023: Consulta solicitudes enviadas por el usuario autenticado
+        [SesionActiva]
+        [HttpGet]
+        public IActionResult SolicitudesEnviadas()
+        {
+            var usuarioId = ObtenerUsuarioIdSesion();
 
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "Sesión expirada.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            using var client = _http.CreateClient();
+            var url = UrlAPI + $"SolicitudAdopcion/ListarSolicitudesEnviadasPorUsuario/{usuarioId}";
+            var result = client.GetAsync(url).Result;
+
+            var solicitudes = new List<SolicitudEnviadaViewModel>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+                solicitudes = result.Content
+                    .ReadFromJsonAsync<List<SolicitudEnviadaViewModel>>().Result
+                    ?? new List<SolicitudEnviadaViewModel>();
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                throw new Exception();
+
+            return View(solicitudes);
+        }
         // ----------------------------------------------------------------
         // RF-022 + RF-026: Aprobar o rechazar una solicitud
         // POST /SolicitudAdopcion/Gestionar
