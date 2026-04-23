@@ -1,10 +1,13 @@
 ﻿using AP_MVC.Filters;
 using AP_MVC.Models;
 using AP_MVC.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace AP_MVC.Controllers
 {
@@ -119,7 +122,7 @@ namespace AP_MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult CambiarPerfil(Usuario model, IFormFile? ImagenPerfil)
+        public async Task<IActionResult> CambiarPerfil(Usuario model, IFormFile? ImagenPerfil)
         {
             var token = ValidarToken(out IActionResult redirect);
 
@@ -202,6 +205,35 @@ namespace AP_MVC.Controllers
                 if (ImagenPerfil != null && ImagenPerfil.Length > 0)
                 {
                     HttpContext.Session.SetString("ImagenPerfil", model.ImagenPerfil);
+
+                    var identity = (ClaimsIdentity)User.Identity!;
+                    var claims = identity.Claims.ToList();
+
+                    //Remover claim anterior de img
+                    var existingClaim = claims.FirstOrDefault(c => c.Type == "ImagenPerfil");
+                    if (existingClaim != null)
+                    {
+                        claims.Remove(existingClaim);
+                    }
+
+                    //Actualizar
+                    claims.Add(new Claim("ImagenPerfil", model.ImagenPerfil));
+
+                    //Re crear identity
+                    var newIdentity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        ClaimTypes.Name,
+                        ClaimTypes.Role
+                    );
+
+                    var principal = new ClaimsPrincipal(newIdentity);
+
+                    //Para rememeber me
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal
+                    );
 
                     ViewBag.Mensaje = result.Content.ReadAsStringAsync().Result;
                     return View(model);
