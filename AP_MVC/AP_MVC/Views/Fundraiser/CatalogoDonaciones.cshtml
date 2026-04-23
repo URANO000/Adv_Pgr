@@ -15,7 +15,7 @@
             <p class="text-muted">Apoyá a las mascotas que más lo necesitan</p>
         </div>
 
-        <!-- RF-021: Barra de búsqueda y filtros -->
+        <!-- Filtros -->
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-body py-3 px-4">
                 <div class="row g-3 align-items-end">
@@ -43,28 +43,30 @@
             </div>
         </div>
 
-        <!-- Mensaje de éxito / error -->
+        <!-- Alerts -->
         @if (TempData["Exito"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>@TempData["Exito"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>@TempData["Error"]
+            <div class="alert alert-success alert-dismissible fade show">
+                <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
+                @TempData["Exito"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         }
 
-        <!-- Contador de resultados -->
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Counter -->
         <p class="text-muted small mb-3" id="contadorResultados">
             @(Model?.Count ?? 0) campaña(s) encontrada(s)
         </p>
 
-        <!-- Grid de cards -->
         @if (Model == null || !Model.Any())
         {
             <div class="text-center py-5">
@@ -81,19 +83,20 @@
                 @foreach (var item in Model)
                 {
                     decimal porcentaje = item.MetaTotal > 0
-                    ? ((item.TotalActual / item.MetaTotal) * 100 > 100
-                    ? 100
-                    : (item.TotalActual / item.MetaTotal) * 100)
-                    : 0;
+                        ? Math.Min((item.TotalActual / item.MetaTotal) * 100, 100)
+                        : 0;
+
+                    string colorClase = porcentaje >= 75 ? "bg-info" : "bg-danger";
 
                     <div class="col-lg-4 col-md-6 fundraiser-card-item"
-                         data-titulo="@item.Titulo.ToLower()"
-                         data-descripcion="@item.Descripcion.ToLower()"
-                         data-animal="@item.NombreAnimal.ToLower()">
+                         data-titulo="@(item.Titulo?.ToLower() ?? "")"
+                         data-descripcion="@(item.Descripcion?.ToLower() ?? "")"     
+                         data-animal="@(item.NombreAnimal?.ToLower() ?? "")">
+
                         <div class="card h-100 shadow-sm border-0 fundraiser-card">
                             <div class="card-body d-flex flex-column p-4">
 
-                                <!-- Header de la card -->
+                                <!-- Header -->
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="fundraiser-avatar me-3">
                                         <iconify-icon icon="mdi:paw" style="font-size:1.6rem;color:#e67e22;"></iconify-icon>
@@ -101,47 +104,51 @@
                                     <div>
                                         <h5 class="fw-bold mb-0 fundraiser-titulo">@item.Titulo</h5>
                                         <small class="text-muted">
-                                            <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>@item.NombreAnimal
+                                            <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>
+                                            @item.NombreAnimal
                                         </small>
                                     </div>
                                 </div>
 
-                                <!-- Descripción -->
+                                <!-- Description -->
                                 <p class="text-muted small mb-3 flex-grow-1 fundraiser-descripcion">
-                                    @(string.IsNullOrEmpty(item.Descripcion)
-                                                                ? ""
-                                                                : item.Descripcion.Length > 120
-                                                                ? item.Descripcion.Substring(0, 120) + "..."
-                                                                : item.Descripcion)
-                        </p>
+                                    @(item.Descripcion.Length > 120
+                                        ? item.Descripcion.Substring(0, 120) + "..."
+                                        : item.Descripcion)
+                                </p>
 
-                                <!-- Barra de progreso -->
+                                <!-- Progress -->
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between small mb-1">
                                         <span class="text-muted">Recaudado</span>
                                         <span class="fw-bold text-success">@porcentaje.ToString("0.0")%</span>
                                     </div>
+
                                     <div class="progress" style="height:8px;border-radius:10px;">
-                                        <div class="progress-bar bg-success"
+                                        <div class="progress-bar @colorClase progress-bar-striped progress-bar-animated"
                                              role="progressbar"
-                                             style="width:@(porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))%"
-                                             aria-valuenow="@porcentaje"
-                                             aria-valuemin="0" aria-valuemax="100">
+                                             style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%">
                                         </div>
                                     </div>
+
                                     <div class="d-flex justify-content-between small mt-1">
-                                        <span class="text-muted">₡@item.TotalActual.ToString("N2") recaudados</span>
+                                        <span class="text-muted">₡@item.TotalActual.ToString("N2")</span>
                                         <span class="text-muted">Meta: ₡@item.MetaTotal.ToString("N2")</span>
                                     </div>
                                 </div>
 
-                                <!-- Botón detalle -->
-                                <a asp-controller="Fundraiser" asp-action="Detalle" asp-route-id="@item.FundraiserId"
-                                   class="btn btn-primary w-100 mt-auto">
-                                    <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>Ver campaña
+                                <!-- Button -->
+                                <a asp-controller="Fundraiser"
+                                       asp-action="Detalle"
+                                       asp-route-id="@item.FundraiserId"
+                                       class="btn btn-primary w-100 mt-auto">
+                                    <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>
+                                    Ver campaña
                                 </a>
 
                             </div>
+
+                            <!-- Footer -->
                             <div class="card-footer border-0 bg-transparent text-center pb-3">
                                 <small class="text-muted">
                                     <iconify-icon icon="mdi:calendar-outline" class="me-1"></iconify-icon>
@@ -150,10 +157,10 @@
                             </div>
                         </div>
                     </div>
-                        }
+                }
             </div>
 
-            <!-- Mensaje sin resultados de filtro -->
+            <!-- No filter results -->
             <div id="sinResultados" class="text-center py-4 d-none">
                 <iconify-icon icon="mdi:magnify-close" style="font-size:3rem;color:#ccc;"></iconify-icon>
                 <p class="text-muted mt-2">No se encontraron campañas con ese criterio.</p>

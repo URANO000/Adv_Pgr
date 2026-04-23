@@ -242,11 +242,27 @@ body {
     }
 }
 
-body {
-    letter-spacing: 0.01625rem;
-    background-color: #FFFFFF;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* pushes footer down */
+}
+
+.footer {
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+}
 
 
 h1,
@@ -258,7 +274,6 @@ h6 {
     font-family: var(--heading-font);
     color: var(--bs-body-color);
     font-weight: 400;
-    text-transform: capitalize;
 }
 
 a {
@@ -527,7 +542,6 @@ iconify-icon.quote-icon {
     color: #908F8D;
     line-height: normal;
     letter-spacing: 0.02125rem;
-    text-transform: capitalize;
     border-radius: 0.25rem;
     border: 1px solid rgba(65, 64, 62, 0.20);
     background: #FFF;
