@@ -277,7 +277,7 @@ a {
     font-weight: 300;
 }
 
-.nav-link.show{
+.nav-link.show {
     color: white !important;
 }
 
@@ -1101,590 +1101,6 @@ Estilos de login y registro
     display: grid;
 }
 
-
-
-
-/*--------------------------------------------------------------
-Módulo Mascotas
---------------------------------------------------------------*/
-
-.mascota-page-section {
-    background: linear-gradient(180deg, #f8fcff 0%, #ffffff 100%);
-    min-height: calc(100vh - 160px);
-}
-
-.mascota-side-panel {
-    padding: 1rem 0.5rem;
-}
-
-.mascota-badge {
-    display: inline-block;
-    background-color: rgba(128, 204, 255, 0.18);
-    color: #4a7a96;
-    border: 1px solid rgba(128, 204, 255, 0.35);
-    border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-}
-
-.mascota-title {
-    font-size: 2.6rem;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-}
-
-.mascota-subtitle {
-    color: #6c757d;
-    font-family: var(--secondary-font);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-}
-
-.mascota-side-card {
-    background: #fff;
-    border: 1px solid #eef3f7;
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-}
-
-    .mascota-side-card h5 {
-        margin-bottom: 1rem;
-    }
-
-.mascota-checklist {
-    margin: 0;
-    padding-left: 1.25rem;
-    font-family: var(--secondary-font);
-    color: #5e6470;
-    line-height: 1.9;
-}
-
-.mascota-form-card {
-    border-radius: 1.5rem;
-    background-color: #fffdf9;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06) !important;
-}
-
-.mascota-form-section {
-    background: #ffffff;
-    border: 1px solid #f0f2f5;
-    border-radius: 1.25rem;
-    padding: 1.4rem;
-}
-
-.section-header {
-    margin-bottom: 1.25rem;
-}
-
-    .section-header h4 {
-        margin-bottom: 0.25rem;
-    }
-
-    .section-header p {
-        margin: 0;
-        color: #7a7a7a;
-        font-family: var(--secondary-font);
-        font-size: 0.95rem;
-    }
-
-.mascota-form-card .form-control,
-.mascota-form-card .form-select {
-    border-radius: 0.85rem;
-    min-height: 58px;
-    border: 1px solid #e8edf2;
-    font-family: var(--secondary-font);
-    box-shadow: none;
-}
-
-    .mascota-form-card .form-control:focus,
-    .mascota-form-card .form-select:focus {
-        border-color: #80CCFF;
-        box-shadow: 0 0 0 0.2rem rgba(128, 204, 255, 0.15);
-    }
-
-.mascota-textarea {
-    min-height: 110px !important;
-}
-
-.mascota-textarea-lg {
-    min-height: 150px !important;
-}
-
-.mascota-submit-btn,
-.mascota-secondary-btn {
-    border-radius: 0.9rem;
-    min-width: 220px;
-    text-align: center;
-}
-
-.mascota-submit-btn {
-    font-weight: 600;
-}
-
-.mascota-secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@media (max-width: 991.98px) {
-    .mascota-title {
-        font-size: 2rem;
-    }
-
-    .mascota-side-panel {
-        padding: 0;
-    }
-}
-
-.perfil-section .card {
-    background-color: #F6EDE3;
-}
-
-.error-danger {
-    color: firebrick;
-    font-size: 50px;
-    font-weight: bold;
-}
-
-.detalle-publicacion-card {
-    max-width: 900px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-.detalle-imagen-principal {
-    width: 100%;
-    height: 420px;
-    background: #f4f4f4;
-}
-
-    .detalle-imagen-principal img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-.detalle-contenido {
-    padding: 28px;
-}
-
-.detalle-encabezado {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-
-.detalle-titulo {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.detalle-descripcion {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-bottom: 22px;
-    color: #444;
-}
-
-.detalle-info-rapida {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-    .detalle-info-rapida div {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 12px 14px;
-    }
-
-.detalle-info-extra p {
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.detalle-galeria {
-    margin-top: 24px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-}
-
-    .detalle-galeria img {
-        width: 100%;
-        height: 130px;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-
-.detalle-acciones {
-    margin-top: 28px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.detalle-btn {
-    min-width: 130px;
-    height: 44px;
-    border-radius: 10px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mispub-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-}
-
-.mispub-title {
-    margin: 0;
-    font-size: 2.2rem;
-    font-weight: 700;
-}
-
-.mispub-subtitle {
-    margin: 8px 0 0 0;
-    color: #666;
-    font-size: 1rem;
-}
-
-.mispub-main-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 230px;
-    height: 48px;
-    padding: 0 20px;
-    background-color: #d8a866;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: 0.2s ease-in-out;
-}
-
-    .mispub-main-btn:hover {
-        background-color: #c99752;
-        color: #fff;
-        text-decoration: none;
-    }
-
-.mispub-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-}
-
-.mispub-card {
-    background: #fff;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    min-height: 420px;
-}
-
-.mispub-card-image {
-    width: 100%;
-    height: 230px;
-    background: #f3f3f3;
-    overflow: hidden;
-}
-
-    .mispub-card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-.mispub-card-content {
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.mispub-card-status {
-    margin-bottom: 10px;
-}
-
-.mispub-card-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1.35;
-    min-height: 52px;
-}
-
-.mispub-card-description {
-    margin: 0;
-    color: #555;
-    line-height: 1.6;
-    min-height: 76px;
-    flex-grow: 1;
-}
-
-.mispub-card-actions {
-    margin-top: 22px;
-    display: flex;
-    justify-content: center;
-}
-
-.mispub-btn-info,
-.mispub-btn-info:hover,
-.mispub-btn-info:focus,
-.mispub-btn-info:active,
-.mispub-btn-info:visited {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 140px;
-    height: 44px;
-    padding: 0 22px;
-    border: none;
-    background-color: #c79a5f;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 10px;
-    font-weight: 600;
-    box-shadow: none;
-    outline: none;
-    transition: none;
-}
-
-@media (max-width: 1100px) {
-    .mispub-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 700px) {
-    .mispub-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .mispub-main-btn {
-        width: 100%;
-    }
-}
-
-.editpub-card {
-    max-width: 720px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    padding: 28px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-
-.editpub-header {
-    margin-bottom: 24px;
-}
-
-.editpub-title {
-    margin: 0 0 8px 0;
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.editpub-subtitle {
-    margin: 0;
-    color: #666;
-}
-
-.editpub-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.editpub-btn {
-    min-width: 140px;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-/*Para registrar mascota*/
-.mascota-preview-empty {
-    min-height: 180px;
-    border: 2px dashed #d9c8af;
-    border-radius: 18px;
-    background: #fcfaf7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #8a7d6c;
-    text-align: center;
-    padding: 24px;
-}
-
-.mascota-preview-empty-icon {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.mascota-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-}
-
-.mascota-preview-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.mascota-preview-image-box {
-    position: relative;
-    width: 100%;
-    height: 160px;
-    border-radius: 16px;
-    overflow: hidden;
-    background: #f3f3f3;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
-}
-
-.mascota-preview-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.mascota-preview-remove {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(185, 54, 69, 0.95);
-    color: #fff;
-    font-size: 1.2rem;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.2s ease-in-out;
-}
-
-    .mascota-preview-remove:hover {
-        background: rgba(162, 45, 59, 1);
-    }
-
-.mascota-preview-name {
-    font-size: 0.85rem;
-    color: #6a6a6a;
-    text-align: center;
-    word-break: break-word;
-}
-
-.mascota-preview-counter {
-    font-weight: 600;
-    color: #7a6c5c;
-}
-
-.detalle-carousel {
-    border-radius: 18px 18px 0 0;
-    overflow: hidden;
-    background: #f4f4f4;
-}
-
-.detalle-carousel-img {
-    width: 100%;
-    height: 430px;
-    object-fit: cover;
-    display: block;
-}
-
-.detalle-carousel .carousel-control-prev,
-.detalle-carousel .carousel-control-next {
-    width: 10%;
-}
-
-.detalle-carousel .carousel-control-prev-icon,
-.detalle-carousel .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.35);
-    border-radius: 50%;
-    padding: 18px;
-    background-size: 55% 55%;
-}
-
-.detalle-thumbnails {
-    display: flex;
-    gap: 10px;
-    padding: 14px 18px 0 18px;
-    flex-wrap: wrap;
-    background: #fff;
-}
-
-.detalle-thumbnail-btn {
-    border: 2px solid transparent;
-    border-radius: 12px;
-    padding: 0;
-    background: transparent;
-    overflow: hidden;
-    width: 78px;
-    height: 78px;
-    cursor: pointer;
-    transition: 0.2s ease-in-out;
-}
-
-    .detalle-thumbnail-btn:hover {
-        border-color: #d8a866;
-    }
-
-.active-thumbnail {
-    border-color: #d8a866;
-}
-
-.detalle-thumbnail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.formRegistro {
-    display: grid;
-}
-
-.perfil-section .card {
-    background-color: #F6EDE3;
-}
-
-.error-danger {
-    color: #ac2a1d;
-    font-size: 50px;
-    font-weight: bold;
-}
-
 /*--------------------------------------------------------------
 Botones de Filtro
 --------------------------------------------------------------*/
@@ -1841,140 +1257,6 @@ Botones de monto rápido en modal
     background-color: #ffffff;
 }
 
-/*--------------------------------------------------------------
-Módulo Mascotas
---------------------------------------------------------------*/
-
-.mascota-page-section {
-    background: linear-gradient(180deg, #f8fcff 0%, #ffffff 100%);
-    min-height: calc(100vh - 160px);
-}
-
-.mascota-side-panel {
-    padding: 1rem 0.5rem;
-}
-
-.mascota-badge {
-    display: inline-block;
-    background-color: rgba(128, 204, 255, 0.18);
-    color: #4a7a96;
-    border: 1px solid rgba(128, 204, 255, 0.35);
-    border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-}
-
-.mascota-title {
-    font-size: 2.6rem;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-}
-
-.mascota-subtitle {
-    color: #6c757d;
-    font-family: var(--secondary-font);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-}
-
-.mascota-side-card {
-    background: #fff;
-    border: 1px solid #eef3f7;
-    border-radius: 1.25rem;
-    padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-}
-
-    .mascota-side-card h5 {
-        margin-bottom: 1rem;
-    }
-
-.mascota-checklist {
-    margin: 0;
-    padding-left: 1.25rem;
-    font-family: var(--secondary-font);
-    color: #5e6470;
-    line-height: 1.9;
-}
-
-.mascota-form-card {
-    border-radius: 1.5rem;
-    background-color: #fffdf9;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06) !important;
-}
-
-.mascota-form-section {
-    background: #ffffff;
-    border: 1px solid #f0f2f5;
-    border-radius: 1.25rem;
-    padding: 1.4rem;
-}
-
-.section-header {
-    margin-bottom: 1.25rem;
-}
-
-    .section-header h4 {
-        margin-bottom: 0.25rem;
-    }
-
-    .section-header p {
-        margin: 0;
-        color: #7a7a7a;
-        font-family: var(--secondary-font);
-        font-size: 0.95rem;
-    }
-
-.mascota-form-card .form-control,
-.mascota-form-card .form-select {
-    border-radius: 0.85rem;
-    min-height: 58px;
-    border: 1px solid #e8edf2;
-    font-family: var(--secondary-font);
-    box-shadow: none;
-}
-
-    .mascota-form-card .form-control:focus,
-    .mascota-form-card .form-select:focus {
-        border-color: #80CCFF;
-        box-shadow: 0 0 0 0.2rem rgba(128, 204, 255, 0.15);
-    }
-
-.mascota-textarea {
-    min-height: 110px !important;
-}
-
-.mascota-textarea-lg {
-    min-height: 150px !important;
-}
-
-.mascota-submit-btn,
-.mascota-secondary-btn {
-    border-radius: 0.9rem;
-    min-width: 220px;
-    text-align: center;
-}
-
-.mascota-submit-btn {
-    font-weight: 600;
-}
-
-.mascota-secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@media (max-width: 991.98px) {
-    .mascota-title {
-        font-size: 2rem;
-    }
-
-    .mascota-side-panel {
-        padding: 0;
-    }
-}
 
 /*--------------------------------------------------------------
 Módulo Mascotas — Preview de imágenes
@@ -3026,6 +2308,7 @@ span.field-validation-error {
             width: 100%;
         }
 }
+
 .solicitud-adopcion-cta {
     margin-top: 1.5rem;
     padding: 1rem 1.25rem;
@@ -3086,8 +2369,150 @@ span.field-validation-error {
 }
 
 /* ==========================================================
-   Registrar mascota - layout 2 paneles
+   Mejoras UI - Registrar mascota
 ========================================================== */
+
+.mascota-form-shell {
+    overflow: hidden;
+}
+
+.mascota-form-topbar {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.mascota-section-kicker {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5d87a1;
+    background: rgba(128, 204, 255, 0.16);
+    border: 1px solid rgba(128, 204, 255, 0.28);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.mascota-section-compact {
+    padding: 1.2rem;
+    border-radius: 1.1rem;
+}
+
+.section-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.mascota-section-pill {
+    flex-shrink: 0;
+    background: #f4f8fb;
+    color: #607789;
+    border: 1px solid #e4edf4;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.mascota-mini-panel {
+    background: #fbfcfe;
+    border: 1px solid #edf2f6;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.mascota-mini-title {
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+    color: #3f5566;
+}
+
+.mascota-textarea-md {
+    min-height: 120px !important;
+}
+
+.compact-description {
+    min-height: 180px !important;
+}
+
+.mascota-aside-tip {
+    background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+    border: 1px solid #e7eef5;
+    border-radius: 1rem;
+    padding: 1rem;
+    color: #61707d;
+    height: 100%;
+    font-family: var(--secondary-font);
+    line-height: 1.7;
+}
+
+.mascota-upload-panel {
+    background: #fcfdfd;
+    border: 1px dashed #dce7ef;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.mascota-upload-hint {
+    background: #f6fafc;
+    border: 1px solid #e5edf3;
+    border-radius: 0.95rem;
+    padding: 0.95rem 1rem;
+    color: #60707e;
+    font-family: var(--secondary-font);
+    line-height: 1.6;
+}
+
+.mascota-form-actions {
+    border-top: 1px solid #eef2f6;
+    padding-top: 1.25rem;
+}
+
+.mascota-form-card .form-control,
+.mascota-form-card .form-select {
+    min-height: 56px;
+}
+
+.mascota-form-card textarea.form-control {
+    padding-top: 1.15rem;
+}
+
+.mascota-preview-grid {
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 991.98px) {
+    .section-header-inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mascota-aside-tip {
+        height: auto;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mascota-form-card .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .mascota-section-compact {
+        padding: 1rem;
+    }
+
+    .compact-description {
+        min-height: 150px !important;
+    }
+}
+
+/*--------------------------------------------------------------
+Registrar Mascota — Layout de paneles y cards
+--------------------------------------------------------------*/
 
 .mascota-register-container {
     max-width: 1680px;
@@ -3099,11 +2524,14 @@ span.field-validation-error {
 .mascota-form-card-wide {
     border-radius: 1.5rem;
     background: #fcfbf8;
+    border: 1px solid #ece8e1;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
 }
 
 .mascota-form-topbar {
     padding-bottom: 1.1rem;
     border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
 }
 
 .mascota-section-kicker {
@@ -3122,10 +2550,11 @@ span.field-validation-error {
 
 .mascota-main-panel {
     background: #ffffff;
-    border: 1px solid #e8edf2;
+    border: 1px solid #e7edf3;
     border-radius: 1.25rem;
-    padding: 1.25rem;
+    padding: 1.35rem;
     height: 100%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
 }
 
 .mascota-panel-header {
@@ -3135,9 +2564,9 @@ span.field-validation-error {
 }
 
 .mascota-panel-icon {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -3153,7 +2582,7 @@ span.field-validation-error {
 }
 
 .mascota-panel-divider {
-    margin: 1rem 0 1.1rem;
+    margin: 1rem 0 1.2rem;
     border-color: #edf1f4;
     opacity: 1;
 }
@@ -3162,42 +2591,20 @@ span.field-validation-error {
     margin-bottom: 0.25rem;
 }
 
-.mascota-subtitle {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #138a72;
-    margin-bottom: 0.9rem;
-}
-
-.mascota-form-card .form-control,
-.mascota-form-card .form-select {
-    min-height: 58px;
-    border-radius: 0.9rem;
-    border-color: #d9e1e8;
-    box-shadow: none;
-}
-
-    .mascota-form-card .form-control:focus,
-    .mascota-form-card .form-select:focus {
-        border-color: #9bc7ea;
-        box-shadow: 0 0 0 0.2rem rgba(74, 132, 182, 0.10);
+    .mascota-subsection > .mascota-subtitle {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #138a72;
+        margin-bottom: 0.9rem;
+        font-family: var(--secondary-font);
+        line-height: 1.3;
     }
-
-.mascota-form-card textarea.form-control {
-    padding-top: 1rem;
-}
-
-.mascota-textarea-md {
-    min-height: 118px !important;
-}
-
-.mascota-textarea-lg {
-    min-height: 170px !important;
-}
 
 .mascota-upload-text {
     color: #7b8794;
     font-size: 0.92rem;
+    font-family: var(--secondary-font);
+    line-height: 1.6;
 }
 
 .mascota-upload-box {
@@ -3205,51 +2612,28 @@ span.field-validation-error {
     padding-top: 0.9rem;
 }
 
-.compact-preview {
-    min-height: 140px;
-    border-radius: 1rem;
-}
-
-.mascota-preview-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-}
-
 .mascota-form-actions {
     border-top: 1px solid #eceff3;
     padding-top: 1.35rem;
 }
 
-.mascota-submit-btn {
-    min-width: 220px;
-    min-height: 56px;
-    border-radius: 0.95rem;
-    font-weight: 700;
+.compact-preview {
+    min-height: 140px;
 }
 
-.mascota-secondary-btn {
-    min-width: 220px;
-    min-height: 56px;
-    border-radius: 0.95rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
+@media (min-width: 1200px) {
+    .mascota-main-panel + .mascota-main-panel {
+        margin-left: 0;
+    }
 
-@media (max-width: 1399.98px) {
-    .mascota-register-container {
-        max-width: 100%;
+    .mascota-register-container .row.g-4 {
+        --bs-gutter-x: 1.5rem;
     }
 }
 
 @media (max-width: 1199.98px) {
     .mascota-main-panel {
         padding: 1rem;
-    }
-
-    .mascota-textarea-lg {
-        min-height: 150px !important;
     }
 }
 
@@ -3277,21 +2661,11 @@ span.field-validation-error {
     .mascota-main-panel {
         padding: 0.95rem;
     }
-
-    .mascota-textarea-md {
-        min-height: 100px !important;
-    }
-
-    .mascota-textarea-lg {
-        min-height: 135px !important;
-    }
-
-    .mascota-submit-btn,
-    .mascota-secondary-btn {
-        width: 100%;
-        min-width: unset;
-    }
 }
+
+/*--------------------------------------------------------------
+Registrar Mascota — Ajustes de layout (panel izquierdo)
+--------------------------------------------------------------*/
 .mascota-subcard {
     border: 1px solid #edf1f4;
     border-radius: 1rem;
@@ -3300,7 +2674,7 @@ span.field-validation-error {
 }
 
 .mascota-textarea-left {
-    min-height: 140px !important;
+    min-height: 155px !important;
 }
 
 @media (max-width: 1199.98px) {
@@ -3310,11 +2684,84 @@ span.field-validation-error {
 }
 
 @media (max-width: 767.98px) {
-    .mascota-subcard {
-        padding: 0.9rem;
-    }
-
     .mascota-textarea-left {
         min-height: 110px !important;
+    }
+}
+/*--------------------------------------------------------------
+Registrar Mascota — Balance de paneles y alturas
+--------------------------------------------------------------*/
+
+.mascota-lower-grid .col-lg-6 {
+    align-items: stretch;
+}
+
+.mascota-subcard-fill {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 100%;
+}
+
+.mascota-textarea-split {
+    min-height: 165px !important;
+}
+
+.mascota-textarea-desc-lg {
+    min-height: 220px !important;
+}
+
+.mascota-upload-box-tight {
+    padding-top: 0.65rem;
+}
+
+.mascota-upload-text-tight {
+    margin-bottom: 0.5rem !important;
+}
+
+.compact-preview-sm {
+    min-height: 115px;
+    padding: 18px;
+}
+
+.mascota-main-panel .form-floating > textarea.form-control {
+    resize: vertical;
+}
+
+@media (min-width: 1200px) {
+    .mascota-main-panel {
+        min-height: 100%;
+    }
+
+    .mascota-textarea-split {
+        min-height: 180px !important;
+    }
+
+    .mascota-textarea-desc-lg {
+        min-height: 260px !important;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .mascota-textarea-split {
+        min-height: 145px !important;
+    }
+
+    .mascota-textarea-desc-lg {
+        min-height: 210px !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mascota-textarea-split {
+        min-height: 120px !important;
+    }
+
+    .mascota-textarea-desc-lg {
+        min-height: 170px !important;
+    }
+
+    .compact-preview-sm {
+        min-height: 100px;
     }
 }

@@ -120,17 +120,19 @@
                                     </div>
                                 </div>
 
-                                <!-- BLOQUE INFERIOR MÁS EQUITATIVO -->
-                                <div class="row g-4 mt-1">
+                                <!-- BLOQUE INFERIOR -->
+                                <div class="row g-4 mt-1 mascota-lower-grid">
                                     <!-- HISTORIAL MÉDICO -->
-                                    <div class="col-lg-6">
-                                        <div class="mascota-subsection h-100 mascota-subcard">
+                                    <div class="col-lg-6 d-flex">
+                                        <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
                                             <h6 class="mascota-subtitle">Historial médico</h6>
 
-                                            <div class="row g-3">
+                                            <div class="row g-3 h-100">
                                                 <div class="col-12">
                                                     <div class="form-floating">
-                                                        <input asp-for="Enfermedades" class="form-control" placeholder="Enfermedades" />
+                                                        <textarea asp-for="Enfermedades"
+                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
+                                                                  placeholder="Enfermedades"></textarea>
                                                         <label asp-for="Enfermedades">Enfermedades</label>
                                                     </div>
                                                 </div>
@@ -138,7 +140,7 @@
                                                 <div class="col-12">
                                                     <div class="form-floating">
                                                         <textarea asp-for="HistorialMedico"
-                                                                  class="form-control mascota-textarea-left"
+                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
                                                                   placeholder="Historial médico"></textarea>
                                                         <label asp-for="HistorialMedico">Historial médico</label>
                                                     </div>
@@ -148,15 +150,15 @@
                                     </div>
 
                                     <!-- PREFERENCIAS -->
-                                    <div class="col-lg-6">
-                                        <div class="mascota-subsection h-100 mascota-subcard">
+                                    <div class="col-lg-6 d-flex">
+                                        <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
                                             <h6 class="mascota-subtitle">Preferencias alimenticias</h6>
 
-                                            <div class="row g-3">
+                                            <div class="row g-3 h-100">
                                                 <div class="col-12">
                                                     <div class="form-floating">
                                                         <textarea asp-for="PreferenciasAlimenticias"
-                                                                  class="form-control mascota-textarea-left"
+                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
                                                                   placeholder="Preferencias alimenticias"></textarea>
                                                         <label asp-for="PreferenciasAlimenticias">Preferencias alimenticias</label>
                                                     </div>
@@ -165,7 +167,7 @@
                                                 <div class="col-12">
                                                     <div class="form-floating">
                                                         <textarea asp-for="Notas"
-                                                                  class="form-control mascota-textarea-left"
+                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
                                                                   placeholder="Notas"></textarea>
                                                         <label asp-for="Notas">Notas adicionales</label>
                                                     </div>
@@ -209,7 +211,7 @@
 
                                     <div class="form-floating">
                                         <textarea asp-for="Descripcion"
-                                                  class="form-control mascota-textarea-lg"
+                                                  class="form-control mascota-textarea-desc-lg"
                                                   placeholder="Describe a la mascota"></textarea>
                                         <label asp-for="Descripcion">Descripción</label>
                                     </div>
@@ -217,12 +219,12 @@
                                 </div>
 
                                 <div class="mascota-subsection mt-4">
-                                    <h6 class="mascota-subtitle">Imágenes de la mascota</h6>
-                                    <p class="mascota-upload-text mb-3">
+                                    <h6 class="mascota-subtitle mb-2">Imágenes de la mascota</h6>
+                                    <p class="mascota-upload-text mascota-upload-text-tight mb-2">
                                         Sube varias fotos para que más personas puedan conocerla.
                                     </p>
 
-                                    <div class="mascota-upload-box">
+                                    <div class="mascota-upload-box mascota-upload-box-tight">
                                         <label for="ImagenesArchivos" class="form-label fw-semibold mb-2">
                                             Agrega las imágenes
                                         </label>
@@ -239,7 +241,7 @@
                                         </small>
 
                                         <div class="mt-3">
-                                            <div id="previewVacio" class="mascota-preview-empty compact-preview">
+                                            <div id="previewVacio" class="mascota-preview-empty compact-preview compact-preview-sm">
                                                 <div class="mascota-preview-empty-icon">📷</div>
                                                 <p class="mb-0">Aquí se mostrarán las imágenes seleccionadas.</p>
                                             </div>
