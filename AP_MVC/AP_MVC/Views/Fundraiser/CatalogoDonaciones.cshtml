@@ -32,7 +32,7 @@
                             <iconify-icon icon="mdi:filter-outline" class="me-1"></iconify-icon>Filtrar por animal
                         </label>
                         <input type="text" id="inputFiltroAnimal" class="form-control"
-                               placeholder="Ej: Max, Luna..." />
+                               placeholder="Ej: Rocky, Luna..." />
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-outline-secondary w-100" id="btnLimpiarFiltros">
@@ -83,14 +83,15 @@
                 @foreach (var item in Model)
                 {
                     decimal porcentaje = item.MetaTotal > 0
-                        ? Math.Min((item.TotalActual / item.MetaTotal) * 100, 100)
-                        : 0;
-
-                    string colorClase = porcentaje >= 75 ? "bg-info" : "bg-danger";
+                    ? Math.Min((item.TotalActual / item.MetaTotal) * 100, 100)
+                    : 0;
+                    string colorBarra = porcentaje >= 75 ? "#198754"   
+                    : porcentaje >= 40 ? "#ffc107"   
+                    : "#dc3545";                    
 
                     <div class="col-lg-4 col-md-6 fundraiser-card-item"
                          data-titulo="@(item.Titulo?.ToLower() ?? "")"
-                         data-descripcion="@(item.Descripcion?.ToLower() ?? "")"     
+                         data-descripcion="@(item.Descripcion?.ToLower() ?? "")"
                          data-animal="@(item.NombreAnimal?.ToLower() ?? "")">
 
                         <div class="card h-100 shadow-sm border-0 fundraiser-card">
@@ -113,21 +114,21 @@
                                 <!-- Description -->
                                 <p class="text-muted small mb-3 flex-grow-1 fundraiser-descripcion">
                                     @(item.Descripcion.Length > 120
-                                        ? item.Descripcion.Substring(0, 120) + "..."
-                                        : item.Descripcion)
-                                </p>
+                                                                ? item.Descripcion.Substring(0, 120) + "..."
+                                                                : item.Descripcion)
+                        </p>
 
                                 <!-- Progress -->
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between small mb-1">
                                         <span class="text-muted">Recaudado</span>
-                                        <span class="fw-bold text-success">@porcentaje.ToString("0.0")%</span>
+                                        <span class="fw-bold" style="color:@colorBarra">@porcentaje.ToString("0.0")%</span>
                                     </div>
 
                                     <div class="progress" style="height:8px;border-radius:10px;">
-                                        <div class="progress-bar @colorClase progress-bar-striped progress-bar-animated"
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
                                              role="progressbar"
-                                             style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%">
+                                             style="width:@porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%;background-color:@colorBarra !important;">
                                         </div>
                                     </div>
 
@@ -139,9 +140,9 @@
 
                                 <!-- Button -->
                                 <a asp-controller="Fundraiser"
-                                       asp-action="Detalle"
-                                       asp-route-id="@item.FundraiserId"
-                                       class="btn btn-primary w-100 mt-auto">
+                                   asp-action="Detalle"
+                                   asp-route-id="@item.FundraiserId"
+                                   class="btn btn-primary w-100 mt-auto">
                                     <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>
                                     Ver campaña
                                 </a>
@@ -157,7 +158,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                        }
             </div>
 
             <!-- No filter results -->
