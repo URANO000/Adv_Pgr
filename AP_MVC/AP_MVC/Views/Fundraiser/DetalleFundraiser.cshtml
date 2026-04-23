@@ -9,21 +9,11 @@
     bool estaLogueado = ViewBag.EstaLogueado ?? false;
 
     decimal porcentaje = Model.MetaTotal > 0
-     ? ((Model.TotalActual / Model.MetaTotal) * 100 > 100
-         ? 100
-         : (Model.TotalActual / Model.MetaTotal) * 100)
-     : 0;
-
-    // Color barra
-    string colorClase = "";
-    if (porcentaje >= 75)
-    {
-        colorClase = "bg-info";
-    }
-    else if (porcentaje <= 75)
-    {
-        colorClase = "bg-danger";
-    }
+        ? Math.Min((Model.TotalActual / Model.MetaTotal) * 100, 100)
+        : 0;
+    string colorBarra = porcentaje >= 75 ? "#198754"   
+                      : porcentaje >= 40 ? "#ffc107"  
+                      : "#dc3545";                     
 }
 
 <section class="fundraiser-section">
@@ -47,7 +37,9 @@
 
                         <!-- Título -->
                         <h2 class="fw-bold">@Model.Titulo</h2>
-                        <small class="text-muted">@Model.NombreAnimal</small>
+                        <small class="text-muted">
+                            <iconify-icon icon="mdi:paw" class="me-1"></iconify-icon>@Model.NombreAnimal
+                        </small>
 
                         <!-- Descripción -->
                         <p class="text-muted mt-3">@Model.Descripcion</p>
@@ -55,7 +47,7 @@
                         <!-- BARRA DE PROGRESO -->
                         <div class="mb-4">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="fw-bold text-success fs-5">
+                                <span class="fw-bold fs-5" style="color:@colorBarra">
                                     ₡@Model.TotalActual.ToString("N2")
                                 </span>
                                 <span class="text-muted">
@@ -64,16 +56,16 @@
                             </div>
 
                             <div class="progress mb-2" style="height:14px;border-radius:10px;">
-                                <div class="progress-bar @colorClase progress-bar-striped progress-bar-animated"
+                                <div class="progress-bar progress-bar-striped progress-bar-animated"
                                      role="progressbar"
-                                     style="width:@(porcentaje.ToString("0.0", CultureInfo.InvariantCulture))%"
+                                     style="width:@(porcentaje.ToString("0.0", CultureInfo.InvariantCulture))%;background-color:@colorBarra !important;"
                                      aria-valuenow="@porcentaje"
                                      aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
 
                             <div class="text-end">
-                                <small class="text-muted fw-bold">
+                                <small class="fw-bold" style="color:@colorBarra">
                                     @porcentaje.ToString("0.0")% alcanzado
                                 </small>
                             </div>
@@ -116,7 +108,6 @@
             </div>
 
             <!-- Sidebar -->
-            <!-- Columna lateral: botón donar -->
             <div class="col-lg-4">
                 <div class="card shadow-sm border-0 fundraiser-card sticky-top" style="top:90px;">
                     <div class="card-body p-4 text-center">
@@ -126,7 +117,7 @@
                         <p class="text-muted small mb-3">Cada colón cuenta para ayudar a @Model.NombreAnimal</p>
 
                         <div class="mb-3">
-                            <span class="fs-4 fw-bold text-success">₡@Model.TotalActual.ToString("N2")</span>
+                            <span class="fs-4 fw-bold" style="color:@colorBarra">₡@Model.TotalActual.ToString("N2")</span>
                             <br /><small class="text-muted">recaudados de ₡@Model.MetaTotal.ToString("N2")</small>
                         </div>
 

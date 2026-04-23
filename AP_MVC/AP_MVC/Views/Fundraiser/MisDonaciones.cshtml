@@ -47,29 +47,17 @@
                             @foreach (var item in Model)
                             {
                                 decimal porcentaje = item.MetaTotal > 0
-                                ? ((item.TotalActual / item.MetaTotal) * 100 > 100
-                                ? 100
-                                : (item.TotalActual / item.MetaTotal) * 100)
+                                ? Math.Min((item.TotalActual / item.MetaTotal) * 100, 100)
                                 : 0;
-
-                                // Color Barra
-                                string colorClase = "";
-                                if (porcentaje >= 75)
-                                {
-                                    colorClase = "bg-info";
-                                }
-                                else if (porcentaje <= 75)
-                                {
-                                    colorClase = "bg-danger";
-                                }
+                                string colorBarra = porcentaje >= 75 ? "#198754"
+                                : porcentaje >= 40 ? "#ffc107" 
+                                : "#dc3545";       
 
                                 var estadoClase = item.IsActive ? "activa" : "inactiva";
 
-                                <tr data-estado="@estadoClase">
+                                <tr class="fila-historial" data-estado="@estadoClase">
                                     <td>
                                         <div class="fw-bold">@item.Titulo</div>
-
-                                        <!-- ✅ FIX ERROR -->
                                         <small class="text-muted">
                                             @{
                                                 var desc = item.Descripcion ?? "";
@@ -92,18 +80,17 @@
 
                                     <td class="text-nowrap">₡@item.MetaTotal.ToString("N2")</td>
 
-                                    <!-- 💰 PROGRESO -->
+                                    <!-- Progreso -->
                                     <td style="min-width:140px;">
                                         <div class="progress mb-1" style="height:7px;border-radius:5px;">
-                                            <div class="progress-bar @colorClase progress-bar-striped progress-bar-animated"
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
                                                  role="progressbar"
-                                                 style="width:@(porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))%">
+                                                 style="width:@(porcentaje.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture))%;background-color:@colorBarra !important;">
                                             </div>
                                         </div>
-
                                         <small class="text-muted">
                                             ₡@item.TotalActual.ToString("N2")
-                                            (@porcentaje.ToString("0.0")%)
+                                            (<span style="color:@colorBarra;font-weight:600;">@porcentaje.ToString("0.0")%</span>)
                                         </small>
                                     </td>
 
@@ -125,11 +112,28 @@
                                     <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
 
                                     <td class="text-center">
-                                        <a asp-controller="Fundraiser" asp-action="Detalle"
-                                           asp-route-id="@item.FundraiserId"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Ver
-                                        </a>
+                                        <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                            <a asp-controller="Fundraiser" asp-action="Detalle"
+                                               asp-route-id="@item.FundraiserId"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <iconify-icon icon="mdi:eye-outline"></iconify-icon> Ver
+                                            </a>
+                                            @if (item.IsActive)
+                                            {
+                                                <a asp-controller="Fundraiser" asp-action="Editar"
+                                                   asp-route-id="@item.FundraiserId"
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    <iconify-icon icon="mdi:pencil-outline"></iconify-icon> Editar
+                                                </a>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalInactivar"
+                                                        data-fundraiser-id="@item.FundraiserId">
+                                                    <iconify-icon icon="mdi:eye-off-outline"></iconify-icon> Inactivar
+                                                </button>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -141,6 +145,61 @@
 
     </div>
 </section>
+
+<!-- Modal inactivar -->
+<div class="modal fade" id="modalInactivar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content custom-delete-modal">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title custom-delete-title">Inactivar publicación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <form asp-controller="Fundraiser" asp-action="Inactivar" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="hiddenFundraiserId" name="id" value="" />
+
+                <div class="modal-body pt-2">
+                    <p class="custom-delete-text">
+                        Tu publicación dejará de mostrarse en el catálogo y no podrá recibir nuevas donaciones.
+                        Quedará archivada en historial y no podrá reactivarse.
+                    </p>
+
+                    <div class="mb-3">
+                        <label for="motivoInactivacion" class="form-label fw-semibold">¿Por qué deseas inactivarla?</label>
+                        <select id="motivoInactivacion" name="motivoInactivacion" class="form-select">
+                            <option value="">Selecciona una opción</option>
+                            <option value="meta">Ya alcancé la meta de recaudación</option>
+                            <option value="incorrecta">La información ya no es correcta</option>
+                            <option value="error">Publiqué por error</option>
+                            <option value="continuar">Ya no deseo continuar con esta campaña</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 d-none" id="contenedorOtroMotivo">
+                        <label for="otroMotivo" class="form-label fw-semibold">Escribe tu razón</label>
+                        <textarea id="otroMotivo" name="otroMotivo" class="form-control" rows="3" maxlength="250"></textarea>
+                    </div>
+
+                    <div class="form-check custom-delete-check">
+                        <input class="form-check-input" type="checkbox" id="confirmacionInactivar">
+                        <label class="form-check-label" for="confirmacionInactivar">
+                            Entiendo que esta acción archivará la publicación y no podré recuperarla.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light custom-cancel-btn" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="btnConfirmarInactivar" class="btn custom-delete-btn" disabled>
+                        Inactivar publicación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/Fundraiser.js"></script>

@@ -1,10 +1,14 @@
-﻿namespace AP_MVC.Models.Mascotas
+﻿using System.Text.Json.Serialization;
+
+namespace AP_MVC.Models.Mascotas
 {
     public class MascotaPublicacionViewModel
     {
         public int PublicacionId { get; set; }
         public int AnimalId { get; set; }
+        [JsonPropertyName("NombreMascota")]
         public string Nombre { get; set; } = string.Empty;
+        [JsonPropertyName("TipoAnimal")]
         public string? Tipo { get; set; }
         public string Edad { get; set; } = string.Empty;
         public string Sexo { get; set; } = string.Empty;
