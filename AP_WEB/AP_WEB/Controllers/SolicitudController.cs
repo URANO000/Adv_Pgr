@@ -129,6 +129,9 @@ namespace AP_WEB.Controllers
                 "Aprobada" => ("#27ae60", "✅",
                     "¡Buenas noticias! El propietario aprobó tu solicitud. " +
                     "Podés ponerte en contacto para coordinar la adopción."),
+                "Revisar" => ("#f39c12", "🔍",
+                    "Tu solicitud está siendo revisada por el propietario. " +
+                    "Te notificaremos cuando haya una decisión final."),
                 _ => ("#7f8c8d", "❌",
                     "En esta ocasión tu solicitud no fue aprobada. " +
                     "Te animamos a seguir explorando mascotas en Patitas Social.")
