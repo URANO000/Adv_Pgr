@@ -21,252 +21,259 @@
                     <span class="mascota-section-kicker">Panel de registro</span>
                     <h2 class="fw-bold mb-1">Nueva publicación de adopción</h2>
                     <p class="text-muted mb-0">
-                        Completa todos los campos y organiza la publicación de forma más clara y compacta.
+                        Completa la información en dos pasos para que el registro sea más claro y fácil de llenar.
                     </p>
                 </div>
 
                 <form asp-action="Registrar" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
 
-                    <div class="row g-4">
-                        <!-- COLUMNA IZQUIERDA -->
-                        <div class="col-xl-7">
-                            <div class="mascota-main-panel h-100">
-                                <div class="mascota-panel-header">
-                                    <div class="mascota-panel-icon">
-                                        <i class="bi bi-clipboard2-heart"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="mb-1">Información de la mascota</h4>
-                                        <p class="mb-0 text-muted">
-                                            Datos generales, historial médico y preferencias alimenticias.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <hr class="mascota-panel-divider" />
-
-                                <!-- DATOS GENERALES -->
-                                <div class="mascota-subsection">
-                                    <h6 class="mascota-subtitle">Datos generales</h6>
-
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <select asp-for="TipoId" asp-items="ViewBag.TiposAnimal" class="form-select">
-                                                    <option value="">Seleccione...</option>
-                                                </select>
-                                                <label asp-for="TipoId">Tipo de animal</label>
-                                            </div>
-                                            <span asp-validation-for="TipoId" class="text-danger small"></span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
-                                                <label asp-for="Nombre">Nombre</label>
-                                            </div>
-                                            <span asp-validation-for="Nombre" class="text-danger small"></span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <select asp-for="Sexo" class="form-select">
-                                                    <option value="">Seleccione...</option>
-                                                    <option value="M">Macho</option>
-                                                    <option value="H">Hembra</option>
-                                                </select>
-                                                <label asp-for="Sexo">Sexo</label>
-                                            </div>
-                                            <span asp-validation-for="Sexo" class="text-danger small"></span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input asp-for="Peso"
-                                                       type="number"
-                                                       step="0.1"
-                                                       min="0.1"
-                                                       class="form-control"
-                                                       placeholder="Ej. 1.5" />
-                                                <label asp-for="Peso">Peso (kg)</label>
-                                            </div>
-                                            <span asp-validation-for="Peso" class="text-danger small"></span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input asp-for="EdadValor"
-                                                       type="number"
-                                                       min="0"
-                                                       class="form-control"
-                                                       placeholder="Ej. 2" />
-                                                <label asp-for="EdadValor">Edad</label>
-                                            </div>
-                                            <span asp-validation-for="EdadValor" class="text-danger small"></span>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <select asp-for="EdadUnidad" class="form-select">
-                                                    <option value="">Seleccione...</option>
-                                                    <option value="Meses">Meses</option>
-                                                    <option value="Años">Años</option>
-                                                </select>
-                                                <label asp-for="EdadUnidad">Unidad de edad</label>
-                                            </div>
-                                            <span asp-validation-for="EdadUnidad" class="text-danger small"></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- BLOQUE INFERIOR -->
-                                <div class="row g-4 mt-1 mascota-lower-grid">
-                                    <!-- HISTORIAL MÉDICO -->
-                                    <div class="col-lg-6 d-flex">
-                                        <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
-                                            <h6 class="mascota-subtitle">Historial médico</h6>
-
-                                            <div class="row g-3 h-100">
-                                                <div class="col-12">
-                                                    <div class="form-floating">
-                                                        <textarea asp-for="Enfermedades"
-                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
-                                                                  placeholder="Enfermedades"></textarea>
-                                                        <label asp-for="Enfermedades">Enfermedades</label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12">
-                                                    <div class="form-floating">
-                                                        <textarea asp-for="HistorialMedico"
-                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
-                                                                  placeholder="Historial médico"></textarea>
-                                                        <label asp-for="HistorialMedico">Historial médico</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- PREFERENCIAS -->
-                                    <div class="col-lg-6 d-flex">
-                                        <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
-                                            <h6 class="mascota-subtitle">Preferencias alimenticias</h6>
-
-                                            <div class="row g-3 h-100">
-                                                <div class="col-12">
-                                                    <div class="form-floating">
-                                                        <textarea asp-for="PreferenciasAlimenticias"
-                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
-                                                                  placeholder="Preferencias alimenticias"></textarea>
-                                                        <label asp-for="PreferenciasAlimenticias">Preferencias alimenticias</label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12">
-                                                    <div class="form-floating">
-                                                        <textarea asp-for="Notas"
-                                                                  class="form-control mascota-textarea-left mascota-textarea-split"
-                                                                  placeholder="Notas"></textarea>
-                                                        <label asp-for="Notas">Notas adicionales</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- COLUMNA DERECHA -->
-                        <div class="col-xl-5">
-                            <div class="mascota-main-panel h-100">
-                                <div class="mascota-panel-header">
-                                    <div class="mascota-panel-icon">
-                                        <i class="bi bi-megaphone"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="mb-1">Información de la publicación</h4>
-                                        <p class="mb-0 text-muted">
-                                            Título, descripción e imágenes de la publicación.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <hr class="mascota-panel-divider" />
-
-                                <div class="mascota-subsection">
-                                    <h6 class="mascota-subtitle">Título de la publicación</h6>
-
-                                    <div class="form-floating">
-                                        <input asp-for="Titulo" class="form-control" placeholder="Escribe un título llamativo" />
-                                        <label asp-for="Titulo">Título</label>
-                                    </div>
-                                    <span asp-validation-for="Titulo" class="text-danger small"></span>
-                                </div>
-
-                                <div class="mascota-subsection mt-4">
-                                    <h6 class="mascota-subtitle">Descripción de la mascota</h6>
-
-                                    <div class="form-floating">
-                                        <textarea asp-for="Descripcion"
-                                                  class="form-control mascota-textarea-desc-lg"
-                                                  placeholder="Describe a la mascota"></textarea>
-                                        <label asp-for="Descripcion">Descripción</label>
-                                    </div>
-                                    <span asp-validation-for="Descripcion" class="text-danger small"></span>
-                                </div>
-
-                                <div class="mascota-subsection mt-4">
-                                    <h6 class="mascota-subtitle mb-2">Imágenes de la mascota</h6>
-                                    <p class="mascota-upload-text mascota-upload-text-tight mb-2">
-                                        Sube varias fotos para que más personas puedan conocerla.
+                    <!-- PASO 1: DATOS DE LA MASCOTA -->
+                    <div class="registro-step active" id="stepMascota">
+                        <div class="registro-step-card">
+                            <div class="registro-step-header">
+                                <div>
+                                    <span class="registro-step-pill">Paso 1 de 2</span>
+                                    <h3 class="mt-3 mb-1">Información de la mascota</h3>
+                                    <p class="text-muted mb-0">
+                                        Completa los datos generales, historial médico y preferencias alimenticias.
                                     </p>
+                                </div>
+                            </div>
 
-                                    <div class="mascota-upload-box mascota-upload-box-tight">
-                                        <label for="ImagenesArchivos" class="form-label fw-semibold mb-2">
-                                            Agrega las imágenes
-                                        </label>
+                            <div class="mascota-subsection">
+                                <h6 class="mascota-subtitle">Datos generales</h6>
 
-                                        <input type="file"
-                                               id="ImagenesArchivos"
-                                               name="ImagenesArchivos"
-                                               class="form-control"
-                                               multiple
-                                               accept=".jpg,.jpeg,.png,.webp" />
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select asp-for="TipoId" asp-items="ViewBag.TiposAnimal" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                            </select>
+                                            <label asp-for="TipoId">Tipo de animal</label>
+                                        </div>
+                                        <span asp-validation-for="TipoId" class="text-danger small"></span>
+                                    </div>
 
-                                        <small class="text-muted d-block mt-2">
-                                            Puedes agregar varias imágenes y eliminarlas antes de guardar.
-                                        </small>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="Nombre" class="form-control" placeholder="Nombre" required />
+                                            <label asp-for="Nombre">Nombre</label>
+                                        </div>
+                                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                    </div>
 
-                                        <div class="mt-3">
-                                            <div id="previewVacio" class="mascota-preview-empty compact-preview compact-preview-sm">
-                                                <div class="mascota-preview-empty-icon">📷</div>
-                                                <p class="mb-0">Aquí se mostrarán las imágenes seleccionadas.</p>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select asp-for="Sexo" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="M">Macho</option>
+                                                <option value="H">Hembra</option>
+                                            </select>
+                                            <label asp-for="Sexo">Sexo</label>
+                                        </div>
+                                        <span asp-validation-for="Sexo" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="Peso"
+                                                   type="number"
+                                                   step="0.1"
+                                                   min="0.1"
+                                                   class="form-control"
+                                                   placeholder="Ej. 1.5"
+                                                   required />
+                                            <label asp-for="Peso">Peso (kg)</label>
+                                        </div>
+                                        <span asp-validation-for="Peso" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input asp-for="EdadValor"
+                                                   type="number"
+                                                   min="0"
+                                                   class="form-control"
+                                                   placeholder="Ej. 2"
+                                                   required />
+                                            <label asp-for="EdadValor">Edad</label>
+                                        </div>
+                                        <span asp-validation-for="EdadValor" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <select asp-for="EdadUnidad" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="Meses">Meses</option>
+                                                <option value="Años">Años</option>
+                                            </select>
+                                            <label asp-for="EdadUnidad">Unidad de edad</label>
+                                        </div>
+                                        <span asp-validation-for="EdadUnidad" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mt-2 mascota-lower-grid">
+                                <div class="col-lg-6 d-flex">
+                                    <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
+                                        <h6 class="mascota-subtitle">Historial médico</h6>
+
+                                        <div class="row g-3 h-100">
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <textarea asp-for="Enfermedades"
+                                                              class="form-control mascota-textarea-left mascota-textarea-split"
+                                                              placeholder="Enfermedades"></textarea>
+                                                    <label asp-for="Enfermedades">Enfermedades</label>
+                                                </div>
                                             </div>
 
-                                            <div id="previewGrid" class="mascota-preview-grid d-none"></div>
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <textarea asp-for="HistorialMedico"
+                                                              class="form-control mascota-textarea-left mascota-textarea-split"
+                                                              placeholder="Historial médico"></textarea>
+                                                    <label asp-for="HistorialMedico">Historial médico</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <div id="previewContador" class="mascota-preview-counter mt-2 d-none"></div>
+                                <div class="col-lg-6 d-flex">
+                                    <div class="mascota-subsection mascota-subcard mascota-subcard-fill w-100">
+                                        <h6 class="mascota-subtitle">Preferencias alimenticias</h6>
+
+                                        <div class="row g-3 h-100">
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <textarea asp-for="PreferenciasAlimenticias"
+                                                              class="form-control mascota-textarea-left mascota-textarea-split"
+                                                              placeholder="Preferencias alimenticias"></textarea>
+                                                    <label asp-for="PreferenciasAlimenticias">Preferencias alimenticias</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <textarea asp-for="Notas"
+                                                              class="form-control mascota-textarea-left mascota-textarea-split"
+                                                              placeholder="Notas"></textarea>
+                                                    <label asp-for="Notas">Notas adicionales</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="registro-actions">
+                                <a asp-action="MisPublicaciones" class="btn btn-outline-primary mascota-secondary-btn">
+                                    Ver mis publicaciones
+                                </a>
+
+                                <button type="button" id="btnSiguientePaso" class="btn btn-primary mascota-submit-btn">
+                                    Continuar
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mascota-form-actions mt-4">
-                        <div class="d-flex flex-column flex-md-row gap-3">
-                            <button type="submit" class="btn btn-primary mascota-submit-btn">
-                                Guardar publicación
-                            </button>
+                    <!-- PASO 2: DATOS DE LA PUBLICACIÓN -->
+                    <div class="registro-step" id="stepPublicacion">
+                        <div class="registro-step-card">
+                            <div class="registro-step-header">
+                                <div>
+                                    <span class="registro-step-pill">Paso 2 de 2</span>
+                                    <h3 class="mt-3 mb-1">Información de la publicación</h3>
+                                    <p class="text-muted mb-0">
+                                        Agrega el título, descripción e imágenes que verán las personas interesadas.
+                                    </p>
+                                </div>
+                            </div>
 
-                            <a asp-action="MisPublicaciones" class="btn btn-outline-primary mascota-secondary-btn">
-                                Ver mis publicaciones
-                            </a>
+                            <div class="row g-4">
+                                <div class="col-lg-7">
+                                    <div class="mascota-subsection">
+                                        <h6 class="mascota-subtitle">Título de la publicación</h6>
+
+                                        <div class="form-floating">
+                                            <input asp-for="Titulo"
+                                                   class="form-control"
+                                                   placeholder="Escribe un título llamativo"
+                                                   required />
+                                            <label asp-for="Titulo">Título</label>
+                                        </div>
+                                        <span asp-validation-for="Titulo" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="mascota-subsection mt-4">
+                                        <h6 class="mascota-subtitle">Descripción de la mascota</h6>
+
+                                        <div class="form-floating">
+                                            <textarea asp-for="Descripcion"
+                                                      class="form-control mascota-textarea-desc-lg"
+                                                      placeholder="Describe a la mascota"
+                                                      required></textarea>
+                                            <label asp-for="Descripcion">Descripción</label>
+                                        </div>
+                                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="mascota-subsection">
+                                        <h6 class="mascota-subtitle mb-2">Imágenes de la mascota</h6>
+                                        <p class="mascota-upload-text mascota-upload-text-tight mb-2">
+                                            Sube varias fotos para que más personas puedan conocerla.
+                                        </p>
+
+                                        <div class="mascota-upload-box mascota-upload-box-tight">
+                                            <label for="ImagenesArchivos" class="form-label fw-semibold mb-2">
+                                                Agrega las imágenes
+                                            </label>
+
+                                            <input type="file"
+                                                   id="ImagenesArchivos"
+                                                   name="ImagenesArchivos"
+                                                   class="form-control"
+                                                   multiple
+                                                   accept=".jpg,.jpeg,.png,.webp" />
+
+                                            <small class="text-muted d-block mt-2">
+                                                Puedes agregar varias imágenes y eliminarlas antes de guardar.
+                                            </small>
+
+                                            <div class="mt-3">
+                                                <div id="previewVacio" class="mascota-preview-empty compact-preview compact-preview-sm">
+                                                    <div class="mascota-preview-empty-icon">📷</div>
+                                                    <p class="mb-0">Aquí se mostrarán las imágenes seleccionadas.</p>
+                                                </div>
+
+                                                <div id="previewGrid" class="mascota-preview-grid d-none"></div>
+
+                                                <div id="previewContador" class="mascota-preview-counter mt-2 d-none"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="registro-actions">
+                                <button type="button" id="btnVolverPaso" class="btn btn-outline-primary mascota-secondary-btn">
+                                    Volver
+                                </button>
+
+                                <button type="submit" class="btn btn-primary mascota-submit-btn">
+                                    Guardar publicación
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                 </form>
 
             </div>
@@ -280,4 +287,5 @@
     }
 
     <script src="~/js/registrar-mascota.js"></script>
+    <script src="~/js/registrar-mascota-pasos.js"></script>
 }
