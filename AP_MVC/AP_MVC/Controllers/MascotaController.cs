@@ -603,8 +603,31 @@ namespace AP_MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Catalogo(string? texto = null, int? tipoId = null, int? categoriaId = null)
+        public IActionResult Catalogo(string? texto = null, int? tipoId = null, int? categoriaId = null, string? tipo = null)
         {
+            if ((!tipoId.HasValue || tipoId.Value == 0) && !string.IsNullOrWhiteSpace(tipo))
+            {
+                using var clientTipos = _http.CreateClient();
+                var urlTipos = UrlAPI + "Animal/ListarTiposAnimal";
+                var resultTipos = clientTipos.GetAsync(urlTipos).Result;
+
+                if (resultTipos.StatusCode == HttpStatusCode.OK)
+                {
+                    var tipos = resultTipos.Content
+                        .ReadFromJsonAsync<List<AnimalTipoViewModel>>().Result
+                        ?? new List<AnimalTipoViewModel>();
+
+                    var tipoEncontrado = tipos.FirstOrDefault(t =>
+                        !string.IsNullOrWhiteSpace(t.NombreTipo) &&
+                        t.NombreTipo.Equals(tipo, StringComparison.OrdinalIgnoreCase));
+
+                    if (tipoEncontrado != null)
+                    {
+                        tipoId = tipoEncontrado.TipoId;
+                    }
+                }
+            }
+
             using var client = _http.CreateClient();
 
             var query = $"?texto={Uri.EscapeDataString(texto ?? string.Empty)}";

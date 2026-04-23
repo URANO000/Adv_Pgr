@@ -4,113 +4,6 @@
     ViewData["Title"] = "Mis solicitudes enviadas";
 }
 
-<style>
-    .solicitudes-page {
-        max-width: 1150px;
-        margin: 0 auto;
-        padding: 2rem 1rem 3rem;
-    }
-
-    .solicitudes-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .solicitudes-title {
-        font-weight: 800;
-        color: #2c3e50;
-        margin: 0;
-    }
-
-    .solicitudes-subtitle {
-        color: #6c757d;
-        margin: .25rem 0 0;
-    }
-
-    .solicitudes-card {
-        border: 0;
-        border-radius: 1rem;
-        box-shadow: 0 8px 24px rgba(0,0,0,.08);
-        overflow: hidden;
-        background: #fff;
-    }
-
-    .solicitudes-toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: .75rem;
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid #eee;
-        background: #fafafa;
-    }
-
-    .solicitudes-filtros {
-        display: flex;
-        gap: .5rem;
-        flex-wrap: wrap;
-    }
-
-        .solicitudes-filtros .btn {
-            border-radius: 999px;
-            font-weight: 600;
-        }
-
-    .active-filter {
-        background-color: #0d6efd !important;
-        color: #fff !important;
-        border-color: #0d6efd !important;
-    }
-
-    .table thead th {
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-
-    .table tbody td {
-        vertical-align: middle;
-    }
-
-    .estado-badge {
-        padding: .45rem .8rem;
-        border-radius: 999px;
-        font-size: .85rem;
-        font-weight: 700;
-        display: inline-block;
-    }
-
-    .estado-pendiente {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-
-    .estado-aprobada {
-        background-color: #d1e7dd;
-        color: #0f5132;
-    }
-
-    .estado-rechazada {
-        background-color: #f8d7da;
-        color: #842029;
-    }
-
-    .estado-revisar {
-        background-color: #cff4fc;
-        color: #055160;
-    }
-
-    .mensaje-box {
-        max-width: 280px;
-        white-space: normal;
-        word-break: break-word;
-    }
-</style>
-
 <div class="solicitudes-page">
 
     @if (TempData["Exito"] != null)
@@ -153,22 +46,26 @@
         <div class="solicitudes-card">
 
             <div class="solicitudes-toolbar">
-                <div class="solicitudes-filtros">
-                    <button type="button" class="btn btn-outline-secondary active-filter" data-filtro="todas">
-                        Todas
-                    </button>
-                    <button type="button" class="btn btn-outline-warning" data-filtro="pendiente">
-                        Pendientes
-                    </button>
-                    <button type="button" class="btn btn-outline-info" data-filtro="revisar">
-                        En revisión
-                    </button>
-                    <button type="button" class="btn btn-outline-success" data-filtro="aprobada">
-                        Aprobadas
-                    </button>
-                    <button type="button" class="btn btn-outline-danger" data-filtro="rechazada">
-                        Rechazadas
-                    </button>
+                <div class="filtros-wrap">
+                    <p class="filtros-label">Filtrar:</p>
+
+                    <div class="solicitudes-filtros">
+                        <button type="button" class="btn btn-filtro-todas active-filter" data-filtro="todas">
+                            Todas
+                        </button>
+                        <button type="button" class="btn btn-filtro-pendiente" data-filtro="pendiente">
+                            Pendientes
+                        </button>
+                        <button type="button" class="btn btn-filtro-revisar" data-filtro="revisar">
+                            En revisión
+                        </button>
+                        <button type="button" class="btn btn-filtro-aprobada" data-filtro="aprobada">
+                            Aprobadas
+                        </button>
+                        <button type="button" class="btn btn-filtro-rechazada" data-filtro="rechazada">
+                            Rechazadas
+                        </button>
+                    </div>
                 </div>
 
                 <span id="contadorSolicitudes" class="text-muted fw-semibold">
@@ -200,6 +97,15 @@
                                 _ => "estado-pendiente"
                             };
 
+                            var estadoIcono = s.Estado switch
+                            {
+                                "Pendiente" => "mdi:clock-outline",
+                                "Aprobada" => "mdi:check-circle-outline",
+                                "Rechazada" => "mdi:close-circle-outline",
+                                "Revisar" => "mdi:eye-outline",
+                                _ => "mdi:clock-outline"
+                            };
+
                             var estadoFiltro = s.Estado.ToLower();
 
                             <tr class="fila-solicitud" data-estado="@estadoFiltro">
@@ -214,6 +120,7 @@
                                 </td>
                                 <td>
                                     <span class="estado-badge @estadoClase">
+                                        <iconify-icon icon="mdi:check-circle-outline"></iconify-icon>
                                         @s.Estado
                                     </span>
                                 </td>
@@ -221,7 +128,7 @@
                                 <td>
                                     <a asp-controller="Mascota"
                                            asp-action="DetalleCatalogo"
-                                           asp-route-publicacionId="@s.PublicacionId"
+                                           asp-route-id="@s.PublicacionId"
                                            class="btn btn-sm btn-outline-primary rounded-pill">
                                         <iconify-icon icon="mdi:eye-outline"></iconify-icon>
                                         Ver publicación

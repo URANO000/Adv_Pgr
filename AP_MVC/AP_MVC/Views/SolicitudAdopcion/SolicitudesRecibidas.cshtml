@@ -10,13 +10,13 @@
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <h2 class="fw-bold mb-0">
-                <iconify-icon icon="mdi:inbox-outline" class="me-2 text-warning"></iconify-icon>
+                <iconify-icon icon="mdi:send-outline" class="me-2"></iconify-icon>
                 Solicitudes recibidas
             </h2>
             <p class="text-muted mt-1 mb-0">Personas interesadas en adoptar esta mascota</p>
         </div>
         <a asp-controller="Mascota" asp-action="MisPublicaciones"
-           class="btn btn-sm btn-outline-secondary">
+               class="btn btn-sm btn-outline-secondary">
             <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Mis publicaciones
         </a>
     </div>
@@ -45,7 +45,7 @@
                           style="font-size:4rem;color:#ccc;"></iconify-icon>
             <p class="text-muted mt-3">Todavía no hay solicitudes para esta publicación.</p>
             <a asp-controller="Mascota" asp-action="MisPublicaciones"
-               class="btn btn-sm btn-warning fw-bold mt-2">
+                   class="btn btn-sm btn-warning fw-bold mt-2">
                 <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>
                 Volver a mis publicaciones
             </a>
@@ -84,17 +84,17 @@
                         {
                             var badgeClase = s.Estado switch
                             {
-                                "Aprobada"  => "bg-success text-black",
+                                "Aprobada" => "bg-success text-black",
                                 "Rechazada" => "bg-secondary text-black",
-                                "Revisar"   => "bg-primary text-black",   
-                                _           => "badge-pendiente"           
+                                "Revisar" => "bg-primary text-black",
+                                _ => "badge-pendiente"
                             };
                             var badgeIcon = s.Estado switch
                             {
-                                "Aprobada"  => "mdi:check-circle-outline",
+                                "Aprobada" => "mdi:check-circle-outline",
                                 "Rechazada" => "mdi:close-circle-outline",
-                                "Revisar"   => "mdi:eye-outline",
-                                _           => "mdi:clock-outline"
+                                "Revisar" => "mdi:eye-outline",
+                                _ => "mdi:clock-outline"
                             };
                             var puedeGestionar = s.Estado == "Pendiente" || s.Estado == "Revisar";
 
@@ -235,9 +235,9 @@
 
                 <form asp-controller="SolicitudAdopcion" asp-action="Gestionar" method="post">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" id="inputSolicitudId"   name="SolicitudId"   value="" />
+                    <input type="hidden" id="inputSolicitudId" name="SolicitudId" value="" />
                     <input type="hidden" id="inputPublicacionId" name="PublicacionId" value="" />
-                    <input type="hidden" id="inputNuevoEstado"   name="NuevoEstado"   value="" />
+                    <input type="hidden" id="inputNuevoEstado" name="NuevoEstado" value="" />
 
                     <button type="submit" id="btnConfirmarGestion"
                             class="btn btn-sm btn-success" disabled>

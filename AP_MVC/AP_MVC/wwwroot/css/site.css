@@ -2873,3 +2873,183 @@ Registrar Mascota — Balance de paneles y alturas
         min-height: 100px;
     }
 }
+/* Solicitudes enviadas */
+
+.solicitudes-page {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+}
+
+.solicitudes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.solicitudes-title {
+    font-weight: 800;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.solicitudes-subtitle {
+    color: #6c757d;
+    margin: .25rem 0 0;
+}
+
+.solicitudes-card {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    background: transparent;
+}
+
+.solicitudes-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem;
+    padding: 0;
+    border-bottom: 0;
+    background: transparent;
+    margin-bottom: .75rem;
+}
+
+.filtros-wrap {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+}
+
+.filtros-label {
+    color: #6c757d;
+    font-weight: 500;
+    margin: 0;
+}
+
+.solicitudes-filtros {
+    display: flex;
+    gap: .4rem;
+    flex-wrap: wrap;
+}
+
+    .solicitudes-filtros .btn {
+        border-radius: .55rem;
+        font-weight: 600;
+        font-size: .92rem;
+        padding: .38rem .8rem;
+        line-height: 1.2;
+        box-shadow: none !important;
+    }
+
+.btn-filtro-todas {
+    color: #8a6d00;
+    border: 1px solid #f2c94c;
+    background-color: #fff;
+}
+
+.btn-filtro-pendiente {
+    color: #d39b00;
+    border: 1px solid #f2c94c;
+    background-color: #fff;
+}
+
+.btn-filtro-revisar {
+    color: #0ea5e9;
+    border: 1px solid #43c5f5;
+    background-color: #fff;
+}
+
+.btn-filtro-aprobada {
+    color: #198754;
+    border: 1px solid #3cb878;
+    background-color: #fff;
+}
+
+.btn-filtro-rechazada {
+    color: #dc3545;
+    border: 1px solid #ef6b76;
+    background-color: #fff;
+}
+
+.solicitudes-filtros .btn.active-filter {
+    color: #000 !important;
+    background-color: #f2c94c !important;
+    border-color: #f2c94c !important;
+}
+
+.tabla-solicitudes-enviadas {
+    border: 1px solid #e9ecef;
+    border-radius: .75rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+    .tabla-solicitudes-enviadas .table {
+        margin-bottom: 0;
+    }
+
+        .tabla-solicitudes-enviadas .table thead th {
+            white-space: nowrap;
+            vertical-align: middle;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tabla-solicitudes-enviadas .table tbody td {
+            vertical-align: middle;
+        }
+
+.estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .32rem .7rem;
+    border-radius: .45rem;
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+
+.estado-pendiente {
+    color: #8a6d00;
+    background-color: #fff8db;
+    border-color: #f2c94c;
+}
+
+.estado-aprobada {
+    color: #2f6b3f;
+    background-color: #edf8ee;
+    border-color: #cfe8d2;
+}
+
+.estado-rechazada {
+    color: #b42318;
+    background-color: #fff1f2;
+    border-color: #f5c2c7;
+}
+
+.estado-revisar {
+    color: #0b74a5;
+    background-color: #eef9ff;
+    border-color: #b6e3f7;
+}
+
+.mensaje-box {
+    max-width: 280px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.icono-sin-resultados {
+    font-size: 3rem;
+    color: #ccc;
+}
