@@ -1,7 +1,3 @@
--- =============================================
--- PATITAS SOCIAL  Script completo
--- Tablas + SPs + Datos de prueba
--- =============================================
 
 DROP DATABASE IF EXISTS patitassocial;
 GO
