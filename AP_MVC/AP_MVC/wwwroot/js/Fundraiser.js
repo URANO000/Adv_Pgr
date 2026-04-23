@@ -112,6 +112,31 @@
     }
 
     // ================================================
+    // MisDonaciones: pasar fundraiserId al modal de inactivar
+    // ================================================
+    var modalInactivar = document.getElementById('modalInactivar');
+    if (modalInactivar) {
+        modalInactivar.addEventListener('show.bs.modal', function (event) {
+            var boton = event.relatedTarget; // el botón que disparó el modal
+            var fundraiserId = boton.getAttribute('data-fundraiser-id');
+
+            // Poner el id en el hidden input
+            document.getElementById('hiddenFundraiserId').value = fundraiserId;
+
+            // Resetear el modal para cada apertura
+            var chk = document.getElementById('confirmacionInactivar');
+            var btn = document.getElementById('btnConfirmarInactivar');
+            var select = document.getElementById('motivoInactivacion');
+            var contenedor = document.getElementById('contenedorOtroMotivo');
+
+            if (chk) chk.checked = false;
+            if (btn) btn.disabled = true;
+            if (select) select.value = '';
+            if (contenedor) contenedor.classList.add('d-none');
+        });
+    }
+
+    // ================================================
     // RF-020: Montos rápidos en modal de donación
     // ================================================
     var botonesMontoRapido = document.querySelectorAll('.btn-monto-rapido');
