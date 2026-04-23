@@ -106,11 +106,15 @@ CREATE TABLE Publicacion (
     CONSTRAINT [FK_Publicacion_UpdatedBy] FOREIGN KEY (UpdatedBy) REFERENCES Usuario(UsuarioId)
 );
 
+-- =============================================
+-- TABLA Solicitud — incluye Estado (Isaac RF-022)
+-- =============================================
 CREATE TABLE Solicitud (
     Id INT IDENTITY PRIMARY KEY,
     PublicacionId INT NOT NULL,
     UsuarioInteresadoId NVARCHAR(450) NOT NULL,
     Mensaje NVARCHAR(MAX) NOT NULL,
+    Estado NVARCHAR(20) NOT NULL DEFAULT 'Pendiente',
     SentAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
 
     CONSTRAINT [FK_Solicitud_Publicacion] FOREIGN KEY (PublicacionId) REFERENCES Publicacion(PublicacionId),
@@ -159,7 +163,7 @@ INSERT INTO AnimalTipo (NombreTipo, CategoriaId) VALUES
 GO
 
 -- =============================================
--- 4. SPs â AutenticaciÃ³n (Adriana)
+-- 4. SPs - Autenticacion (Adriana)
 -- =============================================
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarCuenta]
 	@CorreoElectronico NVARCHAR(255),
@@ -179,20 +183,17 @@ BEGIN
 		WHERE Cedula = @Cedula
 		OR CorreoElectronico = @CorreoElectronico)
 	BEGIN
-
 		INSERT INTO [dbo].[Usuario] (CorreoElectronico,ContrasenaHash, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, Cedula, Telefono, Provincia, CreatedAt, IsActive, RolId)
 		VALUES (@CorreoElectronico, @Contrasenna, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @Cedula, @Telefono, @Provincia, @CreatedAt, 1, 2)
-
 	END
 END
 GO
 
-CREATE OR ALTER PROCEDURE  [dbo].[sp_IniciarSesion]
+CREATE OR ALTER PROCEDURE [dbo].[sp_IniciarSesion]
 	@CorreoElectronico NVARCHAR(255),
 	@Contrasenna NVARCHAR(500)
 AS
 BEGIN
-
 	SELECT u.UsuarioId, u.CorreoElectronico, u.PrimerNombre, u.SegundoNombre,
 	u.PrimerApellido, u.SegundoApellido, u.Cedula, u.Telefono, u.Provincia, u.CreatedAt, u.IsActive, u.ImagenPerfil,
 	r.NombreRol
@@ -261,7 +262,6 @@ BEGIN
 END
 GO
 
-
 CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
 	@UsuarioId NVARCHAR(450),
 	@CorreoElectronico NVARCHAR(255),
@@ -272,11 +272,9 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_EditarUsuario]
 	@Cedula NVARCHAR(200),
 	@Telefono NVARCHAR(30) NULL,
 	@Provincia NVARCHAR(100) NULL,
-
 	@ImagenPerfil VARCHAR(MAX) NULL
 AS
 BEGIN
-
 	UPDATE dbo.Usuario
 	SET CorreoElectronico = @CorreoElectronico,
 		PrimerNombre = @PrimerNombre,
@@ -287,7 +285,6 @@ BEGIN
 		Telefono = @Telefono,
 		Provincia = @Provincia,
 		ImagenPerfil = @ImagenPerfil
-
 	WHERE UsuarioId = @UsuarioId;
 END
 GO
@@ -333,7 +330,7 @@ END
 GO
 
 -- =============================================
--- 5. SPs â Animales
+-- 5. SPs - Animales
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarAnimales]
@@ -348,7 +345,7 @@ END
 GO
 
 -- =============================================
--- 6. SPs â Fundraiser (Evelyn: RF-015,016,018,019)
+-- 6. SPs - Fundraiser (Evelyn: RF-015,016,018,019)
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarFundraiser]
@@ -366,18 +363,18 @@ BEGIN
 END
 GO
 
+-- FIX Isaac: AnimalId removido del UPDATE — editar solo cambia Titulo y Descripcion
 CREATE OR ALTER PROCEDURE [dbo].[sp_EditarFundraiser]
     @FundraiserId INT,
-    @AnimalId INT,
     @Titulo NVARCHAR(200),
     @Descripcion NVARCHAR(MAX)
 AS
 BEGIN
+    SET NOCOUNT ON;
     IF EXISTS (SELECT 1 FROM Fundraiser WHERE FundraiserId = @FundraiserId AND IsActive = 1)
     BEGIN
         UPDATE Fundraiser
-        SET AnimalId    = @AnimalId,
-            Titulo      = @Titulo,
+        SET Titulo      = @Titulo,
             Descripcion = @Descripcion
         WHERE FundraiserId = @FundraiserId;
     END
@@ -393,7 +390,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_ValidarCampanaActivaPorAnimal
+CREATE OR ALTER PROCEDURE sp_ValidarCampanaActivaPorAnimal
     @AnimalId INT
 AS
 BEGIN
@@ -425,7 +422,7 @@ END
 GO
 
 -- =============================================
--- 7. SPs â Fundraiser (Isaac: RF-017,020,021,022,030)
+-- 7. SPs - Fundraiser (Isaac: RF-017,020,021,022,030)
 -- =============================================
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerFundraiser]
@@ -441,7 +438,7 @@ BEGIN
 END
 GO
 
--- RF-017: Catálogo público
+-- RF-017: Catalogo publico
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarFundraisers]
 AS
 BEGIN
@@ -461,7 +458,7 @@ CREATE OR ALTER PROCEDURE [dbo].[sp_ListarDonacionesPorFundraiser]
 AS
 BEGIN
     SELECT d.DonacionId, d.FundraiserId, d.UsuarioId,
-           ISNULL(u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '') + u.PrimerApellido, 'AnÃ³nimo') AS NombreDonante,
+           ISNULL(u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '') + u.PrimerApellido, 'Anonimo') AS NombreDonante,
            d.Total, d.DonatedAt
     FROM Donacion d
     LEFT JOIN Usuario u ON d.UsuarioId = u.UsuarioId
@@ -485,7 +482,7 @@ BEGIN
 END
 GO
 
--- RF-020 + RF-030: Registrar donación y retornar datos para notificación
+-- RF-020 + RF-030: Registrar donacion y retornar datos para notificacion
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarDonacion]
     @FundraiserId INT,
     @UsuarioId NVARCHAR(450) = NULL,
@@ -499,7 +496,7 @@ BEGIN
     SET TotalActual = TotalActual + @Total
     WHERE FundraiserId = @FundraiserId;
 
-    -- Datos para notificaciÃ³n RF-030
+    -- Datos para notificacion RF-030
     SELECT u.CorreoElectronico,
            u.PrimerNombre,
            f.Titulo AS TituloFundraiser,
@@ -520,24 +517,23 @@ GO
 INSERT INTO Usuario (UsuarioId, CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES ('usr-prueba-001', 'prueba@patitas.com', 'DkF5eJ1UhQwmEXbYNJDqmQ==', 'Usuario', 'Prueba', 1, 2);
 
-
---Usuario admin de prueba(pass: 12345678)
+-- Usuario admin de prueba (pass: 12345678)
 INSERT INTO Usuario (CorreoElectronico, ContrasenaHash, PrimerNombre, PrimerApellido, IsActive, RolId)
 VALUES('admin@patitas.com','DkF5eJ1UhQwmEXbYNJDqmQ==','Dean','Winchester', 1, 1);
 
 -- Animales de prueba
 INSERT INTO Animal (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Notas, CreatedBy)
 VALUES
-('usr-prueba-001', 1, 'Rocky', 12.00, '5 años',  'M', 'Necesita cirugía de cadera', 'usr-prueba-001'),
-('usr-prueba-001', 2, 'Luna',  3.80,  '1 año',   'H', 'Muy cariñosa',              'usr-prueba-001'),
-('usr-prueba-001', 1, 'Max',   8.50,  '3 años',  'M', 'Muy juguetón',              'usr-prueba-001');
+('usr-prueba-001', 1, 'Rocky', 12.00, '5 anos',  'M', 'Necesita cirugia de cadera', 'usr-prueba-001'),
+('usr-prueba-001', 2, 'Luna',  3.80,  '1 ano',   'H', 'Muy carinhosa',              'usr-prueba-001'),
+('usr-prueba-001', 1, 'Max',   8.50,  '3 anos',  'M', 'Muy jugueton',              'usr-prueba-001');
 
 -- Fundraisers de prueba
 INSERT INTO Fundraiser (AnimalId, Titulo, Descripcion, MetaTotal, TotalActual, IsActive)
 VALUES
-(1, 'Ayuda para operación de Rocky', 'Rocky necesita una cirugí­a urgente de cadera. Cada colón cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
-(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunación. Ayudanos a mantenerla sana.', 50000, 10000, 1),
-(3, 'Tratamiento dental de Max',     'Campaña finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
+(1, 'Ayuda para operacion de Rocky', 'Rocky necesita una cirugia urgente de cadera. Cada colon cuenta para darle una mejor calidad de vida.', 150000, 45000, 1),
+(2, 'Vacunas completas para Luna',   'Luna no ha recibido su esquema completo de vacunacion. Ayudanos a mantenerla sana.', 50000, 10000, 1),
+(3, 'Tratamiento dental de Max',     'Campana finalizada. Gracias a todos los que donaron.', 80000, 80000, 0);
 
 -- Donaciones de prueba
 INSERT INTO Donacion (FundraiserId, UsuarioId, Total)
@@ -545,12 +541,12 @@ VALUES
 (1, 'usr-prueba-001', 25000),
 (1, NULL,             20000),
 (2, 'usr-prueba-001', 10000);
-GO 
+GO
 
 -- =============================================
 -- 9. SPs Mascotas (Mafeh)
 -- =============================================
--- 23/3/2026 -----------Mascotas----------------------------
+
 CREATE PROCEDURE [dbo].[sp_RegistrarPublicacionMascota]
     @UsuarioId NVARCHAR(450),
     @TipoId INT,
@@ -573,7 +569,7 @@ BEGIN
 
     IF NOT EXISTS (SELECT 1 FROM dbo.Usuario WHERE UsuarioId = @UsuarioId AND IsActive = 1)
     BEGIN
-        RAISERROR('El usuario no existe o está inactivo.', 16, 1);
+        RAISERROR('El usuario no existe o esta inactivo.', 16, 1);
         RETURN;
     END
 
@@ -584,65 +580,24 @@ BEGIN
     END
 
     INSERT INTO dbo.Animal
-    (
-        UsuarioId,
-        TipoId,
-        Nombre,
-        Peso,
-        Edad,
-        Sexo,
-        Enfermedades,
-        HistorialMedico,
-        PreferenciasAlimenticias,
-        Notas,
-        CreatedBy
-    )
+    (UsuarioId, TipoId, Nombre, Peso, Edad, Sexo, Enfermedades,
+     HistorialMedico, PreferenciasAlimenticias, Notas, CreatedBy)
     VALUES
-    (
-        @UsuarioId,
-        @TipoId,
-        @Nombre,
-        @Peso,
-        @Edad,
-        @Sexo,
-        @Enfermedades,
-        @HistorialMedico,
-        @PreferenciasAlimenticias,
-        @Notas,
-        @UsuarioId
-    );
+    (@UsuarioId, @TipoId, @Nombre, @Peso, @Edad, @Sexo, @Enfermedades,
+     @HistorialMedico, @PreferenciasAlimenticias, @Notas, @UsuarioId);
 
     SET @AnimalId = SCOPE_IDENTITY();
 
     INSERT INTO dbo.Publicacion
-    (
-        Titulo,
-        Descripcion,
-        AnimalId,
-        IsActive,
-        PublishedBy,
-        UpdatedAt,
-        UpdatedBy,
-        ClosedAt
-    )
+    (Titulo, Descripcion, AnimalId, IsActive, PublishedBy, UpdatedAt, UpdatedBy, ClosedAt)
     VALUES
-    (
-        @Titulo,
-        @Descripcion,
-        @AnimalId,
-        1,
-        @UsuarioId,
-        NULL,
-        NULL,
-        NULL
-    );
+    (@Titulo, @Descripcion, @AnimalId, 1, @UsuarioId, NULL, NULL, NULL);
 
     SET @PublicacionId = SCOPE_IDENTITY();
 
     SELECT @PublicacionId AS PublicacionId, @AnimalId AS AnimalId;
 END
 GO
-
 
 CREATE PROCEDURE [dbo].[sp_ListarMisPublicacionesMascota]
     @UsuarioId NVARCHAR(450)
@@ -651,29 +606,12 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        p.PublicacionId,
-        p.Titulo,
-        p.Descripcion,
-        p.IsActive,
-        p.PublishedAt,
-        p.UpdatedAt,
-        p.ClosedAt,
-
-        a.AnimalId,
-        a.Nombre AS NombreMascota,
-        a.Peso,
-        a.Edad,
-        a.Sexo,
-        a.Enfermedades,
-        a.HistorialMedico,
-        a.PreferenciasAlimenticias,
-        a.Notas,
-
-        t.TipoId,
-        t.NombreTipo AS TipoAnimal,
-        c.CategoriaId,
-        c.NombreTipo AS CategoriaAnimal
-
+        p.PublicacionId, p.Titulo, p.Descripcion, p.IsActive,
+        p.PublishedAt, p.UpdatedAt, p.ClosedAt,
+        a.AnimalId, a.Nombre AS NombreMascota, a.Peso, a.Edad, a.Sexo,
+        a.Enfermedades, a.HistorialMedico, a.PreferenciasAlimenticias, a.Notas,
+        t.TipoId, t.NombreTipo AS TipoAnimal,
+        c.CategoriaId, c.NombreTipo AS CategoriaAnimal
     FROM dbo.Publicacion p
     INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
     INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
@@ -691,30 +629,13 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        p.PublicacionId,
-        p.Titulo,
-        p.Descripcion,
-        p.IsActive,
-        p.PublishedAt,
-        p.UpdatedAt,
-        p.ClosedAt,
-
-        a.AnimalId,
-        a.UsuarioId,
-        a.TipoId,
-        a.Nombre AS NombreMascota,
-        a.Peso,
-        a.Edad,
-        a.Sexo,
-        a.Enfermedades,
-        a.HistorialMedico,
-        a.PreferenciasAlimenticias,
-        a.Notas,
-
+        p.PublicacionId, p.Titulo, p.Descripcion, p.IsActive,
+        p.PublishedAt, p.UpdatedAt, p.ClosedAt,
+        a.AnimalId, a.UsuarioId, a.TipoId, a.Nombre AS NombreMascota,
+        a.Peso, a.Edad, a.Sexo, a.Enfermedades, a.HistorialMedico,
+        a.PreferenciasAlimenticias, a.Notas,
         t.NombreTipo AS TipoAnimal,
-        c.CategoriaId,
-        c.NombreTipo AS CategoriaAnimal
-
+        c.CategoriaId, c.NombreTipo AS CategoriaAnimal
     FROM dbo.Publicacion p
     INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
     INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
@@ -724,8 +645,6 @@ BEGIN
 END
 GO
 
-
--- 24/3/2026 ----------- Editar Mascotas----------------------------
 CREATE PROCEDURE dbo.sp_EditarPublicacionMascota
     @PublicacionId INT,
     @UsuarioId NVARCHAR(450),
@@ -752,7 +671,6 @@ BEGIN
 END
 GO
 
--- 24/3/2026 ----------- Inactivar Mascotas----------------------------
 CREATE PROCEDURE dbo.sp_InactivarPublicacionMascota
     @PublicacionId INT,
     @UsuarioId NVARCHAR(450)
@@ -786,41 +704,20 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Usuario
-        WHERE UsuarioId = @CreatedBy
-          AND IsActive = 1
-    )
+    IF NOT EXISTS (SELECT 1 FROM dbo.Usuario WHERE UsuarioId = @CreatedBy AND IsActive = 1)
     BEGIN
-        RAISERROR('El usuario no existe o está inactivo.', 16, 1);
+        RAISERROR('El usuario no existe o esta inactivo.', 16, 1);
         RETURN;
     END
 
-    IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Animal
-        WHERE AnimalId = @AnimalId
-    )
+    IF NOT EXISTS (SELECT 1 FROM dbo.Animal WHERE AnimalId = @AnimalId)
     BEGIN
         RAISERROR('El animal no existe.', 16, 1);
         RETURN;
     END
 
-    INSERT INTO dbo.AnimalMedia
-    (
-        AnimalId,
-        ArchivoUrl,
-        FileSize,
-        CreatedBy
-    )
-    VALUES
-    (
-        @AnimalId,
-        @ArchivoUrl,
-        @FileSize,
-        @CreatedBy
-    );
+    INSERT INTO dbo.AnimalMedia (AnimalId, ArchivoUrl, FileSize, CreatedBy)
+    VALUES (@AnimalId, @ArchivoUrl, @FileSize, @CreatedBy);
 
     SELECT SCOPE_IDENTITY() AS MediaId;
 END
@@ -832,13 +729,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT
-        MediaId,
-        AnimalId,
-        ArchivoUrl,
-        FileSize,
-        CreatedAt,
-        CreatedBy
+    SELECT MediaId, AnimalId, ArchivoUrl, FileSize, CreatedAt, CreatedBy
     FROM dbo.AnimalMedia
     WHERE AnimalId = @AnimalId
     ORDER BY CreatedAt DESC;
@@ -853,18 +744,15 @@ BEGIN
     SET NOCOUNT ON;
 
     IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.AnimalMedia
-        WHERE MediaId = @MediaId
-          AND CreatedBy = @UsuarioId
+        SELECT 1 FROM dbo.AnimalMedia
+        WHERE MediaId = @MediaId AND CreatedBy = @UsuarioId
     )
     BEGIN
         RAISERROR('La imagen no existe o no pertenece al usuario.', 16, 1);
         RETURN;
     END
 
-    DELETE FROM dbo.AnimalMedia
-    WHERE MediaId = @MediaId;
+    DELETE FROM dbo.AnimalMedia WHERE MediaId = @MediaId;
 END
 GO
 
@@ -873,15 +761,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT 
-        TipoId,
-        NombreTipo
+    SELECT TipoId, NombreTipo
     FROM dbo.AnimalTipo
     ORDER BY NombreTipo ASC
 END
 GO
 
---SP de Catalogo
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarCatalogoMascotas]
     @Texto NVARCHAR(200) = NULL,
     @TipoId INT = NULL
@@ -890,50 +775,27 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        p.PublicacionId,
-        p.Titulo,
-        p.Descripcion,
-        p.IsActive,
-        p.PublishedAt,
-        p.UpdatedAt,
-        p.ClosedAt,
-
-        a.AnimalId,
-        a.Nombre AS NombreMascota,
-        a.Peso,
-        a.Edad,
-        a.Sexo,
-        a.Enfermedades,
-        a.HistorialMedico,
-        a.PreferenciasAlimenticias,
-        a.Notas,
-
-        t.TipoId,
-        t.NombreTipo AS TipoAnimal,
-        c.CategoriaId,
-        c.NombreTipo AS CategoriaAnimal
-
+        p.PublicacionId, p.Titulo, p.Descripcion, p.IsActive,
+        p.PublishedAt, p.UpdatedAt, p.ClosedAt,
+        a.AnimalId, a.Nombre AS NombreMascota, a.Peso, a.Edad, a.Sexo,
+        a.Enfermedades, a.HistorialMedico, a.PreferenciasAlimenticias, a.Notas,
+        t.TipoId, t.NombreTipo AS TipoAnimal,
+        c.CategoriaId, c.NombreTipo AS CategoriaAnimal
     FROM dbo.Publicacion p
     INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
     INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
     INNER JOIN dbo.AnimalCategoria c ON t.CategoriaId = c.CategoriaId
     WHERE p.IsActive = 1
       AND (
-            @Texto IS NULL
-            OR @Texto = ''
+            @Texto IS NULL OR @Texto = ''
             OR p.Titulo LIKE '%' + @Texto + '%'
             OR p.Descripcion LIKE '%' + @Texto + '%'
             OR a.Nombre LIKE '%' + @Texto + '%'
           )
-      AND (
-            @TipoId IS NULL
-            OR @TipoId = 0
-            OR t.TipoId = @TipoId
-          )
+      AND (@TipoId IS NULL OR @TipoId = 0 OR t.TipoId = @TipoId)
     ORDER BY p.PublishedAt DESC;
 END
 GO
-
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ObtenerDetalleCatalogoMascota]
     @PublicacionId INT
@@ -942,50 +804,29 @@ BEGIN
     SET NOCOUNT ON;
 
     IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Publicacion
-        WHERE PublicacionId = @PublicacionId
-          AND IsActive = 1
+        SELECT 1 FROM dbo.Publicacion
+        WHERE PublicacionId = @PublicacionId AND IsActive = 1
     )
     BEGIN
-        RAISERROR('La publicación no existe o está inactiva.', 16, 1);
+        RAISERROR('La publicacion no existe o esta inactiva.', 16, 1);
         RETURN;
     END
 
     SELECT
-        p.PublicacionId,
-        p.Titulo,
-        p.Descripcion,
-        p.IsActive,
-        p.PublishedAt,
-        p.UpdatedAt,
-        p.ClosedAt,
-
-        a.AnimalId,
-        a.UsuarioId,
-        a.TipoId,
-        a.Nombre AS NombreMascota,
-        a.Peso,
-        a.Edad,
-        a.Sexo,
-        a.Enfermedades,
-        a.HistorialMedico,
-        a.PreferenciasAlimenticias,
-        a.Notas,
-
+        p.PublicacionId, p.Titulo, p.Descripcion, p.IsActive,
+        p.PublishedAt, p.UpdatedAt, p.ClosedAt,
+        a.AnimalId, a.UsuarioId, a.TipoId, a.Nombre AS NombreMascota,
+        a.Peso, a.Edad, a.Sexo, a.Enfermedades, a.HistorialMedico,
+        a.PreferenciasAlimenticias, a.Notas,
         t.NombreTipo AS TipoAnimal,
-        c.CategoriaId,
-        c.NombreTipo AS CategoriaAnimal
-
+        c.CategoriaId, c.NombreTipo AS CategoriaAnimal
     FROM dbo.Publicacion p
     INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
     INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
     INNER JOIN dbo.AnimalCategoria c ON t.CategoriaId = c.CategoriaId
-    WHERE p.PublicacionId = @PublicacionId
-      AND p.IsActive = 1;
+    WHERE p.PublicacionId = @PublicacionId AND p.IsActive = 1;
 END
 GO
-
 
 CREATE OR ALTER PROCEDURE [dbo].[sp_ListarHistorialPublicacionesMascota]
     @UsuarioId NVARCHAR(450),
@@ -994,41 +835,19 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Usuario
-        WHERE UsuarioId = @UsuarioId
-          AND IsActive = 1
-    )
+    IF NOT EXISTS (SELECT 1 FROM dbo.Usuario WHERE UsuarioId = @UsuarioId AND IsActive = 1)
     BEGIN
-        RAISERROR('El usuario no existe o está inactivo.', 16, 1);
+        RAISERROR('El usuario no existe o esta inactivo.', 16, 1);
         RETURN;
     END
 
     SELECT
-        p.PublicacionId,
-        p.Titulo,
-        p.Descripcion,
-        p.IsActive,
-        p.PublishedAt,
-        p.UpdatedAt,
-        p.ClosedAt,
-
-        a.AnimalId,
-        a.Nombre AS NombreMascota,
-        a.Peso,
-        a.Edad,
-        a.Sexo,
-        a.Enfermedades,
-        a.HistorialMedico,
-        a.PreferenciasAlimenticias,
-        a.Notas,
-
-        t.TipoId,
-        t.NombreTipo AS TipoAnimal,
-        c.CategoriaId,
-        c.NombreTipo AS CategoriaAnimal
-
+        p.PublicacionId, p.Titulo, p.Descripcion, p.IsActive,
+        p.PublishedAt, p.UpdatedAt, p.ClosedAt,
+        a.AnimalId, a.Nombre AS NombreMascota, a.Peso, a.Edad, a.Sexo,
+        a.Enfermedades, a.HistorialMedico, a.PreferenciasAlimenticias, a.Notas,
+        t.TipoId, t.NombreTipo AS TipoAnimal,
+        c.CategoriaId, c.NombreTipo AS CategoriaAnimal
     FROM dbo.Publicacion p
     INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
     INNER JOIN dbo.AnimalTipo t ON a.TipoId = t.TipoId
@@ -1043,7 +862,10 @@ BEGIN
 END
 GO
 
--- SP para gestionar adopción (19-04-2026)
+-- =============================================
+-- 10. SPs - Adopciones (Mafalda: RF-021, RF-025)
+-- =============================================
+
 CREATE OR ALTER PROCEDURE [dbo].[sp_RegistrarSolicitudAdopcion]
     @PublicacionId INT,
     @UsuarioInteresadoId NVARCHAR(450),
@@ -1055,24 +877,20 @@ BEGIN
     DECLARE @PropietarioId NVARCHAR(450);
 
     IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Usuario
-        WHERE UsuarioId = @UsuarioInteresadoId
-          AND IsActive = 1
+        SELECT 1 FROM dbo.Usuario
+        WHERE UsuarioId = @UsuarioInteresadoId AND IsActive = 1
     )
     BEGIN
-        RAISERROR('El usuario interesado no existe o está inactivo.', 16, 1);
+        RAISERROR('El usuario interesado no existe o esta inactivo.', 16, 1);
         RETURN;
     END
 
     IF NOT EXISTS (
-        SELECT 1
-        FROM dbo.Publicacion
-        WHERE PublicacionId = @PublicacionId
-          AND IsActive = 1
+        SELECT 1 FROM dbo.Publicacion
+        WHERE PublicacionId = @PublicacionId AND IsActive = 1
     )
     BEGIN
-        RAISERROR('La publicación no existe o está inactiva.', 16, 1);
+        RAISERROR('La publicacion no existe o esta inactiva.', 16, 1);
         RETURN;
     END
 
@@ -1082,33 +900,22 @@ BEGIN
 
     IF @PropietarioId = @UsuarioInteresadoId
     BEGIN
-        RAISERROR('No puedes enviar una solicitud a tu propia publicación.', 16, 1);
+        RAISERROR('No puedes enviar una solicitud a tu propia publicacion.', 16, 1);
         RETURN;
     END
 
     IF EXISTS (
-        SELECT 1
-        FROM dbo.Solicitud
+        SELECT 1 FROM dbo.Solicitud
         WHERE PublicacionId = @PublicacionId
           AND UsuarioInteresadoId = @UsuarioInteresadoId
     )
     BEGIN
-        RAISERROR('Ya enviaste una solicitud para esta publicación.', 16, 1);
+        RAISERROR('Ya enviaste una solicitud para esta publicacion.', 16, 1);
         RETURN;
     END
 
-    INSERT INTO dbo.Solicitud
-    (
-        PublicacionId,
-        UsuarioInteresadoId,
-        Mensaje
-    )
-    VALUES
-    (
-        @PublicacionId,
-        @UsuarioInteresadoId,
-        @Mensaje
-    );
+    INSERT INTO dbo.Solicitud (PublicacionId, UsuarioInteresadoId, Mensaje)
+    VALUES (@PublicacionId, @UsuarioInteresadoId, @Mensaje);
 
     SELECT
         u.CorreoElectronico,
@@ -1117,15 +924,55 @@ BEGIN
         a.Nombre AS NombreMascota,
         ui.PrimerNombre AS NombreInteresado
     FROM dbo.Publicacion p
-    INNER JOIN dbo.Animal a
-        ON p.AnimalId = a.AnimalId
-    INNER JOIN dbo.Usuario u
-        ON p.PublishedBy = u.UsuarioId
-    INNER JOIN dbo.Usuario ui
-        ON ui.UsuarioId = @UsuarioInteresadoId
+    INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
+    INNER JOIN dbo.Usuario u ON p.PublishedBy = u.UsuarioId
+    INNER JOIN dbo.Usuario ui ON ui.UsuarioId = @UsuarioInteresadoId
     WHERE p.PublicacionId = @PublicacionId;
 END
 GO
 
+-- =============================================
+-- 11. SPs - Adopciones (Isaac: RF-022 listado)
+-- =============================================
+
+CREATE OR ALTER PROCEDURE [dbo].[sp_ListarSolicitudesPorPublicacion]
+    @PublicacionId INT,
+    @PropietarioId NVARCHAR(450)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Verificar que la publicacion pertenece al propietario
+    IF NOT EXISTS (
+        SELECT 1 FROM Publicacion
+        WHERE PublicacionId = @PublicacionId
+          AND PublishedBy = @PropietarioId
+    )
+    BEGIN
+        RAISERROR('No tenes acceso a estas solicitudes.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        s.Id AS SolicitudId,
+        s.PublicacionId,
+        s.UsuarioInteresadoId,
+        u.PrimerNombre + ' ' + ISNULL(u.SegundoNombre + ' ', '')
+            + u.PrimerApellido AS NombreInteresado,
+        u.CorreoElectronico,
+        u.Telefono,
+        s.Mensaje,
+        s.Estado,
+        s.SentAt
+    FROM Solicitud s
+    INNER JOIN Usuario u ON s.UsuarioInteresadoId = u.UsuarioId
+    WHERE s.PublicacionId = @PublicacionId
+    ORDER BY s.SentAt DESC;
+END
+GO
+
+-- =============================================
+-- Verificacion final
+-- =============================================
 SELECT UsuarioId, CorreoElectronico, IsActive
 FROM dbo.Usuario;
