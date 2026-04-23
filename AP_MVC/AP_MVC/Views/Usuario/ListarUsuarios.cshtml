@@ -3,110 +3,150 @@
     ViewData["Title"] = "Listado de Usuarios";
 }
 
-<section class="container-fluid py-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+<div class="container mt-4 mb-5">
 
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show">
-                    @TempData["Error"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            }
-
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show">
-                    @TempData["Success"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            }
-            <div class="card shadow-sm">
-                <div class="card-body p-3">
-
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold mb-0">Usuarios</h5>
-
-                        <!-- Buscador futuro.... -->
-                        <input type="text" class="form-control w-auto" placeholder="Buscar..." />
-                    </div>
-
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover align-middle">
-
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Acciones</th>
-                                    <th>Cédula</th>
-                                    <th>Usuario</th>
-                                    <th>Contacto</th>
-                                    <th>Ubicación</th>
-                                    <th>Estado</th>
-                                    <th>Rol</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                @foreach (var u in Model)
-                                {
-                                    <tr>
-                                        <td class="px-4">
-                                            <a asp-action="Detalle" asp-controller="Usuario" asp-route-usuarioId="@u.UsuarioId">
-                                                <iconify-icon icon="mdi:eye-outline" class="text-center" style="color:green">
-                                                </iconify-icon>
-                                            </a>
-                                        </td>
-                                        <!-- Cedula -->
-                                        <td class="fw-semibold">@u.Cedula</td>
-
-                                        <!-- Nombre + Fecha -->
-                                        <td>
-                                            <div class="fw-semibold">@u.nombreCompleto</div>
-                                            <small class="text-muted">
-                                                @u.CreatedAt.ToString("dd/MM/yyyy")
-                                            </small>
-                                        </td>
-
-                                        <!-- Contacto agrupado -->
-                                        <td>
-                                            <div>@u.CorreoElectronico</div>
-                                            <small class="text-muted">@u.Telefono</small>
-                                        </td>
-
-                                        <!-- Provincia -->
-                                        <td>@u.Provincia</td>
-
-                                        <!-- Estado -->
-                                        <td>
-                                            @if (u.IsActive)
-                                            {
-                                                <span class="badge bg-success text-black">Activo</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-secondary text-black">Inactivo</span>
-                                            }
-                                        </td>
-
-                                        <!-- Rol -->
-                                        <td>
-                                            <span class="badge bg-primary-subtle text-primary">
-                                                @u.RolId
-                                            </span>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-0">
+                <iconify-icon icon="mdi:account-group-outline" class="me-2 text-primary"></iconify-icon>
+                Usuarios
+            </h2>
+            <p class="text-muted mt-1 mb-0">Gestión y visualización de usuarios registrados</p>
         </div>
+
+        <input type="text"
+               class="form-control form-control-sm w-auto"
+               placeholder="Buscar usuario..." />
     </div>
-</section>
+
+    <!-- Alerts -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <!-- Empty state -->
+        <div class="text-center py-5">
+            <iconify-icon icon="mdi:account-off-outline"
+                          style="font-size:4rem;color:#ccc;"></iconify-icon>
+            <p class="text-muted mt-3">No hay usuarios registrados.</p>
+        </div>
+    }
+    else
+    {
+        <!-- Card wrapper -->
+        <div class="card shadow-sm border-0"
+             style="border-radius:1rem; background-color: var(--login-card-color);">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Contacto</th>
+                            <th>Ubicación</th>
+                            <th>Estado</th>
+                            <th>Rol</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var u in Model)
+                        {
+                            <tr>
+
+                                <!-- Usuario (grouped) -->
+                                <td>
+                                    <div class="fw-bold">
+                                        <iconify-icon icon="mdi:account-circle-outline"
+                                                      class="me-1 text-muted"></iconify-icon>
+                                        @u.nombreCompleto
+                                    </div>
+                                    <div class="small text-muted">
+                                        @u.Cedula · @u.CreatedAt.ToString("dd/MM/yyyy")
+                                    </div>
+                                </td>
+
+                                <!-- Contacto -->
+                                <td>
+                                    <div class="small">
+                                        <iconify-icon icon="mdi:email-outline" class="me-1 text-muted"></iconify-icon>
+                                        @u.CorreoElectronico
+                                    </div>
+                                    <div class="small text-muted">
+                                        <iconify-icon icon="mdi:phone-outline" class="me-1"></iconify-icon>
+                                        @u.Telefono
+                                    </div>
+                                </td>
+
+                                <!-- Ubicación -->
+                                <td>
+                                    <span class="text-muted small">
+                                        <iconify-icon icon="mdi:map-marker-outline" class="me-1"></iconify-icon>
+                                        @u.Provincia
+                                    </span>
+                                </td>
+
+                                <!-- Estado -->
+                                <td>
+                                    @if (u.IsActive)
+                                    {
+                                        <span class="badge bg-success text-black">
+                                            <iconify-icon icon="mdi:check-circle-outline" class="me-1"></iconify-icon>
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary text-black">
+                                            <iconify-icon icon="mdi:close-circle-outline" class="me-1"></iconify-icon>
+                                            Inactivo
+                                        </span>
+                                    }
+                                </td>
+
+                                <!-- Rol -->
+                                <td>
+                                    <span class="badge bg-primary-subtle text-primary">
+                                        <iconify-icon icon="mdi:shield-account-outline" class="me-1"></iconify-icon>
+                                        @u.RolId
+                                    </span>
+                                </td>
+
+                                <!-- Acciones -->
+                                <td class="text-center">
+                                    <a asp-action="Detalle"
+                                           asp-controller="Usuario"
+                                           asp-route-usuarioId="@u.UsuarioId"
+                                           class="btn btn-sm btn-outline-primary">
+                                        Ver Detalle
+                                    </a>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    }
+</div>
