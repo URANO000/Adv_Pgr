@@ -2873,3 +2873,63 @@ Registrar Mascota — Balance de paneles y alturas
         min-height: 100px;
     }
 }
+
+/*--------------------------------------------------------------
+Registrar Mascota — Formulario por pasos
+--------------------------------------------------------------*/
+
+.registro-step {
+    display: none;
+}
+
+    .registro-step.active {
+        display: block;
+    }
+
+.registro-step-card {
+    background: #ffffff;
+    border: 1px solid #e7edf3;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
+}
+
+.registro-step-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    border-bottom: 1px solid #eef2f5;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.registro-step-pill {
+    background: #eaf4ff;
+    color: #5f7fa0;
+    border: 1px solid #cfe3f8;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.registro-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid #eef2f5;
+    padding-top: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .registro-step-header,
+    .registro-actions {
+        flex-direction: column;
+    }
+
+        .registro-actions .btn {
+            width: 100%;
+        }
+}
