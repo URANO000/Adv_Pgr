@@ -1,0 +1,256 @@
+﻿@model List<AP_MVC.Models.Adopciones.SolicitudAdopcionViewModel>
+
+@{
+    ViewData["Title"] = "Solicitudes recibidas";
+    var publicacionId = (int)(ViewBag.PublicacionId ?? 0);
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-0">
+                <iconify-icon icon="mdi:inbox-outline" class="me-2 text-warning"></iconify-icon>
+                Solicitudes recibidas
+            </h2>
+            <p class="text-muted mt-1 mb-0">Personas interesadas en adoptar esta mascota</p>
+        </div>
+        <a asp-controller="Mascota" asp-action="MisPublicaciones"
+           class="btn btn-sm btn-outline-secondary">
+            <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Mis publicaciones
+        </a>
+    </div>
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <iconify-icon icon="mdi:check-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Exito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <iconify-icon icon="mdi:alert-circle-outline" class="me-2"></iconify-icon>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5">
+            <iconify-icon icon="mdi:inbox-remove-outline"
+                          style="font-size:4rem;color:#ccc;"></iconify-icon>
+            <p class="text-muted mt-3">Todavía no hay solicitudes para esta publicación.</p>
+            <a asp-controller="Mascota" asp-action="MisPublicaciones"
+               class="btn btn-sm btn-warning fw-bold mt-2">
+                <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>
+                Volver a mis publicaciones
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Filtro rápido por estado -->
+        <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+            <span class="text-muted small me-1">Filtrar:</span>
+            <button class="btn btn-sm btn-warning active-filter" data-filtro="todas">Todas</button>
+            <button class="btn btn-sm btn-pendiente" data-filtro="Pendiente">Pendientes</button>
+            <button class="btn btn-sm btn-gestionar-revisar" data-filtro="Revisar">En revisión</button>
+            <button class="btn btn-sm btn-gestionar-aprobar" data-filtro="Aprobada">Aprobadas</button>
+            <button class="btn btn-sm btn-gestionar-rechazar" data-filtro="Rechazada">Rechazadas</button>
+            <span class="ms-auto text-muted small" id="contadorSolicitudes">
+                @Model.Count solicitud(es)
+            </span>
+        </div>
+
+        <div class="card shadow-sm border-0" style="border-radius:1rem; background-color: var(--login-card-color);">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Interesado</th>
+                            <th>Contacto</th>
+                            <th>Mensaje</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSolicitudes">
+                        @foreach (var s in Model)
+                        {
+                            var badgeClase = s.Estado switch
+                            {
+                                "Aprobada"  => "bg-success text-black",
+                                "Rechazada" => "bg-secondary text-black",
+                                "Revisar"   => "bg-primary text-black",   
+                                _           => "badge-pendiente"           
+                            };
+                            var badgeIcon = s.Estado switch
+                            {
+                                "Aprobada"  => "mdi:check-circle-outline",
+                                "Rechazada" => "mdi:close-circle-outline",
+                                "Revisar"   => "mdi:eye-outline",
+                                _           => "mdi:clock-outline"
+                            };
+                            var puedeGestionar = s.Estado == "Pendiente" || s.Estado == "Revisar";
+
+                            <tr class="fila-solicitud" data-estado="@s.Estado">
+                                <td>
+                                    <div class="fw-bold">
+                                        <iconify-icon icon="mdi:account-circle-outline"
+                                                      class="me-1 text-muted"></iconify-icon>
+                                        @s.NombreInteresado
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <iconify-icon icon="mdi:email-outline" class="me-1 text-muted"></iconify-icon>
+                                        @s.CorreoElectronico
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(s.Telefono))
+                                    {
+                                        <div class="small text-muted">
+                                            <iconify-icon icon="mdi:phone-outline" class="me-1"></iconify-icon>@s.Telefono
+                                        </div>
+                                    }
+                                </td>
+                                <td style="max-width:220px;">
+                                    <span class="text-muted small">
+                                        @(s.Mensaje.Length > 80 ? s.Mensaje.Substring(0, 80) + "..." : s.Mensaje)
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge border @badgeClase">
+                                        <iconify-icon icon="@badgeIcon" class="me-1"></iconify-icon>
+                                        @s.Estado
+                                    </span>
+                                </td>
+                                <td class="text-muted small text-nowrap">
+                                    @s.SentAt.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    @if (puedeGestionar)
+                                    {
+                                        <!-- Aprobar -->
+                                        <button type="button"
+                                                class="btn btn-sm btn-gestionar-aprobar me-1 mb-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalGestionar"
+                                                data-solicitud-id="@s.SolicitudId"
+                                                data-publicacion-id="@publicacionId"
+                                                data-nombre="@s.NombreInteresado"
+                                                data-nuevo-estado="Aprobada">
+                                            <iconify-icon icon="mdi:check-circle-outline"></iconify-icon>
+                                            Aprobar
+                                        </button>
+
+                                        @if (s.Estado == "Pendiente")
+                                        {
+                                            <!-- Revisar (solo desde Pendiente) -->
+                                            <button type="button"
+                                                    class="btn btn-sm btn-gestionar-revisar me-1 mb-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalGestionar"
+                                                    data-solicitud-id="@s.SolicitudId"
+                                                    data-publicacion-id="@publicacionId"
+                                                    data-nombre="@s.NombreInteresado"
+                                                    data-nuevo-estado="Revisar">
+                                                <iconify-icon icon="mdi:eye-outline"></iconify-icon>
+                                                Revisar
+                                            </button>
+                                        }
+
+                                        <!-- Rechazar -->
+                                        <button type="button"
+                                                class="btn btn-sm btn-gestionar-rechazar mb-1"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalGestionar"
+                                                data-solicitud-id="@s.SolicitudId"
+                                                data-publicacion-id="@publicacionId"
+                                                data-nombre="@s.NombreInteresado"
+                                                data-nuevo-estado="Rechazada">
+                                            <iconify-icon icon="mdi:close-circle-outline"></iconify-icon>
+                                            Rechazar
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="sinResultados" class="text-center py-4 d-none">
+            <iconify-icon icon="mdi:magnify-close" style="font-size:3rem;color:#ccc;"></iconify-icon>
+            <p class="text-muted mt-2">No hay solicitudes con ese estado.</p>
+        </div>
+    }
+
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="modalGestionar" tabindex="-1"
+     aria-labelledby="modalGestionarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow" style="border-radius:1rem; background-color: var(--login-card-color);">
+
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalGestionarLabel">
+                    <iconify-icon icon="mdi:help-circle-outline" class="me-2 text-warning"></iconify-icon>
+                    Confirmar acción
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body pt-2">
+                <p id="textoConfirmacion" class="mb-3"></p>
+
+                <p id="notaCorreo" class="text-muted small mb-3">
+                    <iconify-icon icon="mdi:email-fast-outline" class="me-1"></iconify-icon>
+                    Se enviará una notificación por correo al interesado.
+                </p>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="checkConfirmar" />
+                    <label class="form-check-label small" for="checkConfirmar">
+                        Confirmo que quiero realizar esta acción.
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <form asp-controller="SolicitudAdopcion" asp-action="Gestionar" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="inputSolicitudId"   name="SolicitudId"   value="" />
+                    <input type="hidden" id="inputPublicacionId" name="PublicacionId" value="" />
+                    <input type="hidden" id="inputNuevoEstado"   name="NuevoEstado"   value="" />
+
+                    <button type="submit" id="btnConfirmarGestion"
+                            class="btn btn-sm btn-success" disabled>
+                        <iconify-icon icon="mdi:check" class="me-1"></iconify-icon>
+                        Confirmar
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/solicitud-adopcion.js"></script>
+}

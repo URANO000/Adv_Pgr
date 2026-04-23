@@ -64,12 +64,20 @@
                             @descripcionCorta
                         </p>
 
-                        <div class="mispub-card-actions">
+                        <div class="mispub-card-actions d-flex gap-2">
                             <a asp-controller="Mascota"
                                    asp-action="Detalle"
                                    asp-route-id="@item.PublicacionId"
                                    class="mispub-btn-info">
+                                <iconify-icon icon="mdi:eye-outline" class="me-1"></iconify-icon>
                                 Ver info
+                            </a>
+                            <a asp-controller="SolicitudAdopcion"
+                                   asp-action="SolicitudesRecibidas"
+                                   asp-route-publicacionId="@item.PublicacionId"
+                                   class="mispub-btn-secondary">
+                                <iconify-icon icon="mdi:inbox-outline" class="me-1"></iconify-icon>
+                                Solicitudes
                             </a>
                         </div>
 

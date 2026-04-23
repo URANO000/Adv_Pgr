@@ -94,6 +94,7 @@
                                         <li><a asp-controller="Fundraiser" asp-action="MisDonaciones" class="dropdown-item">Mis Donaciones</a></li>
                                     </ul>
                                 </li>
+
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Administrador"))
                                 {
                                     <li class="nav-item">

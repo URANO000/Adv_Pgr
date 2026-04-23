@@ -802,6 +802,35 @@ namespace AP_MVC.Controllers
             return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
         }
 
+        [SesionActiva]
+        [HttpGet]
+        public IActionResult SolicitudesRecibidas(int publicacionId)
+        {
+            var usuarioId = ObtenerUsuarioIdSesion();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                TempData["Error"] = "Sesión expirada.";
+                return RedirectToAction("Login", "Home");
+            }
+
+            using var client = _http.CreateClient();
+            var url = UrlAPI + $"Mascota/ListarSolicitudesPorPublicacion/{publicacionId}/{usuarioId}";
+            var result = client.GetAsync(url).Result;
+
+            var solicitudes = new List<SolicitudAdopcionViewModel>();
+
+            if (result.StatusCode == HttpStatusCode.OK)
+                solicitudes = result.Content
+                    .ReadFromJsonAsync<List<SolicitudAdopcionViewModel>>().Result
+                    ?? new List<SolicitudAdopcionViewModel>();
+            else if (result.StatusCode == HttpStatusCode.InternalServerError)
+                throw new Exception();
+
+            ViewBag.PublicacionId = publicacionId;
+            return View("SolicitudesRecibidas", solicitudes);
+        }
+
         [HttpGet]
         public IActionResult Historial(string estado = "todas")
         {
