@@ -1034,7 +1034,36 @@ BEGIN
     WHERE s.Id = @SolicitudId;
 END
 GO
+-- =============================================
+-- RF-023: Listar solicitudes enviadas por usuario
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_ListarSolicitudesEnviadasPorUsuario]
+    @UsuarioInteresadoId NVARCHAR(450)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    IF @UsuarioInteresadoId IS NULL OR LTRIM(RTRIM(@UsuarioInteresadoId)) = ''
+    BEGIN
+        RAISERROR('El UsuarioInteresadoId es requerido.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        s.Id AS SolicitudId,
+        s.PublicacionId,
+        p.Titulo,
+        a.Nombre AS NombreMascota,
+        s.Mensaje,
+        s.Estado,
+        s.SentAt
+    FROM dbo.Solicitud s
+    INNER JOIN dbo.Publicacion p ON s.PublicacionId = p.PublicacionId
+    INNER JOIN dbo.Animal a ON p.AnimalId = a.AnimalId
+    WHERE s.UsuarioInteresadoId = @UsuarioInteresadoId
+    ORDER BY s.SentAt DESC;
+END
+GO
 -- =============================================
 -- Verificacion final
 -- =============================================
