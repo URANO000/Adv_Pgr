@@ -116,36 +116,217 @@
             </div>
 
             <!-- Sidebar -->
+            <!-- Columna lateral: botón donar -->
             <div class="col-lg-4">
-                <div class="card shadow-sm border-0 p-4 text-center">
+                <div class="card shadow-sm border-0 fundraiser-card sticky-top" style="top:90px;">
+                    <div class="card-body p-4 text-center">
 
-                    <h5 class="fw-bold">Donar</h5>
+                        <iconify-icon icon="mdi:gift-outline" style="font-size:3rem;color:#e67e22;"></iconify-icon>
+                        <h5 class="fw-bold mt-2 mb-1">¡Hacé tu donación!</h5>
+                        <p class="text-muted small mb-3">Cada colón cuenta para ayudar a @Model.NombreAnimal</p>
 
-                    <div class="mb-3">
-                        <span class="fs-4 fw-bold text-success">
-                            ₡@Model.TotalActual.ToString("N2")
-                        </span>
-                    </div>
-
-                    @if (Model.IsActive)
-                    {
-                        <button class="btn btn-primary w-100">
-                            Donar ahora
-                        </button>
-                    }
-                    else
-                    {
-                        <div class="alert alert-secondary small">
-                            Campaña inactiva
+                        <div class="mb-3">
+                            <span class="fs-4 fw-bold text-success">₡@Model.TotalActual.ToString("N2")</span>
+                            <br /><small class="text-muted">recaudados de ₡@Model.MetaTotal.ToString("N2")</small>
                         </div>
-                    }
 
+                        @if (Model.IsActive)
+                        {
+                            <button type="button"
+                                    class="btn btn-primary btn-lg w-100 mb-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalDonar">
+                                <iconify-icon icon="mdi:heart-outline" class="me-2"></iconify-icon>Donar ahora
+                            </button>
+
+                            @if ((bool)(ViewBag.EsDuenno ?? false))
+                            {
+                                <button type="button"
+                                        class="btn btn-modal-inactivar w-100 mb-3"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalInactivarPublicacion">
+                                    <iconify-icon icon="mdi:eye-off-outline" class="me-2"></iconify-icon>Inactivar publicación
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-secondary small">
+                                <iconify-icon icon="mdi:lock-outline" class="me-1"></iconify-icon>
+                                Esta campaña está inactiva.
+                            </div>
+                        }
+
+                        <a asp-controller="Fundraiser" asp-action="Catalogo" class="btn btn-outline-secondary w-100">
+                            <iconify-icon icon="mdi:arrow-left" class="me-1"></iconify-icon>Volver al catálogo
+                        </a>
+
+                        <hr class="my-3" />
+                        <small class="text-muted">
+                            <iconify-icon icon="mdi:calendar-check-outline" class="me-1"></iconify-icon>
+                            Publicado: @Model.CreatedAt.ToString("dd/MM/yyyy")
+                        </small>
+
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </section>
+
+
+<!-- RF-020: Modal de simulación de pago -->
+@if (Model.IsActive)
+{
+    <div class="modal fade" id="modalDonar" tabindex="-1" aria-labelledby="modalDonarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="modalDonarLabel">
+                        <iconify-icon icon="mdi:hand-heart" class="me-2 text-warning"></iconify-icon>Realizar donación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form asp-controller="Fundraiser" asp-action="Donar" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="fundraiserId" value="@Model.FundraiserId" />
+
+                    <div class="modal-body px-4">
+
+                        <!-- Monto -->
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="monto" name="monto"
+                                   placeholder="Monto (₡)" min="1" step="0.01" required />
+                            <label for="monto">
+                                <iconify-icon icon="mdi:cash-outline" class="me-1"></iconify-icon>Monto (₡)
+                            </label>
+                        </div>
+
+                        <!-- Montos rápidos -->
+                        <div class="d-flex gap-2 flex-wrap mb-3">
+                            <small class="text-muted w-100">Montos rápidos:</small>
+                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="500">₡500</button>
+                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="1000">₡1.000</button>
+                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="2500">₡2.500</button>
+                            <button type="button" class="btn btn-outline-success btn-sm btn-monto-rapido" data-monto="5000">₡5.000</button>
+                        </div>
+
+                        <!-- Método de pago (RF-020: simulación) -->
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">
+                                <iconify-icon icon="mdi:credit-card-outline" class="me-1"></iconify-icon>Método de pago
+                            </label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="metodoPago"
+                                           id="metodoPayPal" value="PayPal" required />
+                                    <label class="form-check-label" for="metodoPayPal">
+                                        <iconify-icon icon="logos:paypal" class="me-1"></iconify-icon>PayPal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="metodoPago"
+                                           id="metodoSINPE" value="SINPE" />
+                                    <label class="form-check-label" for="metodoSINPE">
+                                        <iconify-icon icon="mdi:cellphone" class="me-1"></iconify-icon>SINPE Móvil
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info small py-2">
+                            <iconify-icon icon="mdi:information-outline" class="me-1"></iconify-icon>
+                            <strong>Simulación:</strong> No se procesará ningún cargo real.
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0 px-4 pb-4">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <iconify-icon icon="mdi:check-circle-outline" class="me-1"></iconify-icon>Confirmar donación
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.IsActive && (bool)(ViewBag.EsDuenno ?? false))
+{
+    <div class="modal fade" id="modalInactivarPublicacion" tabindex="-1" aria-labelledby="modalInactivarPublicacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-delete-modal">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title custom-delete-title" id="modalInactivarPublicacionLabel">
+                        Inactivar publicación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <form asp-controller="Fundraiser"
+                      asp-action="Inactivar"
+                      asp-route-id="@Model.FundraiserId"
+                      method="post"
+                      class="m-0">
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-body pt-2">
+                        <p class="custom-delete-text">
+                            Tu publicación dejará de mostrarse en el catálogo y no podrá recibir nuevas donaciones.
+                            Quedará archivada en historial y no podrá reactivarse.
+                        </p>
+
+                        <div class="mb-3">
+                            <label for="motivoInactivacion" class="form-label fw-semibold">
+                                ¿Por qué deseas inactivarla?
+                            </label>
+                            <select id="motivoInactivacion" name="motivoInactivacion" class="form-select">
+                                <option value="">Selecciona una opción</option>
+                                <option value="meta">Ya alcancé la meta de recaudación</option>
+                                <option value="incorrecta">La información ya no es correcta</option>
+                                <option value="error">Publiqué por error</option>
+                                <option value="continuar">Ya no deseo continuar con esta campaña</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 d-none" id="contenedorOtroMotivo">
+                            <label for="otroMotivo" class="form-label fw-semibold">
+                                Escribe tu razón
+                            </label>
+                            <textarea id="otroMotivo" name="otroMotivo" class="form-control" rows="3" maxlength="250"></textarea>
+                        </div>
+
+                        <div class="form-check custom-delete-check">
+                            <input class="form-check-input" type="checkbox" id="confirmacionInactivar">
+                            <label class="form-check-label" for="confirmacionInactivar">
+                                Entiendo que esta acción archivará la publicación y no podré recuperarla.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light custom-cancel-btn" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                id="btnConfirmarInactivar"
+                                class="btn custom-delete-btn"
+                                disabled>
+                            Inactivar publicación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
 
 @section Scripts {
     <script src="~/js/Fundraiser.js"></script>
