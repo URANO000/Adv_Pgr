@@ -142,6 +142,9 @@ CREATE TABLE Donacion (
 );
 GO
 
+ALTER TABLE dbo.Solicitud
+ALTER COLUMN Estado NVARCHAR(20) NOT NULL;
+
 -- =============================================
 -- 3. DATOS INICIALES
 -- =============================================
@@ -910,8 +913,8 @@ BEGIN
         RETURN;
     END
 
-    INSERT INTO dbo.Solicitud (PublicacionId, UsuarioInteresadoId, Mensaje)
-    VALUES (@PublicacionId, @UsuarioInteresadoId, @Mensaje);
+    INSERT INTO dbo.Solicitud (PublicacionId, UsuarioInteresadoId, Mensaje, Estado)
+    VALUES (@PublicacionId, @UsuarioInteresadoId, @Mensaje, 'Pendiente');
 
     SELECT
         u.CorreoElectronico,
@@ -964,6 +967,71 @@ BEGIN
     INNER JOIN Usuario u ON s.UsuarioInteresadoId = u.UsuarioId
     WHERE s.PublicacionId = @PublicacionId
     ORDER BY s.SentAt DESC;
+END
+GO
+
+-- =============================================
+-- RF-022: Gestionar solicitud de adopción
+--         Estados válidos: Aprobada | Rechazada | Revisar
+-- RF-026: Retorna datos del interesado para notificación por correo
+-- =============================================
+CREATE OR ALTER PROCEDURE [dbo].[sp_GestionarSolicitudAdopcion]
+    @SolicitudId   INT,
+    @PropietarioId NVARCHAR(450),
+    @NuevoEstado   NVARCHAR(20)   -- 'Aprobada' | 'Rechazada' | 'Revisar'
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Validar estado permitido
+    IF @NuevoEstado NOT IN ('Aprobada', 'Rechazada', 'Revisar')
+    BEGIN
+        RAISERROR('Estado inválido. Los valores permitidos son Aprobada, Rechazada o Revisar.', 16, 1);
+        RETURN;
+    END
+
+    -- Validar que la solicitud pertenece a una publicación del propietario
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Solicitud s
+        INNER JOIN dbo.Publicacion p ON s.PublicacionId = p.PublicacionId
+        WHERE s.Id = @SolicitudId
+          AND p.PublishedBy = @PropietarioId
+    )
+    BEGIN
+        RAISERROR('No tenés acceso a esta solicitud.', 16, 1);
+        RETURN;
+    END
+
+    -- Solo se puede gestionar si está Pendiente o en Revisar
+    -- (Aprobada y Rechazada son estados finales)
+    IF NOT EXISTS (
+        SELECT 1 FROM dbo.Solicitud
+        WHERE Id = @SolicitudId
+          AND Estado IN ('Pendiente', 'Revisar')
+    )
+    BEGIN
+        RAISERROR('Esta solicitud ya fue cerrada y no puede modificarse.', 16, 1);
+        RETURN;
+    END
+
+    -- Actualizar estado
+    UPDATE dbo.Solicitud
+    SET Estado = @NuevoEstado
+    WHERE Id = @SolicitudId;
+
+    -- Retornar datos para la notificación al interesado (RF-026)
+    SELECT
+        ui.CorreoElectronico,
+        ui.PrimerNombre,
+        p.Titulo,
+        a.Nombre  AS NombreMascota,
+        s.Estado  AS NuevoEstado
+    FROM dbo.Solicitud s
+    INNER JOIN dbo.Publicacion p  ON s.PublicacionId      = p.PublicacionId
+    INNER JOIN dbo.Animal a       ON p.AnimalId            = a.AnimalId
+    INNER JOIN dbo.Usuario ui     ON s.UsuarioInteresadoId = ui.UsuarioId
+    WHERE s.Id = @SolicitudId;
 END
 GO
 

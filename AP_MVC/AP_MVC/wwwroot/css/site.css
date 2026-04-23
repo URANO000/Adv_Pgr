@@ -2728,6 +2728,112 @@ Registrar Mascota — Balance de paneles y alturas
     resize: vertical;
 }
 
+.mispub-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    height: 42px;
+    padding: 0 14px;
+    background-color: transparent;
+    color: #DEAD6F;
+    border: 1px solid #DEAD6F;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+}
+
+    .mispub-btn-secondary:hover {
+        background-color: #DEAD6F;
+        color: #fff;
+        text-decoration: none;
+    }
+
+/* Badge Pendiente */
+.badge-pendiente {
+    background-color: #DEAD6F !important;
+    color: #fff !important;
+    font-size: 0.8rem;
+    padding: 0.4em 0.75em;
+    font-weight: 700;
+}
+
+/* Botones de gestión de solicitudes */
+.btn-gestionar-aprobar {
+    --bs-btn-color: #138a72;
+    --bs-btn-border-color: #138a72;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #138a72;
+    --bs-btn-hover-border-color: #138a72;
+    font-weight: 600;
+    border: 1px solid #138a72;
+    color: #138a72;
+    background: transparent;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+}
+
+    .btn-gestionar-aprobar:hover {
+        background: #138a72;
+        color: #fff;
+    }
+
+.btn-gestionar-revisar {
+    --bs-btn-color: #2271A3;
+    --bs-btn-border-color: #2271A3;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #2271A3;
+    font-weight: 600;
+    border: 1px solid #2271A3;
+    color: #2271A3;
+    background: transparent;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+}
+
+    .btn-gestionar-revisar:hover {
+        background: #2271A3;
+        color: #fff;
+    }
+
+.btn-gestionar-rechazar {
+    --bs-btn-color: #c0392b;
+    --bs-btn-border-color: #c0392b;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #c0392b;
+    font-weight: 600;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    background: transparent;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+}
+
+    .btn-gestionar-rechazar:hover {
+        background: #c0392b;
+        color: #fff;
+    }
+
+.btn-pendiente {
+    --bs-btn-color: #DEAD6F;
+    --bs-btn-border-color: #DEAD6F;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #DEAD6F;
+    --bs-btn-hover-border-color: #DEAD6F;
+    font-weight: 600;
+    border: 1px solid #DEAD6F;
+    color: #DEAD6F;
+    background: transparent;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+}
+
+    .btn-pendiente:hover {
+        background: #DEAD6F;
+        color: #fff;
+    }
+
 @media (min-width: 1200px) {
     .mascota-main-panel {
         min-height: 100%;

@@ -374,34 +374,6 @@ namespace AP_WEB.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        // RF-022 (Isaac): Listar solicitudes recibidas por publicación
-        [HttpGet("ListarSolicitudesPorPublicacion/{publicacionId}/{propietarioId}")]
-        public IActionResult ListarSolicitudesPorPublicacion(int publicacionId, string propietarioId)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(propietarioId))
-                    return BadRequest("PropietarioId requerido");
-
-                using var context = new SqlConnection(
-                    _config.GetValue<string>("ConnectionStrings:DefaultConnection"));
-
-                var parametros = new DynamicParameters();
-                parametros.Add("@PublicacionId", publicacionId);
-                parametros.Add("@PropietarioId", propietarioId);
-
-                var result = context.Query<SolicitudAdopcionResponse>(
-                    "sp_ListarSolicitudesPorPublicacion",
-                    parametros,
-                    commandType: CommandType.StoredProcedure);
-
-                return Ok(result ?? Enumerable.Empty<SolicitudAdopcionResponse>());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         private static string ConstruirCorreoSolicitudAdopcion(NotificacionSolicitudAdopcionResponse datos)
         {

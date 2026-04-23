@@ -801,6 +801,7 @@ namespace AP_MVC.Controllers
             TempData["Error"] = result.Content.ReadAsStringAsync().Result;
             return RedirectToAction("DetalleCatalogo", new { id = model.PublicacionId });
         }
+
         [SesionActiva]
         [HttpGet]
         public IActionResult SolicitudesRecibidas(int publicacionId)
